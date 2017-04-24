@@ -13,7 +13,7 @@ use MM\Session\SaveHandler\Mock;
 require_once __DIR__ . "/_bootstrap.php";
 
 /**
- * @group pf-session
+ * @group mm-session
  */
 class SessionTest extends \PHPUnit_Framework_TestCase
 {

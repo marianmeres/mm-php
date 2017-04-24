@@ -13,7 +13,7 @@ use MM\Controller\Response;
 require_once __DIR__ . "/_bootstrap.php";
 
 /**
- * @group pf-session
+ * @group mm-session
  */
 class SaveHandlerDbTableTest extends \PHPUnit_Framework_TestCase
 {

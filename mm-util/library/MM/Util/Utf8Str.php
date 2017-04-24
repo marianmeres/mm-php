@@ -1,6 +1,6 @@
 <?php
 /**
- * Portnute veci z webu roznych miest do PF\Util
+ * Portnute veci z webu roznych miest do MM\Util
  * @author www
  */
 namespace MM\Util;
