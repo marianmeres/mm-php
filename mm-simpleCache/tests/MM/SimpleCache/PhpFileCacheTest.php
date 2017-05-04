@@ -122,4 +122,22 @@ class PhpFileCacheTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($cache->getItem($id, $success));
         $this->assertFalse($success);
     }
+
+    public function testNamespaceWorks()
+    {
+        $cache = $this->cache;
+        $ns = "some";
+        $id = 'foo';
+
+        $cache->setNamespace($ns);
+        $cache->setItem($id, 'bar');
+
+        $glob = glob("$this->dir/*.php");
+        $this->assertEquals(1, count($glob));
+        $this->assertTrue(!!preg_match("/$ns$id\.php$/", $glob[0]));
+
+        $cache->removeItem($id);
+        $this->assertEquals(0, count(glob("$this->dir/*.php")));
+
+    }
 }

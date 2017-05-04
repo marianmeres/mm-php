@@ -27,6 +27,11 @@ class PhpFileCache implements SimpleCacheInterface
     protected $_ttl = 86400;
 
     /**
+     * @var string
+     */
+    protected $_namespace;
+
+    /**
      * @param array $options
      */
     public function __construct($dir, array $options = [])
@@ -59,12 +64,40 @@ class PhpFileCache implements SimpleCacheInterface
     }
 
     /**
+     * @param $ns
+     * @return $this
+     */
+    public function setNamespace($ns)
+    {
+        $this->_namespace = $ns;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNamespace()
+    {
+        return $this->_namespace;
+    }
+
+    /**
      * @param $key
      * @return mixed
      */
     protected function _normalizeKey($key)
     {
+        $key = $this->getNamespace() . $key;
         return str_replace(['.', '/', '\\'], '-', $key);
+    }
+
+    /**
+     * @param $key
+     * @return string
+     */
+    protected function _getFilename($key)
+    {
+        return "$this->_cacheDir/" . $this->_normalizeKey($key) . ".php";
     }
 
     /**
@@ -75,8 +108,7 @@ class PhpFileCache implements SimpleCacheInterface
      */
     public function getItem($key, &$success = null)
     {
-        $key = $this->_normalizeKey($key);
-        $filename = "$this->_cacheDir/$key.php";
+        $filename = $this->_getFilename($key);
         $now = time();
 
         if (file_exists($filename) && ($now - $this->_ttl) < filemtime($filename)) {
@@ -101,8 +133,7 @@ class PhpFileCache implements SimpleCacheInterface
      */
     public function hasItem($key)
     {
-        $key = $this->_normalizeKey($key);
-        $filename = "$this->_cacheDir/$key.php";
+        $filename = $this->_getFilename($key);
         $now = time();
 
         return (
@@ -120,8 +151,7 @@ class PhpFileCache implements SimpleCacheInterface
      */
     public function setItem($key, $data, $ttl = null, $throwOnFailure = true)
     {
-        $key = $this->_normalizeKey($key);
-        $filename = "$this->_cacheDir/$key.php";
+        $filename = $this->_getFilename($key);
         $ttl = (int) ($ttl ?: $this->_ttl);
 
         try {
@@ -150,8 +180,7 @@ class PhpFileCache implements SimpleCacheInterface
      */
     public function touchItem($key, $ttl = null)
     {
-        $key = $this->_normalizeKey($key);
-        $filename = "$this->_cacheDir/$key.php";
+        $filename = $this->_getFilename($key);
         $now = time();
         $ttl = $ttl ?: $this->_ttl;
 
@@ -167,8 +196,7 @@ class PhpFileCache implements SimpleCacheInterface
      */
     public function removeItem($key)
     {
-        $key = $this->_normalizeKey($key);
-        $filename = "$this->_cacheDir/$key.php";
+        $filename = $this->_getFilename($key);
 
         return @unlink($filename);
     }

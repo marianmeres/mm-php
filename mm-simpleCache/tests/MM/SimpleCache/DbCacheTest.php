@@ -132,4 +132,23 @@ class DbCacheTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('y', $cache->getItem($id));
     }
+
+    public function testNamespaceWorks()
+    {
+        $db = $this->dbu;
+        $cache = $this->cache;
+        $ns = "some";
+        $id = 'foo';
+
+        $cache->setNamespace($ns);
+        $cache->setItem($id, 'bar');
+
+        $all = $db->fetchAll("*", '_simple_cache');
+
+        $this->assertEquals("$ns$id", $all[0]['id']);
+
+        $cache->removeItem($id);
+
+        $this->assertEquals(0, $db->fetchCount('_simple_cache'));
+    }
 }

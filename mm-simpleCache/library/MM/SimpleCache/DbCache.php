@@ -44,6 +44,11 @@ class DbCache implements SimpleCacheInterface
     protected $_unserialize;
 
     /**
+     * @var string
+     */
+    protected $_namespace;
+
+    /**
      * @param array $options
      */
     public function __construct(DbUtilPdo $db, array $options = [])
@@ -91,12 +96,41 @@ class DbCache implements SimpleCacheInterface
     }
 
     /**
+     * @param $ns
+     * @return $this
+     */
+    public function setNamespace($ns)
+    {
+        $this->_namespace = $ns;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNamespace()
+    {
+        return $this->_namespace;
+    }
+
+    /**
+     * @param $key
+     * @return string
+     */
+    protected function _normalizeKey($key)
+    {
+        return $this->getNamespace() . $key;
+    }
+
+    /**
      * @param $key
      * @param null $success
      * @return null
      */
     public function getItem($key, &$success = null)
     {
+        $key = $this->_normalizeKey($key);
+
         // intentionally fetching 2 fields, so we can easily distinguish between
         // null and not found
         $row = $this->_db->fetchRow('id,data', $this->_tableName, [
@@ -130,6 +164,8 @@ class DbCache implements SimpleCacheInterface
      */
     public function hasItem($key)
     {
+        $key = $this->_normalizeKey($key);
+
         return (bool) $this->_db->fetchCount($this->_tableName, [
             'id' => $key, 'valid_until>=' => time()
         ]);
@@ -147,6 +183,7 @@ class DbCache implements SimpleCacheInterface
     {
         $now = time();
         $ttl = (int) ($ttl ?: $this->_ttl);
+        $key = $this->_normalizeKey($key);
 
         if ($this->_serialize) {
             $s = $this->_serialize;
@@ -194,6 +231,7 @@ class DbCache implements SimpleCacheInterface
     {
         $now = time();
         $ttl = $ttl ?: $this->_ttl;
+        $key = $this->_normalizeKey($key);
 
         return (bool) $this->_db->update(
             $this->_tableName,
@@ -208,6 +246,7 @@ class DbCache implements SimpleCacheInterface
      */
     public function removeItem($key)
     {
+        $key = $this->_normalizeKey($key);
         return (bool) $this->_db->delete($this->_tableName, ['id' => $key]);
     }
 

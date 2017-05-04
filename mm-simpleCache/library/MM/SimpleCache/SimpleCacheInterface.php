@@ -15,6 +15,17 @@ namespace MM\SimpleCache;
 interface SimpleCacheInterface
 {
     /**
+     * @param $ns
+     * @return mixed
+     */
+    public function setNamespace($ns);
+
+    /**
+     * @return mixed
+     */
+    public function getNamespace();
+
+    /**
      * @param $key
      * @param null $success
      * @return mixed
