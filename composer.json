@@ -4,8 +4,8 @@
   "autoload": {
     "psr-0" : {
       "MM\\Application" : "mm-application/library",
-      "MM\\Controller" : "mm-controller/library",
       "MM\\ContentComponent" : "mm-contentComponent/library",
+      "MM\\Controller" : "mm-controller/library",
       "MM\\Form" : "mm-form/library",
       "MM\\Mapper" : "mm-mapper/library",
       "MM\\Model" : "mm-model/library",
