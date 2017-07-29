@@ -246,6 +246,17 @@ class DbTable extends AbstractDao
     }
 
     /**
+     * @param $where
+     * @param array|null $options
+     * @return int
+     */
+    public function fetchCount($where, array $options = null)
+    {
+        $this->_assertRequired();
+        return $this->_db->fetchCount($this->tableName, $where, $options);
+    }
+
+    /**
      * @param array $idData
      * @param $data
      * @param array|null $options

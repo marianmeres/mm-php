@@ -305,6 +305,15 @@ class Mapper
     }
 
     /**
+     * @param $where
+     * @return int
+     */
+    public function fetchCount($where)
+    {
+        return $this->getDao()->fetchCount($where);
+    }
+
+    /**
      * @param AbstractPersistentModel $model
      * @param array $options
      * @return AbstractPersistentModel

@@ -107,6 +107,13 @@ abstract class AbstractDao
     abstract public function fetchAll($where, array $options = null);
 
     /**
+     * @param $where
+     * @param array|null $options
+     * @return mixed
+     */
+    abstract public function fetchCount($where, array $options = null);
+
+    /**
      * @param array $idData
      * @param $data
      * @param array|null $options
