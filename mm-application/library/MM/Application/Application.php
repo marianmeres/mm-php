@@ -155,40 +155,50 @@ class Application
     /**
      * Helper for conventional use. Safely override
      *
-     * @param array $request
-     * @param array $server
+     * @param array|null $request
+     * @param array|null $server
      * @param string $aSeparator
      * @param string $controllerNs
+     * @param string $baseControllerFallback
      * @return AbstractController
      */
     public function factoryController(array $request = null, array $server = null,
-                                      $aSeparator = '.', $controllerNs = 'Controller\\')
+                                      $aSeparator = '.',
+                                      $controllerNs = '\App\{Module}\Controller\\',
+                                      $baseControllerFallback = '\App\Controller')
     {
-        //$request = $request ?: array_merge($_REQUEST, $_GET, $_POST);
         $request = $request ?: array_merge($_GET, $_POST, $_REQUEST);
-
         $request = self::decomposeRequest($request, $aSeparator);
+
+        $replaceMap = [
+            '{Module}'     => ucfirst(strtolower($request['_module'])),
+            '{Controller}' => ucfirst(strtolower($request['_controller'])),
+            '{Action}'     => ucfirst(strtolower($request['_action'])),
+        ];
+        $controllerNs = str_replace(
+            array_keys($replaceMap), array_values($replaceMap), $controllerNs
+        );
+        $controllerNs = preg_replace('/\\\\+/', '\\', $controllerNs);
 
         // vyskladame nazov classu buduceho controllera
         $controllerClass = $controllerNs . str_replace(' ', '', ucwords(str_replace(
-            array(".", "-", '/'), " ", ucfirst(strtolower($request['_controller']))
-        ))) . "Controller";
+                array(".", "-", '/'), " ", ucfirst(strtolower($request['_controller']))
+            ))) . "Controller";
 
         // novinka: "_" v nazve kontrollera mapujeme ako namespace (aby sa dali
         // kontrolere filesystemovo upratat)
         $controllerClass = str_replace(' ', '\\', ucwords(
             str_replace("_", " ", $controllerClass)
         ));
+        // prx($controllerClass);
 
         if (!ClassUtil::classExists($controllerClass)) {
-            $exception = new PageNotFound(
-                "Controller '$controllerClass' not found"
-            );
+            $exception = new PageNotFound("Controller '$controllerClass' not found");
         }
 
         // ak chyba, tak (optimisticky) konvencne defaultny
         if (!empty($exception)) {
-            $controllerClass = "{$controllerNs}IndexController";
+            $controllerClass = $baseControllerFallback;
         }
 
         // konvencia
@@ -215,14 +225,15 @@ class Application
     /**
      * Routing riesime normalne via request parametre "_controller" a "_action",
      * ziadne fancy tanečky... s jedinou vynimkou: ak je setnuty request[a], tak
-     * ten ma vyssiu prioritu a ma tvar "controller/action" resp. "action",
-     * resp. "controller/" (vtedy bude defaultovat na index akciu)
+     * ten ma vyssiu prioritu a ma defaultne tvar module[.controller[.action]]
+     * (pri custom tvare treba pouzit custom $decomposeRequestCallback)
      *
      * @param array $request
      * @param string $aSeparator
      * @return array|mixed
      */
-    public static function decomposeRequest(array $request, $aSeparator = '/')
+    public static function decomposeRequest(array $request, $aSeparator = '.',
+                                            $decomposeStrategyControllerFirst = false)
     {
         // return early with custom decomposition, if provided
         if (is_callable(self::$decomposeRequestCallback)) {
@@ -231,41 +242,51 @@ class Application
             );
         }
 
-        $request['_controller'] = !empty($request['_controller'])
-                               ? $request['_controller'] : 'index';
+        $r = $request;
+        $r['_module']     = !empty($r['_module'])     ? $r['_module']     : 'index';
+        $r['_controller'] = !empty($r['_controller']) ? $r['_controller'] : 'index';
+        $r['_action']     = !empty($r['_action'])     ? $r['_action']     : 'index';
 
-        $request['_action']     = !empty($request['_action'])
-                               ? $request['_action'] : 'index';
+        if (!empty($r['a'])) {
+            $parts = explode($aSeparator, $r['a']);
 
-        if (!empty($request['a'])) {
-
-            // UPDATE: refactor a=contr/action na a=contr.action robime BC compatible hack,
-            // teda ak je separator rozdielny od "/" tak replacneme...
-            if ('/' != $aSeparator) {
-                $request['a'] = str_replace(['/', '%2F'], $aSeparator, $request['a']);
-            }
-
-            $parts = explode($aSeparator, $request['a']);
-            if (1 == count($parts)) { // a=action
-                $request['_action'] = $parts[0];
-            } else { // a=controller/ alebo controller/action alebo a=controller/action/some/other...
-                $request['_controller'] = !empty($parts[0]) ? $parts[0] : 'index';
-                unset($parts[0]);
-
-                // a=controller/  (note trailing slash)
-                if ("" == $parts[1]) {
-                    $parts[1] = 'index';
+            // "controller" first approach
+            if ($decomposeStrategyControllerFirst) {
+                if (1 == count($parts)) {
+                    $r['_controller'] = $parts[0];
                 }
-
-                $request['_action'] = trim(implode($aSeparator, $parts), " $aSeparator"); // action moze obsahovat aj "/"
+                elseif (2 == count($parts)) {
+                    $r['_controller'] = $parts[0];
+                    $r['_action'] = $parts[1];
+                }
+                else {
+                    $r['_module'] = $parts[0];
+                    $r['_controller'] = $parts[1];
+                    array_splice($parts, 0, 2);
+                    $r['_action'] = join($aSeparator, $parts);
+                }
+            }
+            // module first
+            else {
+                if (1 == count($parts)) {
+                    $r['_module'] = $parts[0];
+                }
+                elseif (2 == count($parts)) {
+                    $r['_module'] = $parts[0];
+                    $r['_controller'] = $parts[1];
+                }
+                else {
+                    $r['_module'] = $parts[0];
+                    $r['_controller'] = $parts[1];
+                    array_splice($parts, 0, 2);
+                    $r['_action'] = join($aSeparator, $parts);
+                }
             }
         }
 
-        // uistime sa, ze mame aj "a"... je to krasotina, ale pomoze drzat
-        // konvencne chovanie...
-        $request['a'] = "$request[_controller]{$aSeparator}$request[_action]";
+        $r['a'] = implode($aSeparator, [$r['_module'], $r['_controller'], $r['_action']]);
 
-        return $request;
+        return $r;
     }
 
 
