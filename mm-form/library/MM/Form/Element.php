@@ -613,7 +613,9 @@ class Element
         //     <label for="exampleInputEmail1">Email address</label>
         //     <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
         // </div>
-        $out = "<div class='" . trim("form-group $class $data[id]") . "'>"
+        $errCls = count($this->getErrors()) ? "has-danger" : '';
+
+        $out = "<div class='" . trim("form-group $class $data[id] $errCls") . "'>"
              .   ('' == $label ? "" : "\n  <label for='$data[id]' class='$class'>$label</label>")
              .   "\n  " . $this->renderCoreTag()
              .   ('' == $o['custom_html'] ? "" : "<p class='help-block'>$o[custom_html]</p>")
@@ -640,6 +642,9 @@ class Element
             $attrs['class'] = "";
         }
         $attrs['class'] = trim("form-control $attrs[class]");
+        if (count($this->getErrors())) {
+            $attrs['class'] .= " error form-control-danger";
+        }
 
         // required?
         if ($this->isRequired()) {
