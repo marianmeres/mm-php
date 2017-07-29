@@ -385,6 +385,7 @@ abstract class AbstractController
      */
     public function redirect($url, $permanent = true)
     {
+        if ("" === "$url") { $url = '.'; }
         $this->response()->setHeader("Location", $url);
         $this->response()->setStatusCode($permanent ? 301 : 302);
         return $this;
