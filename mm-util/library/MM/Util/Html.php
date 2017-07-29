@@ -30,6 +30,9 @@ class Html
         if (is_array($attribs)) {
             $attr = '';
             foreach ($attribs as $key => $val) {
+                if (null === $val || false === $val) {
+                    continue;
+                }
                 $key = $escape
                      ? htmlspecialchars($key, ENT_NOQUOTES, 'UTF-8') : $key;
                 $val = $escape
