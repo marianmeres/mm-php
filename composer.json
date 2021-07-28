@@ -1,20 +1,21 @@
 {
-  "name": "marianmeres/mm-php",
-  "version": "1.0.0",
-  "autoload": {
-    "psr-0" : {
-      "MM\\Application" : "mm-application/library",
-      "MM\\ContentComponent" : "mm-contentComponent/library",
-      "MM\\Controller" : "mm-controller/library",
-      "MM\\Form" : "mm-form/library",
-      "MM\\Mapper" : "mm-mapper/library",
-      "MM\\Model" : "mm-model/library",
-      "MM\\Page" : "mm-page/library",
-      "MM\\Pay" : "mm-pay/library",
-      "MM\\Session" : "mm-session/library",
-      "MM\\SimpleCache" : "mm-simpleCache/library",
-      "MM\\Util" : "mm-util/library",
-      "MM\\View" : "mm-view/library"
+    "name": "marianmeres/mm-php",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        },
+        "files": [
+            "src/prx.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "Marian Meres",
+            "email": "marian@meres.sk"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
     }
-  }
 }

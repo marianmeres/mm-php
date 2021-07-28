@@ -1,0 +1,17 @@
+{
+  "name": "mm-php",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prettier": "prettier --write \"src/**/*.php\"",
+    "test": "./phpunit src",
+    "build": "./composer.phar dumpautoload -o"
+  },
+  "author": "Marian Meres <marian@meres.sk>",
+  "license": "ISC",
+  "devDependencies": {
+    "@prettier/plugin-php": "^0.17.3",
+    "prettier": "^2.3.2"
+  }
+}

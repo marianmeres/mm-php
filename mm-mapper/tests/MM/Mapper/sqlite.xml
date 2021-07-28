@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<phpunit>
-    <php>
-        <env name="MM_MAPPER_DB_VENDOR" value="sqlite"/>
-    </php>
-</phpunit>
-
