@@ -7,7 +7,7 @@
             "MM\\": "src/MM/"
         },
         "files": [
-            "src/prx.php"
+            "src/MM/prx.php"
         ]
     },
     "authors": [
