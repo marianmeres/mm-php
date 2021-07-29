@@ -227,7 +227,7 @@ abstract class AbstractController
 		}
 
 		if (empty($action)) {
-			$action = 'index';
+			$action = $this->server()->getRequestMethod();
 		}
 
 		return self::_normalizeActionName($action) . 'Action';
@@ -339,7 +339,7 @@ abstract class AbstractController
 	/**
 	 *  To be overwritten;
 	 */
-	public function indexAction()
+	public function getAction()
 	{
 		echo get_class($this) . ': It Works!';
 	}
