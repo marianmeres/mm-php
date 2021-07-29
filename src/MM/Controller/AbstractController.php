@@ -56,12 +56,14 @@ abstract class AbstractController
 	protected $_dic;
 
 	/**
-	 * @param array $params
-	 * @param array $options
-	 * @internal param array|\MM\Controller\Params $request
+	 *
 	 */
-	public function __construct($params = [], array $options = null)
+	public function __construct(array $params = null, array $options = null)
 	{
+		if (is_null($params)) {
+			$params = array_merge($_GET, $_POST, $_REQUEST);
+		}
+
 		// params parameter je len shorcut z optionov
 		if (!empty($params)) {
 			$options['params'] = $params;
@@ -74,7 +76,7 @@ abstract class AbstractController
 		$this->_init();
 	}
 
-	public static function factory($params = [], array $options = null)
+	public static function factory($params = null, array $options = null)
 	{
 		return new static($params, $options);
 	}

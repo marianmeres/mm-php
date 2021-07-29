@@ -614,4 +614,28 @@ class Response implements \ArrayAccess
 	{
 		return $this->getBody($offset);
 	}
+
+	/**
+	 * sugar
+	 */
+	public function asText()
+	{
+		return $this->setHeader('Content-type', 'text/plain; charset=UTF-8');
+	}
+
+	/**
+	 * sugar
+	 */
+	public function asJson()
+	{
+		return $this->setHeader('Content-type', 'application/json');
+	}
+
+	/**
+	 * sugar
+	 */
+	public function asHtml()
+	{
+		return $this->setHeader('Content-type', 'text/html; charset=UTF-8');
+	}
 }
