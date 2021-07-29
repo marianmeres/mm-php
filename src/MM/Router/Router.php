@@ -2,7 +2,7 @@
 
 namespace MM\Router;
 
-class Router {
-
-    protected $_routes = [];
+class Router
+{
+	protected $_routes = [];
 }

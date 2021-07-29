@@ -29,6 +29,16 @@ final class ControllerTest extends TestCase
 		$this->assertEquals('some', $c->params()->_action);
 	}
 
+	public function testDispatchByArgWorks()
+	{
+		$this->assertEquals(
+			'1test2',
+			SimpleController::factory()
+				->dispatch('test')
+				->toString()
+		);
+	}
+
 	public function testDispatchReturnsResponse()
 	{
 		$c = new SimpleController(['_action' => 'test']);

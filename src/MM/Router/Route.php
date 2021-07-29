@@ -2,7 +2,6 @@
 
 namespace MM\Router;
 
-class Route {
-    
-    
+class Route
+{
 }

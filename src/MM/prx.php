@@ -3,12 +3,12 @@
 if (!function_exists('prx')) {
 	function prx(/* args */)
 	{
-		$numargs = func_num_args();
 		$args = func_get_args();
-		for ($i = 0; $i < $numargs; $i++) {
-			$x = $args[$i];
-			if (!(bool) $x) {
+		foreach ($args as $x) {
+			if (is_bool($x) || is_null($x)) {
+				// ob_start();
 				var_dump($x);
+				// echo trim(ob_get_clean());
 			} else {
 				print_r($x);
 			}

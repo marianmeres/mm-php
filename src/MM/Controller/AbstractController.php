@@ -74,6 +74,11 @@ abstract class AbstractController
 		$this->_init();
 	}
 
+	public static function factory($params = [], array $options = null)
+	{
+		return new static($params, $options);
+	}
+
 	/**
 	 * @param $params
 	 * @return $this
@@ -212,18 +217,20 @@ abstract class AbstractController
 	}
 
 	/**
-	 * gets action name, which is determined from "_action" param. Falls back to
-	 * "index"
-	 *
 	 * @return string
 	 */
-	public function getActionName()
+	public function getActionMethodName($action = null)
 	{
-		if ($this->params()->_action != '') {
-			return $this->_normalizeActionName($this->params()->_action);
+		// if empty argument, look for "_action" param (BC convention)
+		if (empty($action)) {
+			$action = $this->params()->_action;
 		}
 
-		return 'index';
+		if (empty($action)) {
+			$action = 'index';
+		}
+
+		return self::_normalizeActionName($action) . 'Action';
 	}
 
 	/**
@@ -251,10 +258,6 @@ abstract class AbstractController
 	 */
 	public function dispatch($action = null)
 	{
-		if ($action) {
-			$this->params()->_action = $action;
-		}
-
 		// jednotlive kroky (vratane erroru) bufferujeme samostatne aby sme
 		// mali segmenty pod kontrolou v kazdom z nich
 		//
@@ -279,7 +282,7 @@ abstract class AbstractController
 			// dispatch
 			$ob = $this->_obEnabled;
 			$ob && ob_start();
-			$method = $this->getActionName() . 'Action';
+			$method = $this->getActionMethodName($action);
 			$this->$method();
 			$ob && $this->response()->setBody(ob_get_clean(), false);
 
@@ -319,7 +322,7 @@ abstract class AbstractController
 	 * @param string $action
 	 * @return string
 	 */
-	protected function _normalizeActionName($action)
+	protected static function _normalizeActionName($action)
 	{
 		// normalizes "aa.bb-cc_DD/eE" to "aaBbCcDdEe"
 		return lcfirst(
