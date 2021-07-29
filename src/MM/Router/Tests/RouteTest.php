@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace MM\Controller\Tests;
+namespace MM\Router\Tests;
 
 use PHPUnit\Framework\TestCase;
 
