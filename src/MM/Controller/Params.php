@@ -126,7 +126,7 @@ class Params implements \ArrayAccess
 		// 1. internal params container?
 		//if (isset($this->_params[$key])) {
 		// vyssii isset je problematicky pri unset/isset
-		if (array_key_exists($key, $this->_params)) {
+		if (property_exists($this->_params, $key)) {
 			return $this->_params[$key];
 		}
 
