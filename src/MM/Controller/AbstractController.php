@@ -7,6 +7,7 @@ namespace MM\Controller;
 
 use MM\Controller\Exception;
 use MM\Controller\Helper;
+use MM\Controller\Helper\Server;
 
 /**
  * Class AbstractController
@@ -496,10 +497,9 @@ abstract class AbstractController
 
 	/**
 	 * Built in helper
-	 * @return \MM\Controller\Helper\Server
 	 */
-	public function server()
+	public function server(): Server
 	{
-		return $this->getHelper('server', '\MM\Controller\Helper\Server');
+		return $this->getHelper('server', Server::class);
 	}
 }
