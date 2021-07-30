@@ -36,6 +36,7 @@ class Router
 			$routes = [$routes];
 		}
 
+		// prettier-ignore
 		foreach ($routes as $route) {
 			if ($route === '*') {
 				$this->_catchAll = $cb;
@@ -43,9 +44,7 @@ class Router
 				$this->_routes[] = [
 					new Route($route),
 					$cb,
-					array_key_exists('allowQueryParams', $addons)
-						? !!$addons['allowQueryParams']
-						: null,
+					array_key_exists('allowQueryParams', $addons) ? !!$addons['allowQueryParams'] : true,
 					array_key_exists('label', $addons) ? $addons['label'] : null,
 				];
 			}
