@@ -242,7 +242,7 @@ abstract class AbstractController
 	 * Dispatches to action handler. Calls pre/post hooks. Catches action's
 	 * exceptions if found - and forwards to errorAction.
 	 */
-	public function dispatch(string $action = null): Response
+	public function dispatch(string $action = null, bool $output = false): Response
 	{
 		// jednotlive kroky (vratane erroru) bufferujeme samostatne aby sme
 		// mali segmenty pod kontrolou v kazdom z nich
@@ -299,6 +299,10 @@ abstract class AbstractController
 				$errBody .= ob_get_clean();
 			}
 			$this->response()->setBody($errBody, false);
+		}
+
+		if ($output) {
+			return $this->response()->output();
 		}
 
 		return $this->response();
