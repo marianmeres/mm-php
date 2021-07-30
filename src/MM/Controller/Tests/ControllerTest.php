@@ -16,17 +16,10 @@ require_once __DIR__ . '/_bootstrap.php';
  */
 final class ControllerTest extends TestCase
 {
-	public function testActionParamIsNotDefinedByDefault()
+	public function testSettingParamsAtConstructionWorks()
 	{
-		$c = new SimpleController([]);
-		$this->assertNull($c->params()->_action);
-		$this->assertEquals('index', $c->params()->get('_action', 'index'));
-	}
-
-	public function testSettingRequestWorks()
-	{
-		$c = new SimpleController(['_action' => 'some']);
-		$this->assertEquals('some', $c->params()->_action);
+		$c = new SimpleController(['foo' => 'bar']);
+		$this->assertEquals('bar', $c->params()->foo);
 	}
 
 	public function testDispatchByArgWorks()
@@ -41,14 +34,14 @@ final class ControllerTest extends TestCase
 
 	public function testDispatchReturnsResponse()
 	{
-		$c = new SimpleController(['_action' => 'test']);
-		$this->assertTrue($c->dispatch() instanceof Response);
+		$c = new SimpleController();
+		$this->assertTrue($c->dispatch('test') instanceof Response);
 
 		// tu nizsie je response dva krat... lebo dispatchujem druhy krat...
-		$this->assertEquals('1test21test2', $c->dispatch()->__toString());
+		$this->assertEquals('1test21test2', $c->dispatch('test')->__toString());
 
 		$c->response()->reset();
-		$this->assertEquals('1test2', $c->dispatch()->__toString()); // __invoke
+		$this->assertEquals('1test2', $c->dispatch('test')->__toString()); // __invoke
 
 		$c->response()->reset();
 		$this->assertEquals('bar2', $c->dispatch('foo')->__toString()); // test manual dispatching
@@ -56,10 +49,10 @@ final class ControllerTest extends TestCase
 
 	public function testInvalidActionThrows()
 	{
-		$c = new SimpleController(['_action' => 'wrong']);
+		$c = new SimpleController();
 
 		try {
-			$c->dispatch();
+			$c->dispatch('wrong');
 		} catch (Exception $e) {
 			$this->assertEquals(404, $e->getCode());
 			return;

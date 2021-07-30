@@ -58,12 +58,8 @@ abstract class AbstractController
 	/**
 	 *
 	 */
-	public function __construct(array $params = null, array $options = null)
+	public function __construct(array $params = [], array $options = null)
 	{
-		if (is_null($params)) {
-			$params = array_merge($_GET, $_POST, $_REQUEST);
-		}
-
 		// params parameter je len shorcut z optionov
 		if (!empty($params)) {
 			$options['params'] = $params;
@@ -76,17 +72,20 @@ abstract class AbstractController
 		$this->_init();
 	}
 
-	public static function factory($params = null, array $options = null)
-	{
+	/**
+	 *
+	 */
+	public static function factory(
+		$params = [],
+		array $options = null
+	): AbstractController {
 		return new static($params, $options);
 	}
 
 	/**
-	 * @param $params
-	 * @return $this
-	 * @throws Exception
+	 *
 	 */
-	public function setParams($params)
+	public function setParams($params): AbstractController
 	{
 		if (is_array($params)) {
 			$params = new Params($params);
@@ -108,35 +107,35 @@ abstract class AbstractController
 	}
 
 	/**
-	 * @param \ArrayAccess $dic
+	 *
 	 */
-	public function setDic(\ArrayAccess $dic)
+	public function setDic(\ArrayAccess $dic): AbstractController
 	{
 		$this->_dic = $dic;
+		return $this;
 	}
 
 	/**
-	 * @return \ArrayAccess
+	 *
 	 */
-	public function getDic()
+	public function getDic(): \ArrayAccess
 	{
 		return $this->_dic;
 	}
 
 	/**
-	 * @param bool $flag
-	 * @return $this
+	 *
 	 */
-	public function setObEnabled($flag = true)
+	public function setObEnabled(bool $flag = true): AbstractController
 	{
 		$this->_obEnabled = (bool) $flag;
 		return $this;
 	}
 
 	/**
-	 * @return Params
+	 *
 	 */
-	public function params()
+	public function params(): Params
 	{
 		if (!$this->_params) {
 			$this->_params = new Params();
@@ -145,9 +144,9 @@ abstract class AbstractController
 	}
 
 	/**
-	 * @return Response
+	 *
 	 */
-	public function response()
+	public function response(): Response
 	{
 		if (null == $this->_response) {
 			$this->_response = new Response();
@@ -156,10 +155,9 @@ abstract class AbstractController
 	}
 
 	/**
-	 * @param Response $response
-	 * @return $this
+	 *
 	 */
-	public function setResponse(Response $response)
+	public function setResponse(Response $response): AbstractController
 	{
 		$this->_response = $response;
 		return $this;
@@ -167,12 +165,9 @@ abstract class AbstractController
 
 	/**
 	 * Sets options which have normalized setter. Otherwise throws.
-	 *
-	 * @param array $options
-	 * @return $this
 	 * @throws Exception
 	 */
-	public function setOptions(array $options)
+	public function setOptions(array $options): AbstractController
 	{
 		foreach ($options as $_key => $value) {
 			$key = str_replace('_', ' ', strtolower(trim($_key))); // under_scored to CamelCase
@@ -201,33 +196,27 @@ abstract class AbstractController
 	}
 
 	/**
-	 * @param \Exception $e
-	 * @return $this
+	 *
 	 */
-	public function setException(\Exception $e = null)
+	public function setException(\Exception $e = null): AbstractController
 	{
 		$this->_exception = $e;
 		return $this;
 	}
 
 	/**
-	 * @return \Exception|null
+	 *
 	 */
-	public function getException()
+	public function getException(): \Exception
 	{
 		return $this->_exception;
 	}
 
 	/**
-	 * @return string
+	 *
 	 */
-	public function getActionMethodName($action = null)
+	public function getActionMethodName($action = null): string
 	{
-		// if empty argument, look for "_action" param (BC convention)
-		if (empty($action)) {
-			$action = $this->params()->_action;
-		}
-
 		if (empty($action)) {
 			$action = $this->server()->getRequestMethod();
 		}
@@ -236,12 +225,10 @@ abstract class AbstractController
 	}
 
 	/**
-	 * @param $name
-	 * @param $arguments
 	 * @throws Exception
 	 * @throws Exception\PageNotFound
 	 */
-	public function __call($name, $arguments)
+	public function __call(string $name, array $arguments)
 	{
 		// najskor skusime handler akcie
 		if ('Action' == substr($name, -6)) {
@@ -254,11 +241,8 @@ abstract class AbstractController
 	/**
 	 * Dispatches to action handler. Calls pre/post hooks. Catches action's
 	 * exceptions if found - and forwards to errorAction.
-	 *
-	 * @param string $action
-	 * @return Response
 	 */
-	public function dispatch($action = null)
+	public function dispatch(string $action = null): Response
 	{
 		// jednotlive kroky (vratane erroru) bufferujeme samostatne aby sme
 		// mali segmenty pod kontrolou v kazdom z nich
@@ -321,10 +305,9 @@ abstract class AbstractController
 	}
 
 	/**
-	 * @param string $action
-	 * @return string
+	 *
 	 */
-	protected static function _normalizeActionName($action)
+	protected static function _normalizeActionName(string $action): string
 	{
 		// normalizes "aa.bb-cc_DD/eE" to "aaBbCcDdEe"
 		return lcfirst(
@@ -381,12 +364,9 @@ abstract class AbstractController
 
 	/**
 	 * Sugar
-	 * @param $url
-	 * @param bool $permanent
-	 * @return $this
 	 * @throws Exception
 	 */
-	public function redirect($url, $permanent = true)
+	public function redirect(string $url, bool $permanent = true): AbstractController
 	{
 		if ('' === "$url") {
 			$url = '.';
@@ -397,11 +377,9 @@ abstract class AbstractController
 	}
 
 	/**
-	 * @param array $keys
-	 * @return array
 	 * @throws Exception
 	 */
-	public function assertExpectedParams(array $keys)
+	public function assertExpectedParams(array $keys): array
 	{
 		$out = [];
 		// sanity checks
@@ -418,23 +396,21 @@ abstract class AbstractController
 	}
 
 	/**
-	 * @param $name
-	 * @return string
+	 *
 	 */
-	protected function _normalizeHelperName($name)
+	protected function _normalizeHelperName(string $name): string
 	{
 		return strtolower($name);
 	}
 
 	/**
-	 * @param $name
-	 * @param null $fqnOrInstance
-	 * @param bool $reset
-	 * @return $this
 	 * @throws Exception
 	 */
-	public function setHelper($name, $fqnOrInstance = null, $reset = false)
-	{
+	public function setHelper(
+		string $name,
+		$fqnOrInstance = null,
+		bool $reset = false
+	): AbstractController {
 		$name = $this->_normalizeHelperName($name);
 
 		//
@@ -465,22 +441,20 @@ abstract class AbstractController
 	}
 
 	/**
-	 * @param array $nameToFqn
 	 * @throws Exception
 	 */
-	public function setHelpers(array $nameToFqn)
+	public function setHelpers(array $nameToFqn): AbstractController
 	{
 		foreach ($nameToFqn as $name => $fqn) {
 			$this->setHelper($name, $fqn);
 		}
+		return $this;
 	}
 
 	/**
-	 * @param $name
-	 * @param null $fallbackFqnOrInstance
 	 * @throws Exception
 	 */
-	public function getHelper($name, $fallbackFqnOrInstance = null): Helper
+	public function getHelper(string $name, $fallbackFqnOrInstance = null): Helper
 	{
 		$name = $this->_normalizeHelperName($name);
 
