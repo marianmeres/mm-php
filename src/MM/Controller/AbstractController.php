@@ -52,11 +52,6 @@ abstract class AbstractController
 	protected $_obEnabled = true;
 
 	/**
-	 * @var \ArrayAccess
-	 */
-	protected $_dic;
-
-	/**
 	 *
 	 */
 	public function __construct(array $params = [], array $options = null)
@@ -105,23 +100,6 @@ abstract class AbstractController
 	 */
 	protected function _init()
 	{
-	}
-
-	/**
-	 *
-	 */
-	public function setDic(\ArrayAccess $dic): AbstractController
-	{
-		$this->_dic = $dic;
-		return $this;
-	}
-
-	/**
-	 *
-	 */
-	public function getDic(): \ArrayAccess
-	{
-		return $this->_dic;
 	}
 
 	/**
