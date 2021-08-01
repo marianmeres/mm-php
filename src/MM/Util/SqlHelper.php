@@ -182,28 +182,6 @@ class SqlHelper
 			$sql
 		);
 
-		// Sqlite hacks... toto cele je trosku problematicke, ze sa snazime
-		// byt tak trosku schizofrenici a riesit paralene sqlite a mysql...
-		// Sqlite ma vsak obrovsku vyhody ze vie trivialne bezat in memory, a tym
-		// padom je priam stvorena na rychle testovanie...
-		// Nicmenej, najskor dojde k situaciam, kde jednoducho sqlite bude musiet
-		// byt pri niektorych testoch skipnuta
-		//         if (preg_match("/sqlite|pgsql/", $vendor)) {
-		//             // NEDOKONALY special case hack na enum fix pre sqlite
-		//             // skusi "enum ..." definciu nahradit za "text"
-		//             //$rgx = '/( enum\s*[^\)]+\s*\))\s*(,|})/i';
-		//             // update: doplname aj not null
-		//             //$rgx = '/( enum\s*[^\)]+\s*\))\s*((not)?\s+null)?\s*(,|})/i';
-		//             //$rgx = '/( enum\s*[^\)]+\s*\))\s*((not)?\s+null)?\s*(,|})/i';
-		//             $rgx = '/( enum\s*[^\)]+\s*\))([^,}]*)(,|})/i';
-		// //            if (preg_match($rgx, $out, $m)) {
-		// //                print_r($m);
-		// //                exit;
-		// //            }
-		//             $out = preg_replace($rgx, ' text$2$3', $out);
-		//             //die($out);
-		//         }
-
 		return $out;
 	}
 }
