@@ -27,7 +27,7 @@ final class ControllerTest extends TestCase
 		$this->assertEquals(
 			'1test2',
 			SimpleController::factory()
-				->dispatch('test')
+				->dispatch('test', false)
 				->toString()
 		);
 	}
@@ -35,16 +35,16 @@ final class ControllerTest extends TestCase
 	public function testDispatchReturnsResponse()
 	{
 		$c = new SimpleController();
-		$this->assertTrue($c->dispatch('test') instanceof Response);
+		$this->assertTrue($c->dispatch('test', false) instanceof Response);
 
 		// tu nizsie je response dva krat... lebo dispatchujem druhy krat...
-		$this->assertEquals('1test21test2', $c->dispatch('test')->__toString());
+		$this->assertEquals('1test21test2', $c->dispatch('test', false)->__toString());
 
 		$c->response()->reset();
-		$this->assertEquals('1test2', $c->dispatch('test')->__toString()); // __invoke
+		$this->assertEquals('1test2', $c->dispatch('test', false)->__toString()); // __invoke
 
 		$c->response()->reset();
-		$this->assertEquals('bar2', $c->dispatch('foo')->__toString()); // test manual dispatching
+		$this->assertEquals('bar2', $c->dispatch('foo', false)->__toString()); // test manual dispatching
 	}
 
 	public function testInvalidActionThrows()
@@ -52,7 +52,7 @@ final class ControllerTest extends TestCase
 		$c = new SimpleController();
 
 		try {
-			$c->dispatch('wrong');
+			$c->dispatch('wrong', false);
 		} catch (Exception $e) {
 			$this->assertEquals(404, $e->getCode());
 			return;
@@ -70,19 +70,22 @@ final class ControllerTest extends TestCase
 	public function testOutputViaResponseSegments()
 	{
 		$c = new SimpleController();
-		$this->assertEquals('abc2', $c->dispatch('segment')->__toString());
+		$this->assertEquals('abc2', $c->dispatch('segment', false)->__toString());
 	}
 
 	public function testOutputViaEchoAndResponseSegments()
 	{
 		$c = new SimpleController();
-		$this->assertEquals('abcecho2', $c->dispatch('segment-and.echo')->__toString());
+		$this->assertEquals(
+			'abcecho2',
+			$c->dispatch('segment-and.echo', false)->__toString()
+		);
 	}
 
 	public function testResetResponseOnDispatch()
 	{
 		$c = new SimpleController();
-		$this->assertEquals('', $c->dispatch('dispatch/reset')->__toString());
+		$this->assertEquals('', $c->dispatch('dispatch/reset', false)->__toString());
 	}
 
 	public function testRequestParamsHaveLowerPriorityOverDefinedUserlandOnes()
@@ -131,13 +134,13 @@ final class ControllerTest extends TestCase
 		);
 		$this->assertTrue($c->getException() instanceof \Exception);
 		$this->expectException(Exception::class);
-		$c->dispatch();
+		$c->dispatch(null, false);
 	}
 
 	public function testResponseHeadersAccessorWorks()
 	{
 		$c = new SimpleController();
-		$response = $c->dispatch('redir');
+		$response = $c->dispatch('redir', false);
 
 		$this->assertTrue($response->isRedirect());
 		$this->assertEquals('http://nba.com', $response->getHeader('LOCATION')); // kluc bude normalizovany
@@ -147,7 +150,7 @@ final class ControllerTest extends TestCase
 	{
 		$c = new SimpleController();
 		try {
-			$c->dispatch('not-existing');
+			$c->dispatch('not-existing', false);
 			$this->fail();
 		} catch (Exception\PageNotFound $e) {
 		}
@@ -184,7 +187,7 @@ final class ControllerTest extends TestCase
 		$c = new ObDisabledController();
 
 		ob_start();
-		$resp = $c->dispatch('index'); // priamo echuje
+		$resp = $c->dispatch('index', false); // priamo echuje
 
 		$this->assertEquals('index', ob_get_clean());
 		$this->assertEquals('', $resp->toString());
@@ -198,7 +201,7 @@ final class ControllerTest extends TestCase
 		$c = new ObDisabledController();
 
 		ob_start();
-		$resp = $c->dispatch('direct-response');
+		$resp = $c->dispatch('direct-response', false);
 
 		$this->assertEquals('', ob_get_clean());
 		$this->assertEquals('response', $resp->toString());
@@ -214,7 +217,7 @@ final class ControllerTest extends TestCase
 		$c = new ObDisabledController();
 
 		ob_start();
-		$resp = $c->dispatch('static');
+		$resp = $c->dispatch('static', false);
 
 		$this->assertEquals('static', ob_get_clean());
 		$this->assertEquals('', $resp->toString());
@@ -231,7 +234,7 @@ final class ControllerTest extends TestCase
 		$c = new ObDisabledController();
 
 		// ob_start();
-		$resp = $c->dispatch('throw');
+		$resp = $c->dispatch('throw', false);
 
 		$this->assertFalse(ob_get_clean());
 		$this->assertTrue((bool) preg_match('/thrown/', $resp->toString()));
