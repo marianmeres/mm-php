@@ -19,7 +19,7 @@ abstract class ViewAbstract
 	 * helper instances
 	 * @var array
 	 */
-	// private $_helpers = array();
+	protected $_helpers = [];
 
 	/**
 	 * Out-of-the-box "Two step view" design pattern

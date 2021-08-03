@@ -220,7 +220,7 @@ abstract class AbstractController
 	/**
 	 * Dispatches to action handler. Calls pre/post hooks. Catches action's
 	 * exceptions if found - and forwards to errorAction.
-	 * 
+	 *
 	 * Outputs by default
 	 */
 	public function dispatch(string $action = null, bool $output = true)

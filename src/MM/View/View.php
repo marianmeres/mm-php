@@ -4,6 +4,25 @@
  */
 namespace MM\View;
 
+use MM\View\Helper\BodyTagClass;
+use MM\View\Helper\Breadcrumbs;
+use MM\View\Helper\Canonicalize;
+use MM\View\Helper\ContainerOfStrings;
+use MM\View\Helper\HeadCss;
+use MM\View\Helper\HeadCssSrc;
+use MM\View\Helper\HeadCssSrcNonBlocking;
+use MM\View\Helper\HeadScript;
+use MM\View\Helper\HeadScriptSrc;
+use MM\View\Helper\HeadTitle;
+use MM\View\Helper\HtmlBaseTag;
+use MM\View\Helper\HtmlTagClass;
+use MM\View\Helper\LinkRel;
+use MM\View\Helper\LinkRelCanonical;
+use MM\View\Helper\LinkRelNext;
+use MM\View\Helper\LinkRelPrev;
+use MM\View\Helper\MetaNameTags;
+use MM\View\Helper\OpenGraphData;
+
 /**
  * Class View
  * @package MM\View
@@ -32,247 +51,153 @@ class View extends ViewAbstract
 		$this->__scriptIncludeReturn = include func_get_arg(0);
 	}
 
-	// /**
-	//  * @param null $strings
-	//  * @param string $method
-	//  * @param null $escape
-	//  * @return \MM\View\Helper\HeadTitle
-	//  * @throws Exception
-	//  */
-	// public function headTitle($strings = null, $method = 'append', $escape = null)
-	// {
-	//     /** @var \MM\View\Helper\HeadTitle $helper */
-	//     $name = 'HeadTitle';
-	//     $helper = $this->getHelper($name, "\MM\View\Helper\\$name");
-	//     return $helper->__invoke($strings, $method, $escape);
-	// }
+	protected function _factoryHelper(string $name, callable $factory, $reset = false)
+	{
+		$name = strtolower($name);
+		if (!isset($this->_helpers[$name]) || $reset) {
+			$this->_helpers[$name] = $factory($this);
+		}
+		return $this->_helpers[$name];
+	}
 
-	// /**
-	//  * @param null $strings
-	//  * @param string $method
-	//  * @param null $escape
-	//  * @return \MM\View\Helper\HeadScriptSrc
-	//  * @throws Exception
-	//  */
-	// public function headScriptSrc($strings = null, $method = 'append', $escape = null)
-	// {
-	//     /** @var \MM\View\Helper\HeadScriptSrc $helper */
-	//     $name = 'HeadScriptSrc';
-	//     $helper = $this->getHelper($name, "\MM\View\Helper\\$name");
-	//     return $helper->__invoke($strings, $method, $escape);
-	// }
+	public function headTitle($strings = null, $method = 'append', $escape = null)
+	{
+		return $this->_factoryHelper('headTitle', function (View $view) {
+			return new HeadTitle($view);
+		})->__invoke($strings, $method, $escape);
+	}
 
-	// /**
-	//  * @param null $strings
-	//  * @param string $method
-	//  * @param null $escape
-	//  * @return \MM\View\Helper\HeadScript
-	//  * @throws Exception
-	//  */
-	// public function headScript($strings = null, $method = 'append', $escape = null)
-	// {
-	//     /** @var \MM\View\Helper\HeadScript $helper */
-	//     $name = 'HeadScript';
-	//     $helper = $this->getHelper($name, "\MM\View\Helper\\$name");
-	//     return $helper->__invoke($strings, $method, $escape);
-	// }
+	public function headScriptSrc($strings = null, $method = 'append', $escape = null)
+	{
+		return $this->_factoryHelper('headScriptSrc', function (View $view) {
+			return new HeadScriptSrc($view);
+		})->__invoke($strings, $method, $escape);
+	}
 
-	// /**
-	//  * @param null $strings
-	//  * @param string $method
-	//  * @param null $escape
-	//  * @return \MM\View\Helper\HeadCssSrc
-	//  * @throws Exception
-	//  */
-	// public function headCssSrc($strings = null, $method = 'append', $escape = null)
-	// {
-	//     /** @var \MM\View\Helper\HeadCssSrc $helper */
-	//     $name = 'HeadCssSrc';
-	//     $helper = $this->getHelper($name, "\MM\View\Helper\\$name");
-	//     return $helper->__invoke($strings, $method, $escape);
-	// }
+	public function headScript($strings = null, $method = 'append', $escape = null)
+	{
+		return $this->_factoryHelper('headScript', function (View $view) {
+			return new HeadScript($view);
+		})->__invoke($strings, $method, $escape);
+	}
 
-	// /**
-	//  * @param null $strings
-	//  * @param string $method
-	//  * @param null $escape
-	//  * @return \MM\View\Helper\HeadCssSrcNonBlocking
-	//  */
-	// public function HeadCssSrcNonBlocking($strings = null, $method = 'append', $escape = null)
-	// {
-	//     /** @var \MM\View\Helper\HeadCssSrcNonBlocking $helper */
-	//     $name = 'HeadCssSrcNonBlocking';
-	//     $helper = $this->getHelper($name, "\MM\View\Helper\\$name");
-	//     return $helper->__invoke($strings, $method, $escape);
-	// }
+	public function headCssSrc($strings = null, $method = 'append', $escape = null)
+	{
+		return $this->_factoryHelper('headCssSrc', function (View $view) {
+			return new HeadCssSrc($view);
+		})->__invoke($strings, $method, $escape);
+	}
 
-	// /**
-	//  * @param null $strings
-	//  * @param string $method
-	//  * @param null $escape
-	//  * @return \MM\View\Helper\HeadCss
-	//  * @throws Exception
-	//  */
-	// public function headCss($strings = null, $method = 'append', $escape = null)
-	// {
-	//     /** @var \MM\View\Helper\HeadCss $helper */
-	//     $name = 'HeadCss';
-	//     $helper = $this->getHelper($name, "\MM\View\Helper\\$name");
-	//     return $helper->__invoke($strings, $method, $escape);
-	// }
+	public function headCssSrcNonBlocking(
+		$strings = null,
+		$method = 'append',
+		$escape = null
+	) {
+		return $this->_factoryHelper('headCssSrcNonBlocking', function (View $view) {
+			return new HeadCssSrcNonBlocking($view);
+		})->__invoke($strings, $method, $escape);
+	}
 
-	// /**
-	//  * @return Helper\Breadcrumbs
-	//  */
-	// public function breadcrumbs()
-	// {
-	//     /** @var \MM\View\Helper\Breadcrumbs $helper */
-	//     $name = 'Breadcrumbs';
-	//     $helper = $this->getHelper($name, "\MM\View\Helper\\$name");
-	//     return $helper;
-	// }
+	public function headCss($strings = null, $method = 'append', $escape = null)
+	{
+		return $this->_factoryHelper('headCss', function (View $view) {
+			return new HeadCss($view);
+		})->__invoke($strings, $method, $escape);
+	}
 
-	// /**
-	//  * @param $strings
-	//  * @return Helper\HtmlTagClass
-	//  * @throws Exception
-	//  */
-	// public function htmlTagClass($strings = null)
-	// {
-	//     /** @var \MM\View\Helper\HtmlTagClass $helper */
-	//     $name = 'HtmlTagClass';
-	//     $helper = $this->getHelper($name, "\MM\View\Helper\\$name");
-	//     return $helper->__invoke($strings, 'append', null);
-	// }
+	public function breadcrumbs()
+	{
+		return $this->_factoryHelper('breadcrumbs', function (View $view) {
+			return new Breadcrumbs($view);
+		});
+	}
 
-	// /**
-	//  * @param $strings
-	//  * @return Helper\BodyTagClass
-	//  * @throws Exception
-	//  */
-	// public function bodyTagClass($strings = null)
-	// {
-	//     /** @var \MM\View\Helper\BodyTagClass $helper */
-	//     $name = 'BodyTagClass';
-	//     $helper = $this->getHelper($name, "\MM\View\Helper\\$name");
-	//     return $helper->__invoke($strings, 'append', null);
-	// }
+	public function htmlTagClass($strings = null)
+	{
+		return $this->_factoryHelper('htmlTagClass', function (View $view) {
+			return new HtmlTagClass($view);
+		})->__invoke($strings, 'append', null);
+	}
 
-	// /**
-	//  * @param null $href
-	//  * @param null $target
-	//  * @return Helper\HtmlBaseTag
-	//  */
-	// public function htmlBaseTag($href = null, $target = null)
-	// {
-	//     /** @var \MM\View\Helper\HtmlBaseTag $helper */
-	//     $name = 'HtmlBaseTag';
-	//     $helper = $this->getHelper($name, "\MM\View\Helper\\$name");
-	//     return $helper->__invoke($href, $target);
-	// }
+	public function bodyTagClass($strings = null)
+	{
+		return $this->_factoryHelper('htmlTagClass', function (View $view) {
+			return new BodyTagClass($view);
+		})->__invoke($strings, 'append', null);
+	}
 
-	// /**
-	//  * @param null $href
-	//  * @return Helper\LinkRelCanonical
-	//  */
-	// public function linkRelCanonical($href = null)
-	// {
-	//     /** @var \MM\View\Helper\LinkRelCanonical $helper */
-	//     $name = 'LinkRelCanonical';
-	//     $helper = $this->getHelper($name, "\MM\View\Helper\\$name");
-	//     return $helper->__invoke($href);
-	// }
+	public function htmlBaseTag($href = null, $target = null)
+	{
+		return $this->_factoryHelper('htmlBaseTag', function (View $view) {
+			return new HtmlBaseTag($view);
+		})->__invoke($href, $target);
+	}
 
-	// /**
-	//  * @param null $href
-	//  * @return Helper\LinkRelPrev
-	//  */
-	// public function linkRelPrev($href = null)
-	// {
-	//     /** @var \MM\View\Helper\LinkRelPrev $helper */
-	//     $name = 'LinkRelPrev';
-	//     $helper = $this->getHelper($name, "\MM\View\Helper\\$name");
-	//     return $helper->__invoke($href);
-	// }
+	public function linkRelCanonical($href = null)
+	{
+		return $this->_factoryHelper('linkRelCanonical', function (View $view) {
+			return new LinkRelCanonical($view);
+		})->__invoke($href);
+	}
 
-	// /**
-	//  * @param null $href
-	//  * @return Helper\LinkRelNext
-	//  */
-	// public function linkRelNext($href = null)
-	// {
-	//     /** @var \MM\View\Helper\LinkRelNext $helper */
-	//     $name = 'LinkRelNext';
-	//     $helper = $this->getHelper($name, "\MM\View\Helper\\$name");
-	//     return $helper->__invoke($href);
-	// }
+	public function linkRelPrev($href = null)
+	{
+		return $this->_factoryHelper('linkRelPrev', function (View $view) {
+			return new LinkRelPrev($view);
+		})->__invoke($href);
+	}
 
-	// /**
-	//  * @return Helper\LinkRel
-	//  */
-	// public function linkRel()
-	// {
-	//     /** @var \MM\View\Helper\LinkRel $helper */
-	//     $name = 'LinkRel';
-	//     $helper = $this->getHelper($name, "\MM\View\Helper\\$name");
-	//     return $helper;
-	// }
+	public function linkRelNext($href = null)
+	{
+		return $this->_factoryHelper('linkRelNext', function (View $view) {
+			return new LinkRelNext($view);
+		})->__invoke($href);
+	}
 
-	// /**
-	//  * @param null $name
-	//  * @param null $content
-	//  * @return Helper\MetaNameTags
-	//  */
-	// public function metaNameTags($name = null, $content = null)
-	// {
-	//     /** @var \MM\View\Helper\MetaNameTags $helper */
-	//     $_name = 'MetaNameTags';
-	//     $helper = $this->getHelper($_name, "\MM\View\Helper\\$_name");
-	//     if ($name) {
-	//         $helper->set($name, $content);
-	//     }
-	//     return $helper;
-	// }
+	public function linkRel()
+	{
+		return $this->_factoryHelper('linkRel', function (View $view) {
+			return new LinkRel($view);
+		});
+	}
 
-	// /**
-	//  * @param null $propertyOrData
-	//  * @param null $content
-	//  * @param bool|true $overwrite
-	//  * @return Helper\OpenGraphData
-	//  */
-	// public function openGraphData($propertyOrData = null, $content = null, $overwrite = true)
-	// {
-	//     /** @var \MM\View\Helper\OpenGraphData $helper */
-	//     $_name = 'OpenGraphData';
-	//     $helper = $this->getHelper($_name, "\MM\View\Helper\\$_name");
-	//     if ($propertyOrData) {
-	//         $helper->add($propertyOrData, $content, $overwrite);
-	//     }
-	//     return $helper;
-	// }
+	public function metaNameTags($name = null, $content = null)
+	{
+		$helper = $this->_factoryHelper('metaNameTags', function (View $view) {
+			return new MetaNameTags($view);
+		});
+		if ($name) {
+			$helper->set($name, $content);
+		}
+		return $helper;
+	}
 
-	// /**
-	//  * @param $url
-	//  * @return string
-	//  */
-	// public function canonicalize($url = null)
-	// {
-	//     /** @var \MM\View\Helper\Canonicalize $helper */
-	//     $_name = 'Canonicalize';
-	//     $helper = $this->getHelper($_name, "\MM\View\Helper\\$_name");
-	//     return $url ? $helper->__invoke($url) : $helper;
-	// }
+	public function openGraphData(
+		$propertyOrData = null,
+		$content = null,
+		$overwrite = true
+	) {
+		$helper = $this->_factoryHelper('openGraphData', function (View $view) {
+			return new OpenGraphData($view);
+		});
+		if ($propertyOrData) {
+			$helper->add($propertyOrData, $content, $overwrite);
+		}
+		return $helper;
+	}
 
-	// /**
-	//  * @param $label
-	//  * @param null $classes
-	//  * @return Helper\ContainerOfStrings
-	//  */
-	// public function cssClassFor($label, $classes = null)
-	// {
-	//     /** @var \MM\View\Helper\LabeledContainersOfStrings $helper */
-	//     $_name = 'LabeledContainersOfStrings';
-	//     $helper = $this->getHelper($_name, "\MM\View\Helper\\$_name");
-	//     return $helper->__invoke($label, $classes);
-	// }
+	public function canonicalize($url = null)
+	{
+		$helper = $this->_factoryHelper('canonicalize', function (View $view) {
+			return new Canonicalize($view);
+		});
+		return $url ? $helper->__invoke($url) : $helper;
+	}
+
+	public function cssClassFor($label, $classes = null)
+	{
+		return $this->_factoryHelper('cssClassFor', function (View $view) {
+			return new ContainerOfStrings($view);
+		})->__invoke($label, $classes);
+	}
 }

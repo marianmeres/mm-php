@@ -2,6 +2,7 @@
 namespace MM\View\Tests\Helper;
 
 use MM\View\Helper\HeadTitle;
+use MM\View\View;
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/../_bootstrap.php';
@@ -36,5 +37,11 @@ final class HeadTitleTest extends TestCase
 			->append('b')
 			->reverse();
 		$this->assertEquals('b:a', (string) $h);
+	}
+
+	public function testWithView()
+	{
+		$v = new View();
+		$this->assertEquals('foo', (string) $v->headTitle('foo'));
 	}
 }
