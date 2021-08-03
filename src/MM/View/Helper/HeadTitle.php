@@ -13,4 +13,9 @@ class HeadTitle extends ContainerOfStrings
 	protected $_separator = ' | ';
 	protected $_unique = false;
 	protected $_escape = true;
+
+	public function toString()
+	{
+		return '<title>' . implode($this->_separator, $this->_container) . '</title>';
+	}
 }

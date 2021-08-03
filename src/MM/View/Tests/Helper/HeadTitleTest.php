@@ -15,7 +15,7 @@ final class HeadTitleTest extends TestCase
 	public function testHeadTitleIsEmptyByDefault()
 	{
 		$h = new HeadTitle();
-		$this->assertEquals('', (string) $h);
+		$this->assertEquals('<title></title>', (string) $h);
 	}
 
 	public function testHeadTitleWorks()
@@ -27,21 +27,21 @@ final class HeadTitleTest extends TestCase
 		$h->prepend('pre');
 		$h->append('post');
 
-		$exp = 'pre:&gt;:>:post';
+		$exp = '<title>pre:&gt;:>:post</title>';
 		$this->assertEquals($exp, (string) $h);
 
 		$h->setContainer([]);
-		$this->assertEquals('', (string) $h);
+		$this->assertEquals('<title></title>', (string) $h);
 
 		$h->append('a')
 			->append('b')
 			->reverse();
-		$this->assertEquals('b:a', (string) $h);
+		$this->assertEquals('<title>b:a</title>', (string) $h);
 	}
 
 	public function testWithView()
 	{
 		$v = new View();
-		$this->assertEquals('foo', (string) $v->headTitle('foo'));
+		$this->assertEquals('<title>foo</title>', (string) $v->headTitle('foo'));
 	}
 }

@@ -83,6 +83,6 @@ final class ViewTest extends TestCase
 	{
 		$v = new View(['vars' => ['foo' => 'bar']]);
 		$tpl = __DIR__ . '/_tpl/with-helper.phtml';
-		$this->assertEquals('bar', $v->render($tpl));
+		$this->assertEquals('<title>bar</title>', $v->render($tpl));
 	}
 }
