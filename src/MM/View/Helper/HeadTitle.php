@@ -16,6 +16,6 @@ class HeadTitle extends ContainerOfStrings
 
 	public function toString()
 	{
-		return '<title>' . implode($this->_separator, $this->_container) . '</title>';
+		return '<title>' . implode($this->_separator, $this->_container) . "</title>\n";
 	}
 }
