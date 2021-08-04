@@ -8,6 +8,5 @@ namespace MM\View;
  * Class Exception
  * @package MM\View
  */
-class Exception extends \Exception
-{
+class Exception extends \Exception {
 }

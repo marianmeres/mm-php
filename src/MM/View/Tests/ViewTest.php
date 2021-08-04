@@ -9,10 +9,8 @@ require_once __DIR__ . '/_bootstrap.php';
 /**
  * @group mm-view
  */
-final class ViewTest extends TestCase
-{
-	public function testViewVarsCanBeSetAndRead()
-	{
+final class ViewTest extends TestCase {
+	public function testViewVarsCanBeSetAndRead() {
 		$v = new View();
 		$vars = $v->dump();
 		$this->assertTrue(empty($vars));
@@ -22,15 +20,13 @@ final class ViewTest extends TestCase
 		$this->assertFalse(empty($vars));
 	}
 
-	public function testAccessingUndefinedVarTriggersNotice()
-	{
+	public function testAccessingUndefinedVarTriggersNotice() {
 		$this->expectNotice();
 		$v = new View();
 		$v->some;
 	}
 
-	public function testValuesAreEscapedByDefault()
-	{
+	public function testValuesAreEscapedByDefault() {
 		$v = new View([
 			'vars' => [
 				'a' => '>',
@@ -39,37 +35,32 @@ final class ViewTest extends TestCase
 		$this->assertEquals('&gt;', $v->a);
 	}
 
-	public function testRawValueIsAccessibleViaRawMethod()
-	{
+	public function testRawValueIsAccessibleViaRawMethod() {
 		$v = new View();
 		$v->a = '>';
 		$this->assertEquals('>', $v->raw('a'));
 	}
 
-	public function testBasicRenderWorks()
-	{
+	public function testBasicRenderWorks() {
 		$v = new View();
 		$tpl = __DIR__ . '/_tpl/123.phtml';
 		$this->assertEquals('123', $v->render($tpl));
 	}
 
-	public function testBasicRenderWorks2()
-	{
+	public function testBasicRenderWorks2() {
 		$v = new View();
 		$v->a = 123;
 		$tpl = __DIR__ . '/_tpl/a.phtml';
 		$this->assertEquals('123', $v->render($tpl));
 	}
 
-	public function testThisWithinTemplateRefersToViewObjectAndOnlyPublicScopeIsAccessible()
-	{
+	public function testThisWithinTemplateRefersToViewObjectAndOnlyPublicScopeIsAccessible() {
 		$v = new View();
 		$tpl = __DIR__ . '/_tpl/this.phtml';
 		$this->assertEquals('1', $v->render($tpl));
 	}
 
-	public function testNonScalarTypesAreNotEscaped()
-	{
+	public function testNonScalarTypesAreNotEscaped() {
 		$v = new View();
 		$v->a = new \stdClass();
 		$v->b = [];
@@ -79,10 +70,9 @@ final class ViewTest extends TestCase
 		$this->assertEquals([], $v->b);
 	}
 
-	public function testHelperIntegration()
-	{
+	public function testHelperIntegration() {
 		$v = new View(['vars' => ['foo' => 'bar']]);
 		$tpl = __DIR__ . '/_tpl/with-helper.phtml';
-		$this->assertEquals("<title>bar</title>", trim($v->render($tpl)));
+		$this->assertEquals('<title>bar</title>', trim($v->render($tpl)));
 	}
 }

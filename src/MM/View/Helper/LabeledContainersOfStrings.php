@@ -8,8 +8,7 @@ namespace MM\View\Helper;
 
 use MM\View\Helper;
 
-class LabeledContainersOfStrings extends Helper
-{
+class LabeledContainersOfStrings extends Helper {
 	/**
 	 * @var array
 	 */
@@ -20,8 +19,7 @@ class LabeledContainersOfStrings extends Helper
 	 * @param null $strings
 	 * @return ContainerOfStrings
 	 */
-	public function __invoke($label, $strings = null)
-	{
+	public function __invoke($label, $strings = null) {
 		/** @var ContainerOfStrings $cos */
 		$cos = $this->get($label);
 		$strings && $cos->append($strings);
@@ -33,8 +31,7 @@ class LabeledContainersOfStrings extends Helper
 	 * @param array|null $options
 	 * @return mixed
 	 */
-	public function get($label, array $options = null)
-	{
+	public function get($label, array $options = null) {
 		$label = strtolower($label);
 
 		if (!isset($this->_containers[$label])) {

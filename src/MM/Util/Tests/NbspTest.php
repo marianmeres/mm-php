@@ -10,10 +10,8 @@ use PHPUnit\Framework\TestCase;
 /**
  * @group mm-util
  */
-class NbspTest extends TestCase
-{
-	public function testNbspWorks()
-	{
+class NbspTest extends TestCase {
+	public function testNbspWorks() {
 		$map = [
 			'' => null,
 			' ' => null,

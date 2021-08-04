@@ -11,8 +11,7 @@ use MM\View\Exception;
  * Class ContainerOfStrings
  * @package MM\View\Helper
  */
-class ContainerOfStrings extends Helper implements \Countable
-{
+class ContainerOfStrings extends Helper implements \Countable {
 	/**
 	 * @var array
 	 */
@@ -41,8 +40,7 @@ class ContainerOfStrings extends Helper implements \Countable
 	 * @return $this
 	 * @throws Exception
 	 */
-	public function __invoke($strings = null, $method = 'append', $escape = null)
-	{
+	public function __invoke($strings = null, $method = 'append', $escape = null) {
 		if ($strings) {
 			if (!preg_match('/append|prepend|replace/', $method)) {
 				throw new Exception("Unknown method '$method'");
@@ -57,8 +55,7 @@ class ContainerOfStrings extends Helper implements \Countable
 	 * @param null $escape
 	 * @return $this
 	 */
-	public function replace($strings = null, $escape = null)
-	{
+	public function replace($strings = null, $escape = null) {
 		$this->_container = [];
 		if ($strings) {
 			$this->append($strings, $escape);
@@ -71,8 +68,7 @@ class ContainerOfStrings extends Helper implements \Countable
 	 * @param null $escape
 	 * @return $this
 	 */
-	public function append($strings, $escape = null)
-	{
+	public function append($strings, $escape = null) {
 		if (null === $escape) {
 			$escape = $this->_escape;
 		}
@@ -96,8 +92,7 @@ class ContainerOfStrings extends Helper implements \Countable
 	 * @param null $escape
 	 * @return $this
 	 */
-	public function prepend($strings, $escape = null)
-	{
+	public function prepend($strings, $escape = null) {
 		if (null === $escape) {
 			$escape = $this->_escape;
 		}
@@ -122,8 +117,7 @@ class ContainerOfStrings extends Helper implements \Countable
 	 * @param $strings
 	 * @return $this
 	 */
-	public function remove($strings)
-	{
+	public function remove($strings) {
 		$this->_container = array_diff($this->_container, (array) $strings);
 		return $this;
 	}
@@ -132,8 +126,7 @@ class ContainerOfStrings extends Helper implements \Countable
 	 * @param array $container
 	 * @return $this
 	 */
-	public function setContainer(array $container)
-	{
+	public function setContainer(array $container) {
 		$this->_container = $container;
 		return $this;
 	}
@@ -141,8 +134,7 @@ class ContainerOfStrings extends Helper implements \Countable
 	/**
 	 * @return array
 	 */
-	public function getContainer()
-	{
+	public function getContainer() {
 		return $this->_container;
 	}
 
@@ -150,8 +142,7 @@ class ContainerOfStrings extends Helper implements \Countable
 	 * @param $val
 	 * @return string
 	 */
-	protected function _escape($val)
-	{
+	protected function _escape($val) {
 		return htmlspecialchars($val, ENT_COMPAT, 'UTF-8');
 	}
 
@@ -159,8 +150,7 @@ class ContainerOfStrings extends Helper implements \Countable
 	 * @param $flag
 	 * @return $this
 	 */
-	public function setEscape($flag)
-	{
+	public function setEscape($flag) {
 		$this->_escape = (bool) $flag;
 		return $this;
 	}
@@ -169,8 +159,7 @@ class ContainerOfStrings extends Helper implements \Countable
 	 * @param $flag
 	 * @return $this
 	 */
-	public function setUnique($flag)
-	{
+	public function setUnique($flag) {
 		$this->_unique = (bool) $flag;
 		return $this;
 	}
@@ -179,8 +168,7 @@ class ContainerOfStrings extends Helper implements \Countable
 	 * @param $sep
 	 * @return $this
 	 */
-	public function setSeparator($sep)
-	{
+	public function setSeparator($sep) {
 		$this->_separator = $sep;
 		return $this;
 	}
@@ -188,8 +176,7 @@ class ContainerOfStrings extends Helper implements \Countable
 	/**
 	 * @return $this
 	 */
-	public function reverse()
-	{
+	public function reverse() {
 		$this->_container = array_reverse($this->_container);
 		return $this;
 	}
@@ -197,16 +184,14 @@ class ContainerOfStrings extends Helper implements \Countable
 	/**
 	 * @return int
 	 */
-	public function count()
-	{
+	public function count() {
 		return count($this->_container);
 	}
 
 	/**
 	 * To be overridden
 	 */
-	public function toString()
-	{
+	public function toString() {
 		return implode($this->_separator, $this->_container);
 	}
 
@@ -216,8 +201,7 @@ class ContainerOfStrings extends Helper implements \Countable
 	 *
 	 * @return string
 	 */
-	public function __toString()
-	{
+	public function __toString() {
 		return $this->toString();
 	}
 }

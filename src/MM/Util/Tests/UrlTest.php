@@ -10,10 +10,8 @@ require_once __DIR__ . '/_bootstrap.php';
 /**
  * @group mm-util
  */
-final class UrlTest extends TestCase
-{
-	public function testParseAndBuildWorks()
-	{
+final class UrlTest extends TestCase {
+	public function testParseAndBuildWorks() {
 		$urls = [
 			'http://username:password@hostname/path?arg=value#anchor',
 			'https://example.com/?a=some/new&foo=bar',

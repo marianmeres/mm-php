@@ -4,8 +4,7 @@ namespace MM\Util;
 /**
  * Nothing fancy, just basic calculations.
  */
-class Paginator implements \Countable
-{
+class Paginator implements \Countable {
 	/**
 	 * @var int
 	 */
@@ -26,8 +25,7 @@ class Paginator implements \Countable
 	 * @param int $perPage
 	 * @param int $currentPage
 	 */
-	public function __construct($total, $perPage = 10, $currentPage = 1)
-	{
+	public function __construct($total, $perPage = 10, $currentPage = 1) {
 		$this->setItemsTotal($total);
 		$this->setItemsPerPage($perPage);
 		$this->setCurrentPageId($currentPage);
@@ -37,8 +35,7 @@ class Paginator implements \Countable
 	 * @param int $total
 	 * @return $this
 	 */
-	public function setItemsTotal($total)
-	{
+	public function setItemsTotal($total) {
 		$this->_itemsTotal = (int) $total;
 		return $this;
 	}
@@ -46,8 +43,7 @@ class Paginator implements \Countable
 	/**
 	 * @return int
 	 */
-	public function getItemsTotal()
-	{
+	public function getItemsTotal() {
 		return $this->_itemsTotal;
 	}
 
@@ -55,8 +51,7 @@ class Paginator implements \Countable
 	 * @param int $count
 	 * @return $this
 	 */
-	public function setItemsPerPage($count)
-	{
+	public function setItemsPerPage($count) {
 		$this->_itemsPerPage = max(1, (int) $count);
 		return $this;
 	}
@@ -64,8 +59,7 @@ class Paginator implements \Countable
 	/**
 	 * @return int
 	 */
-	public function getItemsPerPage()
-	{
+	public function getItemsPerPage() {
 		return $this->_itemsPerPage;
 	}
 
@@ -73,8 +67,7 @@ class Paginator implements \Countable
 	 * @param $id
 	 * @return $this
 	 */
-	public function setCurrentPageId($id)
-	{
+	public function setCurrentPageId($id) {
 		$this->_currentPageId = max(1, (int) $id);
 		return $this;
 	}
@@ -82,24 +75,21 @@ class Paginator implements \Countable
 	/**
 	 * @return int
 	 */
-	public function getCurrentPageId()
-	{
+	public function getCurrentPageId() {
 		return $this->_currentPageId;
 	}
 
 	/**
 	 * @return int float
 	 */
-	public function getPageCount()
-	{
+	public function getPageCount() {
 		return ceil($this->_itemsTotal / $this->_itemsPerPage);
 	}
 
 	/**
 	 * @return int
 	 */
-	public function count()
-	{
+	public function count() {
 		return $this->getPageCount();
 	}
 
@@ -111,8 +101,7 @@ class Paginator implements \Countable
 	 * @param bool|true $noInterval
 	 * @return array|int
 	 */
-	public function getOffsetByPageId($pageId = null, $noInterval = true)
-	{
+	public function getOffsetByPageId($pageId = null, $noInterval = true) {
 		$pageId = null == $pageId ? $this->_currentPageId : (int) $pageId;
 
 		$out = [
@@ -128,16 +117,14 @@ class Paginator implements \Countable
 	/**
 	 * @return int
 	 */
-	public function getOffset()
-	{
+	public function getOffset() {
 		return $this->getOffsetByPageId(null);
 	}
 
 	/**
 	 * @return int
 	 */
-	public function getLimit()
-	{
+	public function getLimit() {
 		return $this->_itemsPerPage;
 	}
 
@@ -145,8 +132,7 @@ class Paginator implements \Countable
 	 * @param $offset
 	 * @return mixed
 	 */
-	public function getPageIdByOffset($offset)
-	{
+	public function getPageIdByOffset($offset) {
 		$offset = (int) $offset;
 
 		// moze byt aj zaporny, vtedy odratavam s total items
@@ -164,8 +150,7 @@ class Paginator implements \Countable
 	 * @param null $page
 	 * @return bool
 	 */
-	public function isOutOfBounds($page = null)
-	{
+	public function isOutOfBounds($page = null) {
 		if (null === $page) {
 			$page = $this->_currentPageId;
 		}
@@ -178,8 +163,7 @@ class Paginator implements \Countable
 	 * @param null $page
 	 * @return bool|int
 	 */
-	public function getNextPageId($page = null)
-	{
+	public function getNextPageId($page = null) {
 		if (null === $page) {
 			$page = $this->_currentPageId;
 		}
@@ -193,8 +177,7 @@ class Paginator implements \Countable
 	 * @param null $page
 	 * @return bool|int
 	 */
-	public function getPreviousPageId($page = null)
-	{
+	public function getPreviousPageId($page = null) {
 		if (null === $page) {
 			$page = $this->_currentPageId;
 		}
@@ -208,8 +191,7 @@ class Paginator implements \Countable
 	 * @param null $page
 	 * @return bool
 	 */
-	public function isLastPageId($page = null)
-	{
+	public function isLastPageId($page = null) {
 		if (null === $page) {
 			$page = $this->_currentPageId;
 		}
@@ -222,8 +204,7 @@ class Paginator implements \Countable
 	 * @param null $page
 	 * @return bool
 	 */
-	function isFirstPageId($page = null)
-	{
+	function isFirstPageId($page = null) {
 		if (null === $page) {
 			$page = $this->_currentPageId;
 		}
@@ -235,8 +216,7 @@ class Paginator implements \Countable
 	/**
 	 * @return array
 	 */
-	public function dump()
-	{
+	public function dump() {
 		return [
 			'itemsTotal' => $this->getItemsTotal(),
 			'itemsPerPage' => $this->getItemsPerPage(),

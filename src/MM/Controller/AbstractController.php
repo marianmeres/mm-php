@@ -13,8 +13,7 @@ use MM\Controller\Helper\Server;
  * Class AbstractController
  * @package MM\Controller
  */
-abstract class AbstractController
-{
+abstract class AbstractController {
 	/**
 	 * Internal container for _GET, _POST, _SERVER and custom data.
 	 * Usage: $this->params()->key
@@ -54,8 +53,7 @@ abstract class AbstractController
 	/**
 	 *
 	 */
-	public function __construct(array $params = [], array $options = null)
-	{
+	public function __construct(array $params = [], array $options = null) {
 		// params parameter je len shorcut z optionov
 		if (!empty($params)) {
 			$options['params'] = $params;
@@ -81,8 +79,7 @@ abstract class AbstractController
 	/**
 	 *
 	 */
-	public function setParams($params): AbstractController
-	{
+	public function setParams($params): AbstractController {
 		if (is_array($params)) {
 			$params = new Params($params);
 		}
@@ -98,15 +95,13 @@ abstract class AbstractController
 	/**
 	 * Init hook
 	 */
-	protected function _init()
-	{
+	protected function _init() {
 	}
 
 	/**
 	 *
 	 */
-	public function setObEnabled(bool $flag = true): AbstractController
-	{
+	public function setObEnabled(bool $flag = true): AbstractController {
 		$this->_obEnabled = (bool) $flag;
 		return $this;
 	}
@@ -114,8 +109,7 @@ abstract class AbstractController
 	/**
 	 *
 	 */
-	public function params(): Params
-	{
+	public function params(): Params {
 		if (!$this->_params) {
 			$this->_params = new Params();
 		}
@@ -125,8 +119,7 @@ abstract class AbstractController
 	/**
 	 *
 	 */
-	public function response(): Response
-	{
+	public function response(): Response {
 		if (null == $this->_response) {
 			$this->_response = new Response();
 		}
@@ -136,8 +129,7 @@ abstract class AbstractController
 	/**
 	 *
 	 */
-	public function setResponse(Response $response): AbstractController
-	{
+	public function setResponse(Response $response): AbstractController {
 		$this->_response = $response;
 		return $this;
 	}
@@ -146,8 +138,7 @@ abstract class AbstractController
 	 * Sets options which have normalized setter. Otherwise throws.
 	 * @throws Exception
 	 */
-	public function setOptions(array $options): AbstractController
-	{
+	public function setOptions(array $options): AbstractController {
 		foreach ($options as $_key => $value) {
 			$key = str_replace('_', ' ', strtolower(trim($_key))); // under_scored to CamelCase
 			$key = str_replace(' ', '', ucwords($key));
@@ -163,22 +154,19 @@ abstract class AbstractController
 	/**
 	 * Pre action execution hook. May modify action if needed (e.g. on acl check)
 	 */
-	protected function _preDispatch()
-	{
+	protected function _preDispatch() {
 	}
 
 	/**
 	 * Post action execution hook
 	 */
-	protected function _postDispatch()
-	{
+	protected function _postDispatch() {
 	}
 
 	/**
 	 *
 	 */
-	public function setException(\Exception $e = null): AbstractController
-	{
+	public function setException(\Exception $e = null): AbstractController {
 		$this->_exception = $e;
 		return $this;
 	}
@@ -186,16 +174,14 @@ abstract class AbstractController
 	/**
 	 *
 	 */
-	public function getException(): \Exception
-	{
+	public function getException(): \Exception {
 		return $this->_exception;
 	}
 
 	/**
 	 *
 	 */
-	public function getActionMethodName($action = null): string
-	{
+	public function getActionMethodName($action = null): string {
 		if (empty($action)) {
 			$action = $this->server()->getRequestMethod();
 		}
@@ -207,8 +193,7 @@ abstract class AbstractController
 	 * @throws Exception
 	 * @throws Exception\PageNotFound
 	 */
-	public function __call(string $name, array $arguments)
-	{
+	public function __call(string $name, array $arguments) {
 		// najskor skusime handler akcie
 		if ('Action' == substr($name, -6)) {
 			throw new Exception\PageNotFound("Missing action handler for '$name'", 404);
@@ -223,8 +208,7 @@ abstract class AbstractController
 	 *
 	 * Outputs by default
 	 */
-	public function dispatch(string $action = null, bool $output = true)
-	{
+	public function dispatch(string $action = null, bool $output = true) {
 		// jednotlive kroky (vratane erroru) bufferujeme samostatne aby sme
 		// mali segmenty pod kontrolou v kazdom z nich
 		//
@@ -292,33 +276,30 @@ abstract class AbstractController
 	/**
 	 *
 	 */
-	protected static function _normalizeActionName(string $action): string
-	{
+	protected static function _normalizeActionName(string $action): string {
 		// normalizes "aa.bb-cc_DD/eE" to "aaBbCcDdEe"
 		return lcfirst(
 			str_replace(
 				' ',
 				'',
 				ucwords(
-					str_replace(['.', '-', '/', '_'], ' ', ucfirst(strtolower($action)))
-				)
-			)
+					str_replace(['.', '-', '/', '_'], ' ', ucfirst(strtolower($action))),
+				),
+			),
 		);
 	}
 
 	/**
 	 *  To be overwritten;
 	 */
-	public function getAction()
-	{
+	public function getAction() {
 		echo get_class($this) . ': It Works!';
 	}
 
 	/**
 	 * Built-in naive error handler. To be overwritten (extended) at project level,
 	 */
-	public function errorAction()
-	{
+	public function errorAction() {
 		$c = $this;
 		$e = $c->getException();
 
@@ -339,7 +320,7 @@ abstract class AbstractController
 					'<hr/>%s: %s<pre>%s',
 					get_class($e),
 					$e->getCode(),
-					$e->getTraceAsString()
+					$e->getTraceAsString(),
 				);
 			}
 		} else {
@@ -351,8 +332,7 @@ abstract class AbstractController
 	 * Sugar
 	 * @throws Exception
 	 */
-	public function redirect(string $url, bool $permanent = true): AbstractController
-	{
+	public function redirect(string $url, bool $permanent = true): AbstractController {
 		if ('' === "$url") {
 			$url = '.';
 		}
@@ -364,8 +344,7 @@ abstract class AbstractController
 	/**
 	 * @throws Exception
 	 */
-	public function assertExpectedParams(array $keys): array
-	{
+	public function assertExpectedParams(array $keys): array {
 		$out = [];
 		// sanity checks
 		foreach ($keys as $k) {
@@ -383,8 +362,7 @@ abstract class AbstractController
 	/**
 	 *
 	 */
-	protected function _normalizeHelperName(string $name): string
-	{
+	protected function _normalizeHelperName(string $name): string {
 		return strtolower($name);
 	}
 
@@ -421,15 +399,14 @@ abstract class AbstractController
 		//
 		throw new Exception(
 			'Invalid controller helper. Expecting either fully qualified ' .
-				'class name or actual Helper instance'
+				'class name or actual Helper instance',
 		);
 	}
 
 	/**
 	 * @throws Exception
 	 */
-	public function setHelpers(array $nameToFqn): AbstractController
-	{
+	public function setHelpers(array $nameToFqn): AbstractController {
 		foreach ($nameToFqn as $name => $fqn) {
 			$this->setHelper($name, $fqn);
 		}
@@ -439,8 +416,7 @@ abstract class AbstractController
 	/**
 	 * @throws Exception
 	 */
-	public function getHelper(string $name, $fallbackFqnOrInstance = null): Helper
-	{
+	public function getHelper(string $name, $fallbackFqnOrInstance = null): Helper {
 		$name = $this->_normalizeHelperName($name);
 
 		//
@@ -469,8 +445,7 @@ abstract class AbstractController
 	 * @param $name
 	 * @return bool
 	 */
-	public function hasHelper($name)
-	{
+	public function hasHelper($name) {
 		$name = $this->_normalizeHelperName($name);
 		return isset($this->_helpers[$name]);
 	}
@@ -478,8 +453,7 @@ abstract class AbstractController
 	/**
 	 * Built in helper
 	 */
-	public function server(): Server
-	{
+	public function server(): Server {
 		return $this->getHelper('server', Server::class);
 	}
 }

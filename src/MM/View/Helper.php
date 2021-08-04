@@ -8,8 +8,7 @@ namespace MM\View;
  * Class Helper
  * @package MM\View
  */
-class Helper
-{
+class Helper {
 	/**
 	 * @var View
 	 */
@@ -18,16 +17,14 @@ class Helper
 	/**
 	 * @param ViewAbstract $view
 	 */
-	public function __construct(ViewAbstract $view = null)
-	{
+	public function __construct(ViewAbstract $view = null) {
 		if ($view) {
 			$this->setView($view);
 			$this->_init();
 		}
 	}
 
-	public static function factory(ViewAbstract $view = null)
-	{
+	public static function factory(ViewAbstract $view = null) {
 		return new static($view);
 	}
 
@@ -35,8 +32,7 @@ class Helper
 	 * @param ViewAbstract $view
 	 * @return $this
 	 */
-	public function setView(ViewAbstract $view = null)
-	{
+	public function setView(ViewAbstract $view = null) {
 		$this->_view = $view;
 		return $this;
 	}
@@ -44,7 +40,6 @@ class Helper
 	/**
 	 * init hook
 	 */
-	protected function _init()
-	{
+	protected function _init() {
 	}
 }

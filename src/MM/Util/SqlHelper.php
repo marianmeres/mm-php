@@ -7,14 +7,12 @@ namespace MM\Util;
 /**
  *
  */
-class SqlHelper
-{
+class SqlHelper {
 	/**
 	 * @param array $custom
 	 * @return array
 	 */
-	public static function getSqlReplaceMap(array $custom = [])
-	{
+	public static function getSqlReplaceMap(array $custom = []) {
 		// mapa najcastejsich problematickych rozdielnych veci...
 		return array_merge(
 			[
@@ -151,7 +149,7 @@ class SqlHelper
 
 				// todo podla potreby
 			],
-			$custom
+			$custom,
 		);
 	}
 
@@ -161,8 +159,7 @@ class SqlHelper
 	 * @param array $map
 	 * @return mixed
 	 */
-	public static function getVendorSql($sql, $vendor = 'pgsql', array $map = null)
-	{
+	public static function getVendorSql($sql, $vendor = 'pgsql', array $map = null) {
 		if (empty($map)) {
 			$map = self::getSqlReplaceMap();
 		}
@@ -179,7 +176,7 @@ class SqlHelper
 		$out = str_replace(
 			array_keys($searchReplace),
 			array_values($searchReplace),
-			$sql
+			$sql,
 		);
 
 		return $out;

@@ -7,10 +7,8 @@ use PHPUnit\Framework\TestCase;
 /**
  * @group mm-util
  */
-class XmlTest extends TestCase
-{
-	public function getWorkers()
-	{
+class XmlTest extends TestCase {
+	public function getWorkers() {
 		return [
 			'string' => function ($array, $indent = '  ') {
 				return Xml::array2xml($array, 'root', $indent);
@@ -18,8 +16,7 @@ class XmlTest extends TestCase
 		];
 	}
 
-	public function testArray2XmlAllWorkersWork()
-	{
+	public function testArray2XmlAllWorkersWork() {
 		$a = [
 			'@attributes' => [
 				'x' => 123,
@@ -133,8 +130,7 @@ class XmlTest extends TestCase
 		}
 	}
 
-	public function testParseAsEmptyArray()
-	{
+	public function testParseAsEmptyArray() {
 		// 1 case: empty tag
 		$xml = trim('<root><some/></root>');
 		$parsed = Xml::xml2array($xml);

@@ -11,20 +11,16 @@ require_once __DIR__ . '/_bootstrap.php';
 /**
  * @group mm-controller
  */
-final class ParamsTest extends TestCase
-{
-	protected function setUp(): void
-	{
+final class ParamsTest extends TestCase {
+	protected function setUp(): void {
 		$_COOKIE = [];
 	}
 
-	protected function tearDown(): void
-	{
+	protected function tearDown(): void {
 		$_COOKIE = [];
 	}
 
-	public function testCleanInstanceDefaultsToCleanContainers()
-	{
+	public function testCleanInstanceDefaultsToCleanContainers() {
 		$p = new Params();
 
 		// nizsie vsetky pocty su 0, ale davame to takto
@@ -45,8 +41,7 @@ final class ParamsTest extends TestCase
 		$this->assertEquals($_SERVER, $p->_SERVER()->getArrayCopy());
 	}
 
-	public function testAccessingParamsWorks()
-	{
+	public function testAccessingParamsWorks() {
 		$g = ['a' => 1, 'b' => 2];
 		$p = ['c' => 3, 'd' => 4];
 		$s = ['e' => 5, 'f' => 6];
@@ -77,8 +72,7 @@ final class ParamsTest extends TestCase
 		$this->assertEquals(6, $p->_SERVER()->f);
 	}
 
-	public function testMutatingParamsWorks()
-	{
+	public function testMutatingParamsWorks() {
 		$p = new Params();
 
 		$p->_GET()->g = 1;
@@ -100,8 +94,7 @@ final class ParamsTest extends TestCase
 		$this->assertEquals($a, $p->get());
 	}
 
-	public function testPriorityIsFromCustomToGetToPost()
-	{
+	public function testPriorityIsFromCustomToGetToPost() {
 		$p = new Params([
 			'_GET' => ['a' => 'g'],
 			'_POST' => ['a' => 'p'],
@@ -115,8 +108,7 @@ final class ParamsTest extends TestCase
 		$this->assertEquals(['a' => 'x'], $p->toArray());
 	}
 
-	public function testCommonArrayIsConsideredParamsAtConstructor()
-	{
+	public function testCommonArrayIsConsideredParamsAtConstructor() {
 		$p = new Params([
 			'a' => 1,
 			'b' => 2,
@@ -125,8 +117,7 @@ final class ParamsTest extends TestCase
 		$this->assertEquals(2, $p['b']);
 	}
 
-	public function testParamsCookieProxiesToCookieSuperglobal()
-	{
+	public function testParamsCookieProxiesToCookieSuperglobal() {
 		$p = new Params();
 		$this->assertNull($p->test);
 		$this->assertNull($p->_COOKIE()->test);
@@ -138,8 +129,7 @@ final class ParamsTest extends TestCase
 		$this->assertEquals(1, $p->_COOKIE()->test);
 	}
 
-	public function testCookieParamCanBeMocked()
-	{
+	public function testCookieParamCanBeMocked() {
 		$p = new Params([
 			'_COOKIE' => ['a' => 'b'],
 		]);
@@ -154,8 +144,7 @@ final class ParamsTest extends TestCase
 		$this->assertEmpty($_COOKIE);
 	}
 
-	public function testResetWorks()
-	{
+	public function testResetWorks() {
 		$p = new Params([
 			'_GET' => ['a' => 'g'],
 			'_POST' => ['a' => 'p'],
@@ -168,8 +157,7 @@ final class ParamsTest extends TestCase
 		$this->assertNull($p->a);
 	}
 
-	public function testIssetAndEmptyOnMagicFieldsWorks()
-	{
+	public function testIssetAndEmptyOnMagicFieldsWorks() {
 		$p = new Params([
 			'_GET' => ['a' => 'g'],
 			'_POST' => ['a' => 'p'],
@@ -193,8 +181,7 @@ final class ParamsTest extends TestCase
 		$this->assertTrue(empty($p->bar));
 	}
 
-	public function testIssetAndEmptyOnMagicFieldsWorks2()
-	{
+	public function testIssetAndEmptyOnMagicFieldsWorks2() {
 		$p = new Params([
 			'_GET' => ['a' => 'g', 'b' => 'b'],
 			'params' => ['a' => 'x', 'b' => null], // vyssia priorita

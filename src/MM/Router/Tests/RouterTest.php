@@ -12,10 +12,8 @@ require_once __DIR__ . '/_bootstrap.php';
 /**
  * @group mm-router
  */
-final class RouterTest extends TestCase
-{
-	public function testSanityCheck()
-	{
+final class RouterTest extends TestCase {
+	public function testSanityCheck() {
 		$log = new ArrayObject(); // we need reference
 		$router = new Router([
 			'/' => function () use ($log) {
@@ -47,8 +45,7 @@ final class RouterTest extends TestCase
 		$this->assertEquals('index', join(',', $log->getArrayCopy()));
 	}
 
-	public function testFirstMatchWins()
-	{
+	public function testFirstMatchWins() {
 		$log = new ArrayObject();
 		$router = new Router();
 
@@ -65,8 +62,7 @@ final class RouterTest extends TestCase
 		$this->assertEquals('index', join(',', $log->getArrayCopy()));
 	}
 
-	public function testExecFallback()
-	{
+	public function testExecFallback() {
 		$log = new ArrayObject();
 		$router = new Router([
 			'/' => function () use ($log) {
@@ -82,8 +78,7 @@ final class RouterTest extends TestCase
 		$this->assertEquals('fallback', join(',', $log->getArrayCopy()));
 	}
 
-	public function testCatchAllFallback()
-	{
+	public function testCatchAllFallback() {
 		$log = new ArrayObject();
 		$router = new Router([
 			'/' => function () use ($log) {
@@ -105,8 +100,7 @@ final class RouterTest extends TestCase
 		$this->assertEquals('404,index', join(',', $log->getArrayCopy()));
 	}
 
-	public function testExecReturnsArbitraryValue()
-	{
+	public function testExecReturnsArbitraryValue() {
 		$index = new ArrayObject(['page' => 'index']);
 		$notFound = new ArrayObject(['page' => 'not-found']);
 
@@ -123,8 +117,7 @@ final class RouterTest extends TestCase
 		$this->assertEquals($notFound, $router->exec('/foo'));
 	}
 
-	public function testIntegration()
-	{
+	public function testIntegration() {
 		$log = new ArrayObject();
 		$log2 = new ArrayObject();
 
@@ -173,12 +166,11 @@ final class RouterTest extends TestCase
 
 		$this->assertEquals(
 			join(',', [null, null, '*', $route, '/']),
-			join(',', $log2->getArrayCopy())
+			join(',', $log2->getArrayCopy()),
 		);
 	}
 
-	public function testUnsubscribeWorks()
-	{
+	public function testUnsubscribeWorks() {
 		$log = new ArrayObject(); // we need reference
 		$router = new Router([
 			'/' => function () {
@@ -201,8 +193,7 @@ final class RouterTest extends TestCase
 		$this->assertEquals(join(',', $log->getArrayCopy()), $logged);
 	}
 
-	public function testLabel()
-	{
+	public function testLabel() {
 		$router = new Router();
 
 		$router->on('/foo', function () {}, ['label' => 'foo']);
@@ -215,8 +206,7 @@ final class RouterTest extends TestCase
 		$this->assertEquals('bar', $router->current()['label']);
 	}
 
-	public function testWithQueryVars()
-	{
+	public function testWithQueryVars() {
 		$log = new ArrayObject(); // we need reference
 		$router = new Router([
 			'/[foo]' => function ($params) use ($log) {

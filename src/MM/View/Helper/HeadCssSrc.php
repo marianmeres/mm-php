@@ -8,8 +8,7 @@ namespace MM\View\Helper;
  * Class HeadCssSrc
  * @package MM\View\Helper
  */
-class HeadCssSrc extends ContainerOfStrings
-{
+class HeadCssSrc extends ContainerOfStrings {
 	/**
 	 * @var bool
 	 */
@@ -23,8 +22,7 @@ class HeadCssSrc extends ContainerOfStrings
 	/**
 	 * @return string
 	 */
-	public function toString()
-	{
+	public function toString() {
 		$out = '';
 		foreach ($this->_container as $src) {
 			$out .= "<link href='$src' rel='stylesheet'>\n";

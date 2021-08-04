@@ -1,6 +1,5 @@
 <?php
 namespace MM\Util\Tests\ClassUtil;
 
-class Potomok extends Rodic
-{
+class Potomok extends Rodic {
 }

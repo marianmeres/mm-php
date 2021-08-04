@@ -10,14 +10,12 @@ use MM\View\Helper;
 /**
  * @package MM\View\Helper
  */
-class Canonicalize extends Helper
-{
+class Canonicalize extends Helper {
 	/**
 	 * @param $url
 	 * @return string
 	 */
-	public function __invoke($url)
-	{
+	public function __invoke($url) {
 		return self::url($url);
 	}
 
@@ -25,8 +23,7 @@ class Canonicalize extends Helper
 	 * @param $url
 	 * @return string
 	 */
-	public static function url($url)
-	{
+	public static function url($url) {
 		$parts = Url::parse($url);
 		if (!empty($parts['path'])) {
 			$parts['path'] = self::path($parts['path']);
@@ -38,8 +35,7 @@ class Canonicalize extends Helper
 	 * @param $path
 	 * @return array|string
 	 */
-	public static function path($path)
-	{
+	public static function path($path) {
 		$out = [];
 
 		// normalize directory separator (use "/")

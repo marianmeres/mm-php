@@ -4,27 +4,23 @@ namespace MM\Router;
 
 use MM\Util\Str;
 
-class Route
-{
+class Route {
 	const SPLITTER = '/';
 
 	protected $_route;
 
 	protected $_parsed;
 
-	public function __construct(string $route)
-	{
+	public function __construct(string $route) {
 		$this->_route = $route;
 		$this->_parsed = static::_parse($this->_route);
 	}
 
-	public static function factory(string $route): Route
-	{
+	public static function factory(string $route): Route {
 		return new static($route);
 	}
 
-	protected static function _sanitizeAndSplit(string $str): array
-	{
+	protected static function _sanitizeAndSplit(string $str): array {
 		$s = static::SPLITTER;
 		$str = trim($str);
 
@@ -36,12 +32,11 @@ class Route
 		return array_values(
 			array_filter(explode('/', $out), function ($segment) {
 				return $segment != '';
-			})
+			}),
 		);
 	}
 
-	protected static function _parse($route): array
-	{
+	protected static function _parse($route): array {
 		$segments = static::_sanitizeAndSplit($route);
 		$out = [];
 
@@ -77,8 +72,7 @@ class Route
 		return $out;
 	}
 
-	public function parse(string $url, bool $allowQueryParams = true)
-	{
+	public function parse(string $url, bool $allowQueryParams = true) {
 		$matched = [];
 
 		$qPos = strpos($url, '?');
@@ -121,8 +115,7 @@ class Route
 		return $matched;
 	}
 
-	public function dump()
-	{
+	public function dump() {
 		return [
 			'route' => $this->_route,
 			'parsed' => $this->_parsed,

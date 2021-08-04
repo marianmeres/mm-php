@@ -10,8 +10,7 @@ use MM\Controller\Exception;
  * needed - so it can be easily tracked (e.g. force https when using credit cards...)
  * Message might contain the actual url to be redirected to.
  */
-class Redirect extends Exception
-{
+class Redirect extends Exception {
 	protected $code = 301;
 	protected $message = 'Redirect';
 }

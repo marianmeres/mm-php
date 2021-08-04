@@ -8,8 +8,7 @@ namespace MM\Util;
  *
  * pouzitie:
  */
-class CliColor
-{
+class CliColor {
 	/**
 	 * @var array
 	 */
@@ -46,8 +45,7 @@ class CliColor
 	 * @param $color
 	 * @return string
 	 */
-	public static function set($str, $color)
-	{
+	public static function set($str, $color) {
 		$colors = explode('+', $color);
 		$out = '';
 		$isColored = false;
@@ -76,8 +74,7 @@ class CliColor
 	 * @param $s
 	 * @return string
 	 */
-	public static function red($s)
-	{
+	public static function red($s) {
 		return self::set($s, 'red');
 	}
 
@@ -85,8 +82,7 @@ class CliColor
 	 * @param $s
 	 * @return string
 	 */
-	public static function green($s)
-	{
+	public static function green($s) {
 		return self::set($s, 'green');
 	}
 
@@ -94,8 +90,7 @@ class CliColor
 	 * @param $s
 	 * @return string
 	 */
-	public static function yellow($s)
-	{
+	public static function yellow($s) {
 		return self::set($s, 'yellow');
 	}
 
@@ -103,8 +98,7 @@ class CliColor
 	 * @param $s
 	 * @return string
 	 */
-	public static function blue($s)
-	{
+	public static function blue($s) {
 		return self::set($s, 'blue');
 	}
 
@@ -112,8 +106,7 @@ class CliColor
 	 * @param $s
 	 * @return string
 	 */
-	public static function magenta($s)
-	{
+	public static function magenta($s) {
 		return self::set($s, 'magenta');
 	}
 
@@ -121,8 +114,7 @@ class CliColor
 	 * @param $s
 	 * @return string
 	 */
-	public static function cyan($s)
-	{
+	public static function cyan($s) {
 		return self::set($s, 'cyan');
 	}
 
@@ -130,8 +122,7 @@ class CliColor
 	 * @param $s
 	 * @return string
 	 */
-	public static function white($s)
-	{
+	public static function white($s) {
 		return self::set($s, 'white');
 	}
 }

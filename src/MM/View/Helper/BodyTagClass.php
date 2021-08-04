@@ -6,8 +6,7 @@
 
 namespace MM\View\Helper;
 
-class BodyTagClass extends ContainerOfStrings
-{
+class BodyTagClass extends ContainerOfStrings {
 	/**
 	 * @var bool
 	 */
@@ -21,8 +20,7 @@ class BodyTagClass extends ContainerOfStrings
 	/**
 	 * @return string
 	 */
-	public function toString()
-	{
+	public function toString() {
 		return implode($this->_separator, $this->_container);
 	}
 }

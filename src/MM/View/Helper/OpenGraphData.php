@@ -11,8 +11,7 @@ use MM\View\Helper;
  * Class HeadCss
  * @package MM\View\Helper
  */
-class OpenGraphData extends Helper implements \Countable
-{
+class OpenGraphData extends Helper implements \Countable {
 	/**
 	 * @var array
 	 */
@@ -52,8 +51,7 @@ class OpenGraphData extends Helper implements \Countable
 	/**
 	 * @return $this
 	 */
-	public function reset()
-	{
+	public function reset() {
 		$this->_data = [];
 		return $this;
 	}
@@ -65,8 +63,7 @@ class OpenGraphData extends Helper implements \Countable
 	 * @return $this
 	 * @throws Exception
 	 */
-	public function add($propertyOrData, $propertyContent = null, $overwrite = true)
-	{
+	public function add($propertyOrData, $propertyContent = null, $overwrite = true) {
 		if (is_array($propertyOrData)) {
 			// note: $propertyContentOrOverwriteFlag ignored here
 			foreach ($propertyOrData as $k => $v) {
@@ -86,8 +83,7 @@ class OpenGraphData extends Helper implements \Countable
 	 * @return $this
 	 * @throws Exception
 	 */
-	protected function _addOne($property, $content, $overwrite = true)
-	{
+	protected function _addOne($property, $content, $overwrite = true) {
 		$property = strtolower($property);
 
 		// add "og:" prefix if not provided
@@ -110,8 +106,7 @@ class OpenGraphData extends Helper implements \Countable
 	/**
 	 * @return string
 	 */
-	public function toString()
-	{
+	public function toString() {
 		$out = '';
 
 		foreach ($this->_data as $property => $content) {
@@ -120,7 +115,7 @@ class OpenGraphData extends Helper implements \Countable
 					//"<meta property='$property' content='%s'/>\n", htmlspecialchars($content)
 					// zistujem, ze html nie je dobre...
 					"<meta property='$property' content='%s'/>\n",
-					strip_tags($content)
+					strip_tags($content),
 				);
 			}
 		}
@@ -131,16 +126,14 @@ class OpenGraphData extends Helper implements \Countable
 	/**
 	 * @return string
 	 */
-	public function __toString()
-	{
+	public function __toString() {
 		return $this->toString();
 	}
 
 	/**
 	 * @return int
 	 */
-	public function count()
-	{
+	public function count() {
 		return count($this->_data);
 	}
 }

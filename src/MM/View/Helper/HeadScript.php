@@ -8,8 +8,7 @@ namespace MM\View\Helper;
  * Class HeadScript
  * @package MM\View\Helper
  */
-class HeadScript extends ContainerOfStrings
-{
+class HeadScript extends ContainerOfStrings {
 	/**
 	 * @var bool
 	 */
@@ -23,8 +22,7 @@ class HeadScript extends ContainerOfStrings
 	/**
 	 * @return string
 	 */
-	public function toString()
-	{
+	public function toString() {
 		$out = '';
 		foreach ($this->_container as $string) {
 			$out .= "<script>\n$string\n</script>\n";

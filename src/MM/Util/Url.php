@@ -4,8 +4,7 @@
  */
 namespace MM\Util;
 
-class Url
-{
+class Url {
 	/**
 	 * Trosku normalizuje chovanie parse_url
 	 *
@@ -13,8 +12,7 @@ class Url
 	 * @param null $component
 	 * @return array
 	 */
-	public static function parse($url, $component = null)
-	{
+	public static function parse($url, $component = null) {
 		$urlParts = array_merge(
 			[
 				'scheme' => '',
@@ -26,7 +24,7 @@ class Url
 				'query' => '',
 				'fragment' => '',
 			],
-			(array) parse_url($url)
+			(array) parse_url($url),
 		);
 
 		if (null == $component) {
@@ -47,8 +45,7 @@ class Url
 	 * @param array $urlParts
 	 * @return string
 	 */
-	public static function build(array $urlParts)
-	{
+	public static function build(array $urlParts) {
 		$scheme = $user = $pass = $host = $hostname = $port = $path = $query = $fragment =
 			'';
 
@@ -63,7 +60,7 @@ class Url
 				'query' => '',
 				'fragment' => '',
 			],
-			$urlParts
+			$urlParts,
 		);
 		extract($urlParts);
 
@@ -110,8 +107,7 @@ class Url
 	 * @param string $hostKey
 	 * @return string
 	 */
-	public static function serverUrl(array $server = null, $hostKey = 'SERVER_NAME')
-	{
+	public static function serverUrl(array $server = null, $hostKey = 'SERVER_NAME') {
 		if (!$server) {
 			$server = $_SERVER;
 		}

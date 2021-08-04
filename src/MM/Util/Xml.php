@@ -8,8 +8,7 @@ namespace MM\Util;
  * Class Xml
  * @package MM\Util
  */
-class Xml
-{
+class Xml {
 	/**
 	 * Intentionally not using DOM, pure string stuff
 	 *
@@ -24,8 +23,7 @@ class Xml
 	 * @return string
 	 * @throws \Exception
 	 */
-	public static function array2xml(array $array, $rootName = 'root', $indent = '  ')
-	{
+	public static function array2xml(array $array, $rootName = 'root', $indent = '  ') {
 		// skip formatting uplne
 		if (is_bool($indent)) {
 			$formatOutput = $indent;
@@ -91,7 +89,7 @@ class Xml
 							$attrs .= sprintf(
 								' %s="%s"',
 								htmlspecialchars($ak),
-								htmlspecialchars($av)
+								htmlspecialchars($av),
 							);
 						}
 
@@ -152,8 +150,7 @@ class Xml
 	 * @param $xmlString
 	 * @return mixed
 	 */
-	public static function xml2array($xmlString)
-	{
+	public static function xml2array($xmlString) {
 		$xml = simplexml_load_string($xmlString);
 		$json = json_encode($xml);
 		return json_decode($json, true);

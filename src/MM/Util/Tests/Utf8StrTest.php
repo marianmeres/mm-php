@@ -12,10 +12,8 @@ use PHPUnit\Framework\TestCase;
  *
  * @group mm-util
  */
-class Utf8StrTest extends TestCase
-{
-	public function testUnaccentWorks()
-	{
+class Utf8StrTest extends TestCase {
+	public function testUnaccentWorks() {
 		$s1 =
 			'Příliš žluťoučký kůň úpěl ďábelské ódy. ľňôä' .
 			'Babí léto definitivně skončilo, zatáhne se a na horách začne sněžit';
@@ -27,12 +25,11 @@ class Utf8StrTest extends TestCase
 		$this->assertEquals(
 			strtolower(Utf8Str::normalizeUnaccentUtf8String($s1)),
 			'prilis zlutoucky kun upel dabelske ody. lnoa' .
-				'babi leto definitivne skoncilo, zatahne se a na horach zacne snezit'
+				'babi leto definitivne skoncilo, zatahne se a na horach zacne snezit',
 		);
 	}
 
-	public function testUnaccentWorks2()
-	{
+	public function testUnaccentWorks2() {
 		$s1 =
 			'Příliš žluťoučký kůň úpěl ďábelské ódy. ľňôä' .
 			'Babí léto definitivně skončilo, zatáhne se a na horách začne sněžit';
@@ -40,12 +37,11 @@ class Utf8StrTest extends TestCase
 		$this->assertEquals(
 			strtolower(Utf8Str::unaccentUtf8String($s1)),
 			'prilis zlutoucky kun upel dabelske ody. lnoa' .
-				'babi leto definitivne skoncilo, zatahne se a na horach zacne snezit'
+				'babi leto definitivne skoncilo, zatahne se a na horach zacne snezit',
 		);
 	}
 
-	public function testUnaccentWorks3()
-	{
+	public function testUnaccentWorks3() {
 		$s1 =
 			'Příliš žluťoučký kůň úpěl ďábelské ódy. ľňôä' .
 			'Babí léto definitivně skončilo, zatáhne se a na horách začne sněžit';
@@ -53,7 +49,7 @@ class Utf8StrTest extends TestCase
 		$this->assertEquals(
 			strtolower(Utf8Str::unaccent($s1)),
 			'prilis zlutoucky kun upel dabelske ody. lnoa' .
-				'babi leto definitivne skoncilo, zatahne se a na horach zacne snezit'
+				'babi leto definitivne skoncilo, zatahne se a na horach zacne snezit',
 		);
 	}
 }

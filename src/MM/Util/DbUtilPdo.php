@@ -19,8 +19,7 @@ namespace MM\Util;
  * - tested for mysql, sqlite, pgsql
  *
  */
-class DbUtilPdo
-{
+class DbUtilPdo {
 	const LOG_IDX_QUERY = 0;
 	const LOG_IDX_START = 1;
 	const LOG_IDX_EXTRA = 2;
@@ -87,8 +86,7 @@ class DbUtilPdo
 	/**
 	 * @param mixed $optionsOrResource
 	 */
-	public function __construct($optionsOrResource = null)
-	{
+	public function __construct($optionsOrResource = null) {
 		if ($optionsOrResource instanceof \PDO) {
 			return $this->setResource($optionsOrResource);
 		}
@@ -105,8 +103,7 @@ class DbUtilPdo
 	 * @param  boolean $flag
 	 * @return bool
 	 */
-	public function activateQueryLog($flag = true)
-	{
+	public function activateQueryLog($flag = true) {
 		$oldValue = $this->_queryLog;
 		$this->_queryLog = $flag ? (array) $this->_queryLog : null;
 
@@ -119,16 +116,14 @@ class DbUtilPdo
 	/**
 	 * @return bool
 	 */
-	public function isQueryLogActive()
-	{
+	public function isQueryLogActive() {
 		return is_array($this->_queryLog);
 	}
 
 	/**
 	 * @return DbUtilPdo
 	 */
-	public function resetQueryLog()
-	{
+	public function resetQueryLog() {
 		// resetneme na cisty array iba ak je array, null ma specialny vyznam
 		// (deaktivovane logovanie)
 		if (is_array($this->_queryLog)) {
@@ -140,24 +135,21 @@ class DbUtilPdo
 	/**
 	 * @return array|null
 	 */
-	public function getQueryLog()
-	{
+	public function getQueryLog() {
 		return $this->_queryLog;
 	}
 
 	/**
 	 * @return int
 	 */
-	public function getQueryLogCounter()
-	{
+	public function getQueryLogCounter() {
 		return $this->_queryLogCounter;
 	}
 
 	/**
 	 * @return $this
 	 */
-	public function resetQueryLogCounter()
-	{
+	public function resetQueryLogCounter() {
 		$this->_queryLogCounter = 0;
 		return $this;
 	}
@@ -168,8 +160,7 @@ class DbUtilPdo
 	 * @param null $extra
 	 * @return DbUtilPdo
 	 */
-	protected function _log($sql, $extra = null)
-	{
+	protected function _log($sql, $extra = null) {
 		// toto robime vzdy
 		$this->_queryLogCounter++;
 
@@ -205,8 +196,7 @@ class DbUtilPdo
 	/**
 	 * Zapise trvanie v milisekundach do posledneho log zaznamu.
 	 */
-	protected function _logUpdateLastQueryDuration()
-	{
+	protected function _logUpdateLastQueryDuration() {
 		if (is_array($this->_queryLog) && !empty($this->_queryLog)) {
 			// asi by sa dalo ist cez current(), co ale moze byt najskor
 			// problematicke po prechadzani logu... neviem ale naisto
@@ -214,7 +204,7 @@ class DbUtilPdo
 			$current = &$this->_queryLog[$currentIdx];
 			if (!isset($current[self::LOG_IDX_DURATION])) {
 				$current[self::LOG_IDX_DURATION] = round(
-					(microtime(true) - $current[self::LOG_IDX_START]) * 1000
+					(microtime(true) - $current[self::LOG_IDX_START]) * 1000,
 				);
 			}
 		}
@@ -224,24 +214,21 @@ class DbUtilPdo
 	 * Vrati driver connection resource
 	 * @return \PDO
 	 */
-	public function getResource()
-	{
+	public function getResource() {
 		return $this->connect()->_resource;
 	}
 
 	/**
 	 * @return boolean
 	 */
-	public function isConnected()
-	{
+	public function isConnected() {
 		return (bool) $this->_resource;
 	}
 
 	/**
 	 * @return array
 	 */
-	public function getOptions()
-	{
+	public function getOptions() {
 		return $this->_options;
 	}
 
@@ -254,8 +241,7 @@ class DbUtilPdo
 	 * @throws \InvalidArgumentException
 	 * @return DbUtilPdo
 	 */
-	public function setResource($pdo = null)
-	{
+	public function setResource($pdo = null) {
 		// ak null tak reset a return early
 		if (null === $pdo) {
 			$this->_resource = null;
@@ -310,8 +296,7 @@ class DbUtilPdo
 	 * @throws \RuntimeException
 	 * @return \PDO
 	 */
-	public static function factoryResource(array $options, $debug = false)
-	{
+	public static function factoryResource(array $options, $debug = false) {
 		$o = $options;
 		$dsn = '';
 
@@ -375,15 +360,14 @@ class DbUtilPdo
 	 * @throws \RuntimeException
 	 * @return DbUtilPdo
 	 */
-	public function connect()
-	{
+	public function connect() {
 		if ($this->_resource) {
 			return $this;
 		}
 
 		if (empty($this->_options)) {
 			throw new \RuntimeException(
-				'Unable to connect. Neither resource nor options are available.'
+				'Unable to connect. Neither resource nor options are available.',
 			);
 		}
 
@@ -397,8 +381,7 @@ class DbUtilPdo
 	 * Znici resource ak ho ma
 	 * @return DbUtilPdo
 	 */
-	public function disconnect()
-	{
+	public function disconnect() {
 		// $this->_options = array();
 		return $this->setResource(null);
 	}
@@ -408,8 +391,7 @@ class DbUtilPdo
 	 * @param  string $sql
 	 * @return \PDOStatement
 	 */
-	public function prepare($sql)
-	{
+	public function prepare($sql) {
 		return $this->getResource()->prepare($sql);
 	}
 
@@ -419,8 +401,7 @@ class DbUtilPdo
 	 * @param array $data
 	 * @return bool|int
 	 */
-	public function execute($rawSqlOrPreparedStatement, array $data = [])
-	{
+	public function execute($rawSqlOrPreparedStatement, array $data = []) {
 		$db = $this->getResource();
 		if ($rawSqlOrPreparedStatement instanceof \PDOStatement) {
 			$stmt = $rawSqlOrPreparedStatement;
@@ -445,12 +426,11 @@ class DbUtilPdo
 	 * @param array $addons
 	 * @return \PDOStatement
 	 */
-	public function query($fields, $table, $where = null, array $addons = null)
-	{
+	public function query($fields, $table, $where = null, array $addons = null) {
 		return $this->querySql(
 			"SELECT $fields FROM " . $this->qi($table),
 			$where,
-			$addons
+			$addons,
 		);
 	}
 
@@ -461,8 +441,7 @@ class DbUtilPdo
 	 * @param array $addons
 	 * @return \PDOStatement
 	 */
-	public function querySql($sql, $where = null, array $addons = null)
-	{
+	public function querySql($sql, $where = null, array $addons = null) {
 		$db = $this->getResource();
 
 		// if (!empty($where)) {
@@ -508,8 +487,7 @@ class DbUtilPdo
 	 * @param  mixed $addons
 	 * @return array
 	 */
-	public function fetchAll($fields, $table, $where = null, array $addons = null)
-	{
+	public function fetchAll($fields, $table, $where = null, array $addons = null) {
 		$stmt = $this->query($fields, $table, $where, $addons);
 		return $stmt->fetchAll(\PDO::FETCH_ASSOC);
 	}
@@ -521,8 +499,7 @@ class DbUtilPdo
 	 * @param  array $addons
 	 * @return array
 	 */
-	public function fetchAllSql($sql, $where = null, array $addons = null)
-	{
+	public function fetchAllSql($sql, $where = null, array $addons = null) {
 		$stmt = $this->querySql($sql, $where, $addons);
 		return $stmt->fetchAll(\PDO::FETCH_ASSOC);
 	}
@@ -536,13 +513,12 @@ class DbUtilPdo
 	 * @param  array $addons
 	 * @return array|null
 	 */
-	public function fetchRow($fields, $table, $where = null, array $addons = null)
-	{
+	public function fetchRow($fields, $table, $where = null, array $addons = null) {
 		$stmt = $this->query(
 			$fields,
 			$table,
 			$where,
-			array_merge((array) $addons, ['limit' => 1])
+			array_merge((array) $addons, ['limit' => 1]),
 		);
 		$row = $stmt->fetch(\PDO::FETCH_ASSOC);
 
@@ -561,8 +537,7 @@ class DbUtilPdo
 	 * @param  array $addons
 	 * @return array|null
 	 */
-	public function fetchRowSql($sql, $where = null, array $addons = null)
-	{
+	public function fetchRowSql($sql, $where = null, array $addons = null) {
 		$stmt = $this->querySql($sql, $where, $addons);
 		$row = $stmt->fetch(\PDO::FETCH_ASSOC);
 		$stmt->closeCursor();
@@ -579,8 +554,7 @@ class DbUtilPdo
 	 * @param  array $addons
 	 * @return array|null
 	 */
-	public function fetchCol($fields, $table, $where = null, array $addons = null)
-	{
+	public function fetchCol($fields, $table, $where = null, array $addons = null) {
 		$stmt = $this->query($fields, $table, $where, $addons);
 		$out = $stmt->fetchAll(\PDO::FETCH_COLUMN, 0);
 		return $out ?: null;
@@ -594,8 +568,7 @@ class DbUtilPdo
 	 * @param  array $addons
 	 * @return array|null
 	 */
-	public function fetchColSql($sql, $where = null, array $addons = null)
-	{
+	public function fetchColSql($sql, $where = null, array $addons = null) {
 		$stmt = $this->querySql($sql, $where, $addons);
 		$out = $stmt->fetchAll(\PDO::FETCH_COLUMN, 0);
 		return $out ?: null;
@@ -610,8 +583,7 @@ class DbUtilPdo
 	 * @param  array $addons
 	 * @return string|null
 	 */
-	public function fetchOne($fields, $table, $where = null, array $addons = null)
-	{
+	public function fetchOne($fields, $table, $where = null, array $addons = null) {
 		$addons = (array) $addons;
 		if (!array_key_exists('limit', $addons)) {
 			// defaultne pridame limit 1
@@ -632,8 +604,7 @@ class DbUtilPdo
 	 * @param  array $addons
 	 * @return string|null
 	 */
-	public function fetchOneSql($sql, $where = null, array $addons = null)
-	{
+	public function fetchOneSql($sql, $where = null, array $addons = null) {
 		$addons = (array) $addons;
 		if (!array_key_exists('limit', $addons)) {
 			// defaultne pridame limit 1
@@ -654,8 +625,7 @@ class DbUtilPdo
 	 * @param  boolean $debug
 	 * @return int
 	 */
-	public function fetchCount($table, $where = null, $debug = false)
-	{
+	public function fetchCount($table, $where = null, $debug = false) {
 		return (int) $this->fetchOne('COUNT(*) AS count', $table, $where, [
 			'debug' => $debug,
 		]);
@@ -686,8 +656,7 @@ class DbUtilPdo
 	 * @param array $addons
 	 * @return array
 	 */
-	public function fetchPairsSql($sql, $where = null, array $addons = null)
-	{
+	public function fetchPairsSql($sql, $where = null, array $addons = null) {
 		$stmt = $this->querySql($sql, $where, $addons);
 		return $stmt->fetchAll(\PDO::FETCH_KEY_PAIR);
 	}
@@ -700,8 +669,7 @@ class DbUtilPdo
 	 * @param  boolean $debug
 	 * @return int
 	 */
-	public function insert($table, array $data, $debug = false)
-	{
+	public function insert($table, array $data, $debug = false) {
 		$db = $this->getResource();
 
 		if (empty($data)) {
@@ -728,7 +696,7 @@ class DbUtilPdo
 			'INSERT INTO %s (%s) VALUES (%s)',
 			$this->qi($table),
 			implode(', ', $columns),
-			implode(', ', $values)
+			implode(', ', $values),
 		);
 
 		if ($debug) {
@@ -751,8 +719,7 @@ class DbUtilPdo
 	 * @param  string $name
 	 * @return int
 	 */
-	public function lastInsertId($name = null)
-	{
+	public function lastInsertId($name = null) {
 		$db = $this->getResource();
 
 		// rychly hack pre postgres... POZOR: mozu nastat situacie kedy toto
@@ -787,8 +754,7 @@ class DbUtilPdo
 	 * @param  boolean $debug
 	 * @return int      affected rows
 	 */
-	public function update($table, array $data, $where, $debug = false)
-	{
+	public function update($table, array $data, $where, $debug = false) {
 		$db = $this->getResource();
 
 		if (empty($data)) {
@@ -856,8 +822,7 @@ class DbUtilPdo
 	 * @param bool $debug
 	 * @return int|string|void
 	 */
-	public function delete($table, $where, array $addons = null, $debug = false)
-	{
+	public function delete($table, $where, array $addons = null, $debug = false) {
 		$db = $this->getResource();
 
 		// return false, ak posielame empty where (false, prazdne pole..)
@@ -903,8 +868,7 @@ class DbUtilPdo
 	 * @param  string $identifier
 	 * @return string
 	 */
-	public function qi($identifier)
-	{
+	public function qi($identifier) {
 		// return early ak $identifier obsahuje "." to nechceme quotovat
 		if (false !== strpos($identifier, '.')) {
 			return $identifier;
@@ -926,8 +890,7 @@ class DbUtilPdo
 	 * @param int $valueTypeHint
 	 * @return string
 	 */
-	public function qv($value, $valueTypeHint = \PDO::PARAM_STR)
-	{
+	public function qv($value, $valueTypeHint = \PDO::PARAM_STR) {
 		// Scalar variables are: integer, float, string or boolean
 		if (is_scalar($value)) {
 			return $this->getResource()->quote($value, $valueTypeHint);
@@ -950,8 +913,7 @@ class DbUtilPdo
 	 *
 	 * @return bool
 	 */
-	public function inTransaction()
-	{
+	public function inTransaction() {
 		$db = $this->getResource();
 
 		if (method_exists($db, 'inTransaction')) {
@@ -967,8 +929,7 @@ class DbUtilPdo
 	 * @param  boolean $strict
 	 * @return DbUtilPdo
 	 */
-	public function begin($strict = true)
-	{
+	public function begin($strict = true) {
 		$db = $this->getResource();
 
 		if ($strict || !$this->inTransaction()) {
@@ -989,8 +950,7 @@ class DbUtilPdo
 	 * @param  boolean $strict
 	 * @return DbUtilPdo
 	 */
-	public function commit($strict = true)
-	{
+	public function commit($strict = true) {
 		$db = $this->getResource();
 
 		if ($strict || $this->inTransaction()) {
@@ -1010,8 +970,7 @@ class DbUtilPdo
 	 * @param  boolean $strict
 	 * @return DbUtilPdo
 	 */
-	public function rollback($strict = true)
-	{
+	public function rollback($strict = true) {
 		$db = $this->getResource();
 
 		if ($strict || $this->inTransaction()) {
@@ -1034,8 +993,7 @@ class DbUtilPdo
 	 * @param  boolean $forceNOT
 	 * @return string
 	 */
-	protected static function _getOptionalSignFromColNotation(&$col, $forceNOT = false)
-	{
+	protected static function _getOptionalSignFromColNotation(&$col, $forceNOT = false) {
 		$sign = '';
 
 		// match na 2 posledne znaky
@@ -1072,8 +1030,7 @@ class DbUtilPdo
 	 * @param $col
 	 * @return array
 	 */
-	public static function getSignFromColNotation($col)
-	{
+	public static function getSignFromColNotation($col) {
 		$pseudoClone = $col . '';
 		$sign = trim(self::_getOptionalSignFromColNotation($pseudoClone, false));
 		return [
@@ -1104,8 +1061,7 @@ class DbUtilPdo
 	 * @param  string $operator
 	 * @return string
 	 */
-	public function buildSqlWhere($where = null, $operator = 'AND')
-	{
+	public function buildSqlWhere($where = null, $operator = 'AND') {
 		$sql = '';
 
 		if (is_array($where)) {
@@ -1136,7 +1092,7 @@ class DbUtilPdo
 						"$operator %s%sIN (%s) ",
 						$this->qi($col),
 						$sign,
-						implode(',', $val)
+						implode(',', $val),
 					);
 				}
 
@@ -1172,8 +1128,7 @@ class DbUtilPdo
 	 * @param  array $addons
 	 * @return string
 	 */
-	public function buildSqlAddons(array $addons = null)
-	{
+	public function buildSqlAddons(array $addons = null) {
 		$sql = ' ';
 
 		if (!empty($addons['group_by'])) {
@@ -1198,8 +1153,7 @@ class DbUtilPdo
 	/**
 	 * @return string
 	 */
-	public function getDriverName()
-	{
+	public function getDriverName() {
 		return strtolower($this->getResource()->getAttribute(\PDO::ATTR_DRIVER_NAME));
 	}
 
@@ -1207,8 +1161,7 @@ class DbUtilPdo
 	 * Sugar
 	 * @return bool
 	 */
-	public function isSqlite()
-	{
+	public function isSqlite() {
 		return 'sqlite' == $this->getDriverName();
 	}
 
@@ -1216,8 +1169,7 @@ class DbUtilPdo
 	 * Sugar
 	 * @return bool
 	 */
-	public function isMysql()
-	{
+	public function isMysql() {
 		return 'mysql' == $this->getDriverName();
 	}
 
@@ -1225,16 +1177,14 @@ class DbUtilPdo
 	 * Sugar
 	 * @return bool
 	 */
-	public function isPgsql()
-	{
+	public function isPgsql() {
 		return 'pgsql' == $this->getDriverName();
 	}
 
 	/**
 	 * @return array
 	 */
-	public function getTables($details = false)
-	{
+	public function getTables($details = false) {
 		$out = [];
 
 		if ($this->isSqlite()) {
@@ -1271,8 +1221,7 @@ class DbUtilPdo
 	 * @return array
 	 * @throws \Exception
 	 */
-	public function getColumns($tableName)
-	{
+	public function getColumns($tableName) {
 		$out = [];
 		$tableName = $this->qv($tableName);
 
@@ -1289,7 +1238,7 @@ class DbUtilPdo
 				'select COLUMN_NAME, COLUMN_TYPE ' .
 					'FROM INFORMATION_SCHEMA.COLUMNS ' .
 					"WHERE TABLE_SCHEMA='$dbName' " .
-					"AND TABLE_NAME=$tableName"
+					"AND TABLE_NAME=$tableName",
 			);
 			foreach ($rows as $row) {
 				$out[$row['COLUMN_NAME']] = [
@@ -1300,7 +1249,7 @@ class DbUtilPdo
 			$rows = $this->fetchAllSql(
 				'SELECT column_name, data_type ' .
 					'FROM information_schema.columns ' .
-					"WHERE table_schema='public' AND table_name=$tableName"
+					"WHERE table_schema='public' AND table_name=$tableName",
 			);
 			foreach ($rows as $row) {
 				$out[$row['column_name']] = [
@@ -1310,7 +1259,7 @@ class DbUtilPdo
 		} else {
 			$driver = $this->getDriverName();
 			throw new \RuntimeException(
-				"Driver '$driver' not supported in " . __METHOD__
+				"Driver '$driver' not supported in " . __METHOD__,
 			);
 		}
 

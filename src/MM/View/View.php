@@ -27,8 +27,7 @@ use MM\View\Helper\OpenGraphData;
  * Class View
  * @package MM\View
  */
-class View extends ViewAbstract
-{
+class View extends ViewAbstract {
 	/**
 	 * @var mixed
 	 */
@@ -37,8 +36,7 @@ class View extends ViewAbstract
 	/**
 	 * Trick to make clean scoped template. Taken from ZF1.
 	 */
-	protected function _run()
-	{
+	protected function _run() {
 		// http://php.net/manual/en/function.include.php
 		// ... It is possible to execute a return statement inside an included file
 		// in order to terminate processing in that file and return to the script
@@ -51,8 +49,7 @@ class View extends ViewAbstract
 		$this->__scriptIncludeReturn = include func_get_arg(0);
 	}
 
-	protected function _factoryHelper(string $name, callable $factory, $reset = false)
-	{
+	protected function _factoryHelper(string $name, callable $factory, $reset = false) {
 		$name = strtolower($name);
 		if (!isset($this->_helpers[$name]) || $reset) {
 			$this->_helpers[$name] = $factory($this);
@@ -60,29 +57,25 @@ class View extends ViewAbstract
 		return $this->_helpers[$name];
 	}
 
-	public function headTitle($strings = null, $method = 'append', $escape = null)
-	{
+	public function headTitle($strings = null, $method = 'append', $escape = null) {
 		return $this->_factoryHelper('headTitle', function (View $view) {
 			return new HeadTitle($view);
 		})->__invoke($strings, $method, $escape);
 	}
 
-	public function headScriptSrc($strings = null, $method = 'append', $escape = null)
-	{
+	public function headScriptSrc($strings = null, $method = 'append', $escape = null) {
 		return $this->_factoryHelper('headScriptSrc', function (View $view) {
 			return new HeadScriptSrc($view);
 		})->__invoke($strings, $method, $escape);
 	}
 
-	public function headScript($strings = null, $method = 'append', $escape = null)
-	{
+	public function headScript($strings = null, $method = 'append', $escape = null) {
 		return $this->_factoryHelper('headScript', function (View $view) {
 			return new HeadScript($view);
 		})->__invoke($strings, $method, $escape);
 	}
 
-	public function headCssSrc($strings = null, $method = 'append', $escape = null)
-	{
+	public function headCssSrc($strings = null, $method = 'append', $escape = null) {
 		return $this->_factoryHelper('headCssSrc', function (View $view) {
 			return new HeadCssSrc($view);
 		})->__invoke($strings, $method, $escape);
@@ -98,71 +91,61 @@ class View extends ViewAbstract
 		})->__invoke($strings, $method, $escape);
 	}
 
-	public function headCss($strings = null, $method = 'append', $escape = null)
-	{
+	public function headCss($strings = null, $method = 'append', $escape = null) {
 		return $this->_factoryHelper('headCss', function (View $view) {
 			return new HeadCss($view);
 		})->__invoke($strings, $method, $escape);
 	}
 
-	public function breadcrumbs()
-	{
+	public function breadcrumbs() {
 		return $this->_factoryHelper('breadcrumbs', function (View $view) {
 			return new Breadcrumbs($view);
 		});
 	}
 
-	public function htmlTagClass($strings = null)
-	{
+	public function htmlTagClass($strings = null) {
 		return $this->_factoryHelper('htmlTagClass', function (View $view) {
 			return new HtmlTagClass($view);
 		})->__invoke($strings, 'append', null);
 	}
 
-	public function bodyTagClass($strings = null)
-	{
+	public function bodyTagClass($strings = null) {
 		return $this->_factoryHelper('htmlTagClass', function (View $view) {
 			return new BodyTagClass($view);
 		})->__invoke($strings, 'append', null);
 	}
 
-	public function htmlBaseTag($href = null, $target = null)
-	{
+	public function htmlBaseTag($href = null, $target = null) {
 		return $this->_factoryHelper('htmlBaseTag', function (View $view) {
 			return new HtmlBaseTag($view);
 		})->__invoke($href, $target);
 	}
 
-	public function linkRelCanonical($href = null)
-	{
+	public function linkRelCanonical($href = null) {
 		return $this->_factoryHelper('linkRelCanonical', function (View $view) {
 			return new LinkRelCanonical($view);
 		})->__invoke($href);
 	}
 
-	public function linkRelPrev($href = null)
-	{
+	public function linkRelPrev($href = null) {
 		return $this->_factoryHelper('linkRelPrev', function (View $view) {
 			return new LinkRelPrev($view);
 		})->__invoke($href);
 	}
 
-	public function linkRelNext($href = null)
-	{
+	public function linkRelNext($href = null) {
 		return $this->_factoryHelper('linkRelNext', function (View $view) {
 			return new LinkRelNext($view);
 		})->__invoke($href);
 	}
 
-	public function linkRel()
-	{
+	public function linkRel() {
 		return $this->_factoryHelper('linkRel', function (View $view) {
 			return new LinkRel($view);
 		});
 	}
 
-	public function metaNameTags($name = null, $content = null)
-	{
+	public function metaNameTags($name = null, $content = null) {
 		$helper = $this->_factoryHelper('metaNameTags', function (View $view) {
 			return new MetaNameTags($view);
 		});
@@ -186,16 +169,14 @@ class View extends ViewAbstract
 		return $helper;
 	}
 
-	public function canonicalize($url = null)
-	{
+	public function canonicalize($url = null) {
 		$helper = $this->_factoryHelper('canonicalize', function (View $view) {
 			return new Canonicalize($view);
 		});
 		return $url ? $helper->__invoke($url) : $helper;
 	}
 
-	public function cssClassFor($label, $classes = null)
-	{
+	public function cssClassFor($label, $classes = null) {
 		return $this->_factoryHelper('cssClassFor', function (View $view) {
 			return new ContainerOfStrings($view);
 		})->__invoke($label, $classes);

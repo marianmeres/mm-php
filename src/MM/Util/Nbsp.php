@@ -4,8 +4,7 @@
  */
 namespace MM\Util;
 
-class Nbsp
-{
+class Nbsp {
 	/**
 	 * Doplni &nbsp; tam kde treba... najskor vsak nebude dokonale, a vsetky
 	 * hranicne case-y urcite teraz nevidim...
@@ -13,8 +12,7 @@ class Nbsp
 	 * @param $s
 	 * @return mixed
 	 */
-	public static function apply($s, $debug = false)
-	{
+	public static function apply($s, $debug = false) {
 		//$rg = "/(^|\W+|\s+)(\w)\s+(\w+)/imsu";
 		$rg = implode('', [
 			// zaciatok, alebo whitespace+, alebo non-word+

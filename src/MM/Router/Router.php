@@ -2,8 +2,7 @@
 
 namespace MM\Router;
 
-class Router
-{
+class Router {
 	protected $_routes = [];
 
 	protected $_catchAll;
@@ -12,26 +11,22 @@ class Router
 
 	protected $_subscriptions = [];
 
-	public function __construct(array $config = [])
-	{
+	public function __construct(array $config = []) {
 		foreach ($config as $route => $cb) {
 			$this->on($route, $cb);
 		}
 	}
 
-	public function reset()
-	{
+	public function reset() {
 		$this->_routes = [];
 		return $this;
 	}
 
-	public function current()
-	{
+	public function current() {
 		return $this->_current;
 	}
 
-	public function on($routes, callable $cb, array $addons = [])
-	{
+	public function on($routes, callable $cb, array $addons = []) {
 		if (!is_array($routes)) {
 			$routes = [$routes];
 		}
@@ -51,8 +46,7 @@ class Router
 		}
 	}
 
-	public function exec(string $url, callable $fallbackFn = null)
-	{
+	public function exec(string $url, callable $fallbackFn = null) {
 		foreach ($this->_routes as $conf) {
 			[$route, $cb, $allowQueryParams, $label] = $conf;
 			$params = $route->parse($url, (bool) $allowQueryParams);
@@ -78,16 +72,14 @@ class Router
 		return false;
 	}
 
-	public function _publishCurrent($route, $params, $label)
-	{
+	public function _publishCurrent($route, $params, $label) {
 		$this->_current = ['route' => $route, 'params' => $params, 'label' => $label];
 		foreach ($this->_subscriptions as $fn) {
 			$fn($this->_current);
 		}
 	}
 
-	public function subscribe(callable $fn): callable
-	{
+	public function subscribe(callable $fn): callable {
 		$this->_subscriptions[] = $fn;
 		$fn($this->current());
 

@@ -8,8 +8,7 @@ use MM\View\Exception;
 /**
  * @package MM\View\Helper
  */
-class Breadcrumbs extends ContainerOfData
-{
+class Breadcrumbs extends ContainerOfData {
 	public $screenReaderOnlyCssClassname = 'sr-only';
 	public $ariaTitleContent = 'Breadcrumb navigation';
 	public $customCssClass = '';
@@ -19,8 +18,7 @@ class Breadcrumbs extends ContainerOfData
 	 * @return mixed
 	 * @throws Exception
 	 */
-	protected function _validateAndNormalizeData($data)
-	{
+	protected function _validateAndNormalizeData($data) {
 		if (!is_array($data) || empty($data['label']) || !isset($data['href'])) {
 			throw new Exception("Expecting data as ['label'=>'...', 'href' => '...']");
 		}
@@ -30,8 +28,7 @@ class Breadcrumbs extends ContainerOfData
 	/**
 	 * @return $this
 	 */
-	public function removeDuplicateEntries()
-	{
+	public function removeDuplicateEntries() {
 		$hrefsFound = [];
 		foreach ($this->_container as $k => $data) {
 			if (!isset($hrefsFound[$data['href']])) {
@@ -52,8 +49,7 @@ class Breadcrumbs extends ContainerOfData
 	 *
 	 * @return string
 	 */
-	public function toString()
-	{
+	public function toString() {
 		$count = count($this);
 		if (!$count) {
 			return '';
@@ -87,7 +83,7 @@ class Breadcrumbs extends ContainerOfData
 
 			$li .= sprintf(
 				"      <meta itemprop='position' property='position' content='%d'>\n",
-				$i + 1
+				$i + 1,
 			);
 			$li .= "    </li>\n";
 			$out .= $li;

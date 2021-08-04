@@ -2,8 +2,7 @@
 require_once __DIR__ . '/../../../../vendor/autoload.php';
 
 if (!function_exists('getEnvFromPhpUnitXmlConfig')) {
-	function getEnvFromPhpUnitXmlConfig($name, $default = null)
-	{
+	function getEnvFromPhpUnitXmlConfig($name, $default = null) {
 		$opts = getopt('c:');
 		// prx(__DIR__ . "/$opts[c]");
 		if (!empty($opts['c'])) {
@@ -34,7 +33,7 @@ foreach (['_config', '_config.dist'] as $k) {
 if (!defined('MM_UTIL_DB_VENDOR')) {
 	define(
 		'MM_UTIL_DB_VENDOR',
-		getEnvFromPhpUnitXmlConfig('MM_UTIL_DB_VENDOR', 'sqlite')
+		getEnvFromPhpUnitXmlConfig('MM_UTIL_DB_VENDOR', 'sqlite'),
 	);
 }
 

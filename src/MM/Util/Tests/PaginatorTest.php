@@ -7,10 +7,8 @@ use PHPUnit\Framework\TestCase;
 /**
  * @group mm-util
  */
-class PaginatorTest extends TestCase
-{
-	public function testPaginatorWorks()
-	{
+class PaginatorTest extends TestCase {
+	public function testPaginatorWorks() {
 		$p = new Paginator(101, 10, 1);
 
 		$this->assertEquals(10, $p->getLimit());

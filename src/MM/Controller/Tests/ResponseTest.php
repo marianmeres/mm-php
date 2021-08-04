@@ -11,10 +11,8 @@ require_once __DIR__ . '/_bootstrap.php';
 /**
  * @group mm-controller
  */
-final class ResponseTest extends TestCase
-{
-	public function testSettingAngGettingSegmentsWorks()
-	{
+final class ResponseTest extends TestCase {
+	public function testSettingAngGettingSegmentsWorks() {
 		$r = new Response();
 
 		$this->assertEquals([], $r->getBody());
@@ -40,8 +38,7 @@ final class ResponseTest extends TestCase
 		$this->assertEquals('pre.something.post', $r->__toString());
 	}
 
-	public function testDefaultResponseStatusIsOk()
-	{
+	public function testDefaultResponseStatusIsOk() {
 		$rh = new Response();
 		$this->assertEquals(200, $rh->getStatusCode());
 		$this->assertEquals('HTTP/1.1 200 OK', $rh->getStatusAsString());
@@ -55,15 +52,13 @@ final class ResponseTest extends TestCase
 		$this->assertFalse($rh->isNotFound());
 	}
 
-	public function testInvalidStatusCodeThrows()
-	{
+	public function testInvalidStatusCodeThrows() {
 		$this->expectException(Exception::class);
 		$rh = new Response();
 		$rh->setStatusCode(123456);
 	}
 
-	public function testSettingHeadersWorks()
-	{
+	public function testSettingHeadersWorks() {
 		$rh = new Response();
 		$rh->setHeader('k1', 'v1');
 		$rh->setHeader('K2', 'v2');
@@ -72,8 +67,7 @@ final class ResponseTest extends TestCase
 		$this->assertEquals('v2', $rh->getHeader('k2'));
 	}
 
-	public function testActualHeadersSendingWorks()
-	{
+	public function testActualHeadersSendingWorks() {
 		// to silence "This test did not perform any assertions"
 		$this->expectNotToPerformAssertions();
 
@@ -86,7 +80,7 @@ final class ResponseTest extends TestCase
 			// pokial sa nezmeni lokalizacia a verzia php, tak by to malo fungovat
 			if (!preg_match('/headers already sent/', $e->getMessage())) {
 				$this->fail(
-					'Most likely failed... (was expecting different native error message)'
+					'Most likely failed... (was expecting different native error message)',
 				);
 			}
 			return;
@@ -98,16 +92,14 @@ final class ResponseTest extends TestCase
 		$this->fail('Seems like headers were not sent, but this may not be accurate...');
 	}
 
-	public function testKeysAreConventionallyNormalized()
-	{
+	public function testKeysAreConventionallyNormalized() {
 		$rh = new Response();
 		$rh->setHeader('some-key', '1');
 		$h = $rh->getHeaders();
 		$this->assertTrue(isset($h['Some-Key']));
 	}
 
-	public function testSetCookieWorkflowWorks()
-	{
+	public function testSetCookieWorkflowWorks() {
 		$dur = 60 * 60 * 24;
 		$exp = time() + 60 * 60 * 24 * 7;
 
@@ -137,11 +129,11 @@ final class ResponseTest extends TestCase
 		$this->assertEquals(
 			$c[1],
 			'c=d; domain=www.nba.com; path=/; expires=' .
-				date(\DateTime::COOKIE, time() + $dur)
+				date(\DateTime::COOKIE, time() + $dur),
 		);
 		$this->assertEquals(
 			$c[2],
-			sprintf('e=f; expires=%s; secure; httponly', date(\DateTime::COOKIE, $exp))
+			sprintf('e=f; expires=%s; secure; httponly', date(\DateTime::COOKIE, $exp)),
 		);
 
 		// _COOKIE
@@ -194,8 +186,7 @@ final class ResponseTest extends TestCase
 		$this->assertTrue(strtotime($c[2]['expires']) < time());
 	}
 
-	public function testCookiesAreBeingSendAsRegularHeaders()
-	{
+	public function testCookiesAreBeingSendAsRegularHeaders() {
 		$r = new Response();
 		$r->setCookie('a', 'b');
 		try {
@@ -205,7 +196,7 @@ final class ResponseTest extends TestCase
 		} catch (\Exception $e) {
 			$this->assertEquals(
 				1,
-				preg_match('/headers already sent/i', $e->getMessage())
+				preg_match('/headers already sent/i', $e->getMessage()),
 			);
 		}
 	}

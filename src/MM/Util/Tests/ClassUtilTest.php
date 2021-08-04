@@ -8,10 +8,8 @@ use PHPUnit\Framework\TestCase;
 /**
  * @group mm-util
  */
-class ClassUtilTest extends TestCase
-{
-	public function testGetLastSegmentNameWorks()
-	{
+class ClassUtilTest extends TestCase {
+	public function testGetLastSegmentNameWorks() {
 		$data = [
 			'a' => 'a',
 			'B' => 'B',
@@ -26,8 +24,7 @@ class ClassUtilTest extends TestCase
 		}
 	}
 
-	public function testClassUsesDeepWorks()
-	{
+	public function testClassUsesDeepWorks() {
 		$expected = [
 			'MM\Util\Tests\ClassUtil\HeyTrait',
 			'MM\Util\Tests\ClassUtil\HeyTrait2',
@@ -44,8 +41,7 @@ class ClassUtilTest extends TestCase
 		}
 	}
 
-	public function testClassExistsIsAutoloadableCheckWorks()
-	{
+	public function testClassExistsIsAutoloadableCheckWorks() {
 		$this->assertTrue(ClassUtil::classExists(\MM\Util\Tests\ClassUtil\Dummy::class));
 		$this->assertFalse(ClassUtil::classExists('Whatever\Not\Existing'));
 
@@ -53,14 +49,12 @@ class ClassUtilTest extends TestCase
 		$this->assertFalse(ClassUtil::classExists('MM\Util\Tests\ClassUtil\Dummy3'));
 	}
 
-	public function testClassExistsPhpErrorInClassFilenameIsRethrown()
-	{
+	public function testClassExistsPhpErrorInClassFilenameIsRethrown() {
 		$this->expectException(ErrorException::class);
 		ClassUtil::classExists('MM\Util\Tests\ClassUtil\Dummy2');
 	}
 
-	public function testClassExistsPhpErrorExceptionInClassIsRethrown()
-	{
+	public function testClassExistsPhpErrorExceptionInClassIsRethrown() {
 		$this->expectException(ErrorException::class);
 		ClassUtil::classExists('MM\Util\Tests\ClassUtil\DummyChild');
 	}

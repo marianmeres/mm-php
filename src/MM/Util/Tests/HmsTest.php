@@ -10,10 +10,8 @@ require_once __DIR__ . '/_bootstrap.php';
 /**
  * @group mm-util
  */
-final class HmsTest extends TestCase
-{
-	public function testHmsWorks()
-	{
+final class HmsTest extends TestCase {
+	public function testHmsWorks() {
 		$this->assertEquals('00:00:10', Hms::get(10));
 		$this->assertEquals('00:01:00', Hms::get(60));
 		$this->assertEquals('00:02:01', Hms::get(121));

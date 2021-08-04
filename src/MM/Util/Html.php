@@ -4,8 +4,7 @@
  */
 namespace MM\Util;
 
-class Html
-{
+class Html {
 	/**
 	 * toString helper
 	 *

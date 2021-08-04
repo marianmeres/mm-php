@@ -13,15 +13,13 @@ require_once __DIR__ . '/_bootstrap.php';
  *
  * @group mm-util
  */
-class DbUtilPdoTest extends TestCase
-{
+class DbUtilPdoTest extends TestCase {
 	/**
 	 * @var DbUtilPdo
 	 */
 	public $dbu;
 
-	public function getTestTableSql($vendor = 'sqlite')
-	{
+	public function getTestTableSql($vendor = 'sqlite') {
 		$sql = "
             drop table if exists _test;
             create table _test (
@@ -38,8 +36,7 @@ class DbUtilPdoTest extends TestCase
 		return SqlHelper::getVendorSql($sql, $vendor);
 	}
 
-	protected function setUp(): void
-	{
+	protected function setUp(): void {
 		// $this->dbu = new DbUtilPdo(new \PDO("sqlite::memory:"));
 		if (!defined('MM_UTIL_PDO_JSON_CONFIG')) {
 			die('MM_UTIL_PDO_JSON_CONFIG not defined');
@@ -50,22 +47,19 @@ class DbUtilPdoTest extends TestCase
 		$this->dbu->getResource()->exec($sql);
 	}
 
-	public function testDsnModeRequiresAtLeastDriverAndDatabaseForSqlite()
-	{
+	public function testDsnModeRequiresAtLeastDriverAndDatabaseForSqlite() {
 		$this->expectException('\RuntimeException');
 		DbUtilPdo::factoryResource([]);
 	}
 
-	public function testDsnModeRequiresAtLeastDriverAndDatabaseForSqlite2()
-	{
+	public function testDsnModeRequiresAtLeastDriverAndDatabaseForSqlite2() {
 		$this->expectException('\RuntimeException');
 		DbUtilPdo::factoryResource([
 			'driver' => 'sqlite',
 		]);
 	}
 
-	public function testDsnModeRequiresAtLeastDriverAndDatabaseAndHostnameForOthers()
-	{
+	public function testDsnModeRequiresAtLeastDriverAndDatabaseAndHostnameForOthers() {
 		$this->expectException('\RuntimeException');
 		DbUtilPdo::factoryResource([
 			'driver' => 'pgsql',
@@ -73,8 +67,7 @@ class DbUtilPdoTest extends TestCase
 		]);
 	}
 
-	public function testDsnModeRequiresAtLeastDriverAndDatabaseAndHostnameForOthers2()
-	{
+	public function testDsnModeRequiresAtLeastDriverAndDatabaseAndHostnameForOthers2() {
 		$this->expectNotToPerformAssertions();
 		// tu testujeme ze to nehodi
 		DbUtilPdo::factoryResource(
@@ -83,25 +76,23 @@ class DbUtilPdoTest extends TestCase
 				'database' => 'some',
 				'hostname' => 'juchu',
 			],
-			$debug = true
+			$debug = true,
 		);
 	}
 
-	public function testDsnStringIsBuildCorrectlyForSqlite()
-	{
+	public function testDsnStringIsBuildCorrectlyForSqlite() {
 		$debug = DbUtilPdo::factoryResource(
 			[
 				'driver' => 'sqlite',
 				'database' => ':memory:',
 			],
-			true
+			true,
 		);
 
 		$this->assertEquals('sqlite::memory:', $debug['dsn']);
 	}
 
-	public function testDsnStringIsBuildCorrectlyForMysqlAndPgsql()
-	{
+	public function testDsnStringIsBuildCorrectlyForMysqlAndPgsql() {
 		// toto je len na ilustraciu podporovanych zapisov
 		$map = [
 			'mysql' => 'mysql',
@@ -118,7 +109,7 @@ class DbUtilPdoTest extends TestCase
 					'username' => 'hoho',
 					'a' => 'b',
 				],
-				true
+				true,
 			);
 
 			$expected = [
@@ -132,13 +123,12 @@ class DbUtilPdoTest extends TestCase
 		}
 	}
 
-	public function testSqliteForeignKeysSupportIsEnabledByDefaultAndCanBeDisabled()
-	{
+	public function testSqliteForeignKeysSupportIsEnabledByDefaultAndCanBeDisabled() {
 		// defaultne je ON
 		if ('sqlite' == $this->dbu->getDriverName()) {
 			$this->assertEquals(
 				1,
-				$this->dbu->fetchOneSql('PRAGMA foreign_keys', null, ['limit' => null])
+				$this->dbu->fetchOneSql('PRAGMA foreign_keys', null, ['limit' => null]),
 			);
 		}
 
@@ -149,69 +139,60 @@ class DbUtilPdoTest extends TestCase
 		$db->setResource(new \PDO('sqlite::memory:'));
 		$this->assertEquals(
 			0,
-			$db->fetchOneSql('PRAGMA foreign_keys', null, ['limit' => null])
+			$db->fetchOneSql('PRAGMA foreign_keys', null, ['limit' => null]),
 		);
 		// prx($db->getQueryLog());
 	}
 
-	public function testFetchallReturnsArray()
-	{
+	public function testFetchallReturnsArray() {
 		$all = $this->dbu->fetchAll('*', '_test');
 		$this->assertIsArray($all);
 		$this->assertCount(3, $all);
 		$this->assertEquals('wow', $all[2]['foo']);
 	}
 
-	public function testFetchallReturnsEmptyArrayWhenNothingFound()
-	{
+	public function testFetchallReturnsEmptyArrayWhenNothingFound() {
 		$all = $this->dbu->fetchAll('*', '_test', 'id = 123');
 		$this->assertIsArray($all);
 		$this->assertEmpty($all);
 	}
 
-	public function testFetchallsqlReturnsArray()
-	{
+	public function testFetchallsqlReturnsArray() {
 		$all = $this->dbu->fetchAllSql('select * from _test');
 		$this->assertIsArray($all);
 		$this->assertCount(3, $all);
 		$this->assertEquals('wow', $all[2]['foo']);
 	}
 
-	public function testFetchallsqlReturnsEmptyArrayWhenNothingFound()
-	{
+	public function testFetchallsqlReturnsEmptyArrayWhenNothingFound() {
 		$all = $this->dbu->fetchAllSql('select * from _test', 'id = 123');
 		$this->assertIsArray($all);
 		$this->assertEmpty($all);
 	}
 
-	public function testFetchrowReturnsArray()
-	{
+	public function testFetchrowReturnsArray() {
 		$row = $this->dbu->fetchRow('foo', '_test', null, ['debug' => 0]);
 		$this->assertIsArray($row);
 		$this->assertTrue(isset($row['foo']));
 	}
 
-	public function testFetchrowReturnsNullWhenNothingFound()
-	{
+	public function testFetchrowReturnsNullWhenNothingFound() {
 		$row = $this->dbu->fetchRow('*', '_test', 'id = 123');
 		$this->assertNull($row);
 	}
 
-	public function testFetchrowsqlReturnsArray()
-	{
+	public function testFetchrowsqlReturnsArray() {
 		$row = $this->dbu->fetchRowSql('select foo from _test');
 		$this->assertIsArray($row);
 		$this->assertTrue(isset($row['foo']));
 	}
 
-	public function testFetchrowsqlReturnsNullWhenNothingFound()
-	{
+	public function testFetchrowsqlReturnsNullWhenNothingFound() {
 		$row = $this->dbu->fetchRowSql('select * from _test where id = 123');
 		$this->assertNull($row);
 	}
 
-	public function testFetchcolReturnsArrayOfFirstColInAllRows()
-	{
+	public function testFetchcolReturnsArrayOfFirstColInAllRows() {
 		$col = $this->dbu->fetchCol('foo', '_test', null, [
 			'order_by' => 'id',
 			'debug' => 0,
@@ -219,14 +200,12 @@ class DbUtilPdoTest extends TestCase
 		$this->assertSame(['bull', 'shit', 'wow'], $col);
 	}
 
-	public function testFetchcolReturnsNullWhenNothingFound()
-	{
+	public function testFetchcolReturnsNullWhenNothingFound() {
 		$row = $this->dbu->fetchCol('*', '_test', 'id = 123');
 		$this->assertNull($row);
 	}
 
-	public function testFetchcolsqlReturnsArrayOfFirstColInAllRows()
-	{
+	public function testFetchcolsqlReturnsArrayOfFirstColInAllRows() {
 		$col = $this->dbu->fetchColSql('select foo from _test', null, [
 			'order_by' => 'id',
 			'debug' => 0,
@@ -234,14 +213,12 @@ class DbUtilPdoTest extends TestCase
 		$this->assertSame(['bull', 'shit', 'wow'], $col);
 	}
 
-	public function testFetchcolsqlReturnsNullWhenNothingFound()
-	{
+	public function testFetchcolsqlReturnsNullWhenNothingFound() {
 		$row = $this->dbu->fetchColSql('select * from _test', 'id = 123');
 		$this->assertNull($row);
 	}
 
-	public function testFetchoneReturnsValue()
-	{
+	public function testFetchoneReturnsValue() {
 		$res = $this->dbu->fetchOne('foo', '_test', null, [
 			'order_by' => 'id',
 			'debug' => 0,
@@ -249,14 +226,12 @@ class DbUtilPdoTest extends TestCase
 		$this->assertEquals('bull', $res);
 	}
 
-	public function testFetchoneReturnsNullWhenNothingFound()
-	{
+	public function testFetchoneReturnsNullWhenNothingFound() {
 		$res = $this->dbu->fetchOne('*', '_test', 'id = 123');
 		$this->assertNull($res);
 	}
 
-	public function testFetchonesqlReturnsValue()
-	{
+	public function testFetchonesqlReturnsValue() {
 		$res = $this->dbu->fetchOneSql('select foo from _test', null, [
 			'order_by' => 'id',
 			'debug' => 0,
@@ -264,38 +239,33 @@ class DbUtilPdoTest extends TestCase
 		$this->assertEquals('bull', $res);
 	}
 
-	public function testFetchonesqlReturnsNullWhenNothingFound()
-	{
+	public function testFetchonesqlReturnsNullWhenNothingFound() {
 		$res = $this->dbu->fetchOneSql('select * from _test', ['id' => 123]);
 		$this->assertNull($res);
 	}
 
-	public function testFetchcountWorks()
-	{
+	public function testFetchcountWorks() {
 		$this->assertEquals(3, $this->dbu->fetchCount('_test'));
 		$this->assertEquals(2, $this->dbu->fetchCount('_test', 'id IN (2, 3)'));
 		$this->assertEquals(1, $this->dbu->fetchCount('_test', 'id = 1'));
 		$this->assertEquals(0, $this->dbu->fetchCount('_test', 'id = 123'));
 	}
 
-	public function testWhereConditionAsStringWorks()
-	{
+	public function testWhereConditionAsStringWorks() {
 		$all = $this->dbu->fetchAll('*', '_test', 'id = 3');
 		$this->assertIsArray($all);
 		$this->assertCount(1, $all);
 		$this->assertEquals('wow', $all[0]['foo']);
 	}
 
-	public function testWhereConditionAsArrayWorks()
-	{
+	public function testWhereConditionAsArrayWorks() {
 		$all = $this->dbu->fetchAll('*', '_test', ['id' => 3], ['debug' => 0]);
 		$this->assertIsArray($all);
 		$this->assertCount(1, $all);
 		$this->assertEquals('wow', $all[0]['foo']);
 	}
 
-	public function testBuildWhereWorks()
-	{
+	public function testBuildWhereWorks() {
 		// 1. magic string key "=" noescape
 		$sql = $this->dbu->buildSqlWhere([
 			'=' => 'as is',
@@ -336,8 +306,7 @@ class DbUtilPdoTest extends TestCase
 		// prx($sql);
 	}
 
-	public function testMagicStringsInWhereColNamesWork()
-	{
+	public function testMagicStringsInWhereColNamesWork() {
 		// quotovaci znak pre akutalny driver
 		$q = substr($this->dbu->qv('x'), 0, 1);
 
@@ -364,7 +333,7 @@ class DbUtilPdoTest extends TestCase
 			$this->assertEquals(
 				1,
 				preg_match($regExp, $sql),
-				"mismatch in: $notation : $res : $sql : $regExp"
+				"mismatch in: $notation : $res : $sql : $regExp",
 			);
 		}
 
@@ -392,7 +361,7 @@ class DbUtilPdoTest extends TestCase
 			$this->assertEquals(
 				1,
 				preg_match($regExp, $sql),
-				"mismatch in: $notation : $res : $sql : $regExp"
+				"mismatch in: $notation : $res : $sql : $regExp",
 			);
 		}
 
@@ -406,13 +375,12 @@ class DbUtilPdoTest extends TestCase
 			$this->assertEquals(
 				1,
 				preg_match($regExp, $sql),
-				"mismatch in: $notation : $res : $sql : $regExp"
+				"mismatch in: $notation : $res : $sql : $regExp",
 			);
 		}
 	}
 
-	public function testInsertWorks()
-	{
+	public function testInsertWorks() {
 		$this->assertEquals(3, $this->dbu->fetchCount('_test'));
 
 		$affectedRows = $this->dbu->insert('_test', [
@@ -425,21 +393,18 @@ class DbUtilPdoTest extends TestCase
 		$this->assertEquals(1, $affectedRows);
 	}
 
-	public function testLastInsertIdWorks()
-	{
+	public function testLastInsertIdWorks() {
 		// setUp setuje 3
 		$this->assertEquals(3, $this->dbu->lastInsertId());
 		$this->dbu->execute("insert into _test (uid) values ('mrtepokokot')");
 		$this->assertEquals(4, $this->dbu->lastInsertId());
 	}
 
-	public function testInsertReturnsFalseOnEmptyData()
-	{
+	public function testInsertReturnsFalseOnEmptyData() {
 		$this->assertFalse($this->dbu->insert('_test', []));
 	}
 
-	public function testUpdateAllWorks()
-	{
+	public function testUpdateAllWorks() {
 		$this->assertEquals(0, $this->dbu->fetchCount('_test', ['foo' => 'xyz']));
 		$result = $this->dbu->update('_test', ['foo' => 'xyz'], '1=1');
 		$this->assertEquals(3, $this->dbu->fetchCount('_test', ['foo' => 'xyz']));
@@ -449,48 +414,41 @@ class DbUtilPdoTest extends TestCase
 		// $this->assertEquals(3, $result->getGeneratedValue());
 	}
 
-	public function testUpdateOneWorks()
-	{
+	public function testUpdateOneWorks() {
 		$this->assertEquals(0, $this->dbu->fetchCount('_test', ['foo' => 'xyz']));
 		$result = $this->dbu->update('_test', ['foo' => 'xyz'], 'id = 1');
 		$this->assertEquals(1, $this->dbu->fetchCount('_test', ['foo' => 'xyz']));
 	}
 
-	public function testUpdateHasNoEffectOnNotMatchingWhereCondition()
-	{
+	public function testUpdateHasNoEffectOnNotMatchingWhereCondition() {
 		$this->assertEquals(0, $this->dbu->fetchCount('_test', ['foo' => 'xyz']));
 		$result = $this->dbu->update('_test', ['foo' => 'xyz'], ['id' => 213]);
 		$this->assertEquals(0, $this->dbu->fetchCount('_test', ['foo' => 'xyz']));
 	}
 
-	public function testUpdateReturnsFalseOnEmptyData()
-	{
+	public function testUpdateReturnsFalseOnEmptyData() {
 		$this->assertFalse($this->dbu->update('_test', [], '1=1'));
 	}
 
-	public function testDeleteWholeTableWorks()
-	{
+	public function testDeleteWholeTableWorks() {
 		$this->assertEquals(3, $this->dbu->fetchCount('_test'));
 		$this->dbu->delete('_test', true);
 		$this->assertEquals(0, $this->dbu->fetchCount('_test'));
 	}
 
-	public function testDeleteWithWhereConditionWorks()
-	{
+	public function testDeleteWithWhereConditionWorks() {
 		$this->assertEquals(3, $this->dbu->fetchCount('_test'));
 		$this->dbu->delete('_test', ['id' => 1]);
 		$this->assertEquals(2, $this->dbu->fetchCount('_test'));
 	}
 
-	public function testDeleteWithNotMatchedWhereConditionDeletesNothing()
-	{
+	public function testDeleteWithNotMatchedWhereConditionDeletesNothing() {
 		$this->assertEquals(3, $this->dbu->fetchCount('_test'));
 		$this->dbu->delete('_test', ['id' => 123]);
 		$this->assertEquals(3, $this->dbu->fetchCount('_test'));
 	}
 
-	public function testTransactionWorkflowWorks()
-	{
+	public function testTransactionWorkflowWorks() {
 		$this->assertEquals(3, $this->dbu->fetchCount('_test'));
 
 		$this->dbu->begin();
@@ -508,8 +466,7 @@ class DbUtilPdoTest extends TestCase
 		$this->assertEquals(2, $this->dbu->fetchCount('_test'));
 	}
 
-	public function testDefaultStrictBehaviourThrowsWhenCommitOrRollbackWhileNotInTransaction()
-	{
+	public function testDefaultStrictBehaviourThrowsWhenCommitOrRollbackWhileNotInTransaction() {
 		$this->expectNotToPerformAssertions();
 		try {
 			$this->dbu->rollback();
@@ -524,15 +481,13 @@ class DbUtilPdoTest extends TestCase
 		}
 	}
 
-	public function testRelaxedBehaviourIsSilentWhenCommitOrRollbackWhileNotInTransaction()
-	{
+	public function testRelaxedBehaviourIsSilentWhenCommitOrRollbackWhileNotInTransaction() {
 		$this->expectNotToPerformAssertions();
 		$this->dbu->rollback(false);
 		$this->dbu->commit(false);
 	}
 
-	public function testQueryLogWorks()
-	{
+	public function testQueryLogWorks() {
 		// tento nebude zaratany
 		$this->dbu->insert('_test', ['uid' => 1]);
 
@@ -558,8 +513,7 @@ class DbUtilPdoTest extends TestCase
 		$this->assertNull($this->dbu->getQueryLog());
 	}
 
-	public function testInactiveQueryLogIsAlwaysNullInternally()
-	{
+	public function testInactiveQueryLogIsAlwaysNullInternally() {
 		// tento nebude zaratany
 		$this->dbu->activateQueryLog(true);
 		$this->dbu->insert('_test', ['uid' => 1]);
@@ -575,8 +529,7 @@ class DbUtilPdoTest extends TestCase
 		$this->assertNull($this->dbu->getQueryLog());
 	}
 
-	public function testValueIsNotEscapedInUpdateIfMagicOperatorIsUsed()
-	{
+	public function testValueIsNotEscapedInUpdateIfMagicOperatorIsUsed() {
 		$before = $this->dbu->fetchAll('*', '_test', null, ['order_by' => 'id']);
 		$this->dbu->update(
 			'_test',
@@ -586,15 +539,14 @@ class DbUtilPdoTest extends TestCase
 				// 'foo' => 'trim',
 			],
 			null,
-			0
+			0,
 		);
 		$after = $this->dbu->fetchAll('*', '_test', null, ['order_by' => 'id']);
 		$this->assertEquals($before, $after);
 		// prx($this->dbu->fetchAll('*', '_test'));
 	}
 
-	public function testExternalStaticLoggerWorks()
-	{
+	public function testExternalStaticLoggerWorks() {
 		$x = [];
 		//DbUtilPdo::$logger = function ($sql, $extra) use (&$x) {
 		$this->dbu->logger = function ($sql, $extra) use (&$x) {
@@ -611,8 +563,7 @@ class DbUtilPdoTest extends TestCase
 		$this->assertEquals(1, preg_match('/789/', $x[1][0]));
 	}
 
-	public function testExtractingSignNotationFromColumntNameIsPublicAndWorks()
-	{
+	public function testExtractingSignNotationFromColumntNameIsPublicAndWorks() {
 		$colNameToExpectedSign = $backup = [
 			'some' => '=',
 			'some=' => '=',
@@ -632,8 +583,7 @@ class DbUtilPdoTest extends TestCase
 		$this->assertSame($colNameToExpectedSign, $backup);
 	}
 
-	public function testGroupByAddonWorks()
-	{
+	public function testGroupByAddonWorks() {
 		$db = $this->dbu;
 
 		// prvym dvom nastavime rovnake foo
@@ -652,8 +602,7 @@ class DbUtilPdoTest extends TestCase
 		$this->assertEquals('wow', $col[1]);
 	}
 
-	public function testFetchingPairsWorks()
-	{
+	public function testFetchingPairsWorks() {
 		$db = $this->dbu;
 
 		// vyrobime si pary rucne
@@ -665,7 +614,7 @@ class DbUtilPdoTest extends TestCase
 			],
 			[
 				'order_by' => 'id desc',
-			]
+			],
 		);
 		$pairs = [];
 		foreach ($rows as $row) {
@@ -675,20 +624,18 @@ class DbUtilPdoTest extends TestCase
 		// a musia sa rovnat
 		$this->assertSame(
 			$pairs,
-			$db->fetchPairs('id', 'foo', '_test', 'id>1', ['order_by' => 'id desc'])
+			$db->fetchPairs('id', 'foo', '_test', 'id>1', ['order_by' => 'id desc']),
 		);
 	}
 
-	public function testGetColumnsWorks()
-	{
+	public function testGetColumnsWorks() {
 		$db = $this->dbu;
 		$cols = $db->getColumns('_test');
 		$expected = ['id', 'uid', 'foo'];
 		$this->assertEquals(array_keys($cols), $expected);
 	}
 
-	public function testQueryLogCounterWorks()
-	{
+	public function testQueryLogCounterWorks() {
 		$db = $this->dbu;
 
 		$db->resetQueryLogCounter();
@@ -707,8 +654,7 @@ class DbUtilPdoTest extends TestCase
 		$this->assertEquals(7, $db->getQueryLogCounter());
 	}
 
-	public function testDeleteWithAddonLimitWorkForMysql()
-	{
+	public function testDeleteWithAddonLimitWorkForMysql() {
 		$db = $this->dbu;
 
 		// toto podporuje iba mysql
@@ -725,8 +671,7 @@ class DbUtilPdoTest extends TestCase
 		$this->assertCount(1, $rows);
 	}
 
-	public function testGetTablesWorks()
-	{
+	public function testGetTablesWorks() {
 		$db = $this->dbu;
 
 		$tables = $db->getTables();

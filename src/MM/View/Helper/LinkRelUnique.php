@@ -9,8 +9,7 @@ namespace MM\View\Helper;
 use MM\View\Helper;
 use MM\View\Exception;
 
-abstract class LinkRelUnique extends Helper
-{
+abstract class LinkRelUnique extends Helper {
 	protected $_rel;
 
 	/**
@@ -22,8 +21,7 @@ abstract class LinkRelUnique extends Helper
 	 * @param null $href
 	 * @return $this
 	 */
-	public function __invoke($href = null)
-	{
+	public function __invoke($href = null) {
 		$href && $this->setHref($href);
 		return $this;
 	}
@@ -32,8 +30,7 @@ abstract class LinkRelUnique extends Helper
 	 * @param $href
 	 * @return $this
 	 */
-	public function setHref($href)
-	{
+	public function setHref($href) {
 		$this->_href = $href;
 		return $this;
 	}
@@ -41,16 +38,14 @@ abstract class LinkRelUnique extends Helper
 	/**
 	 * @return string
 	 */
-	public function getHref()
-	{
+	public function getHref() {
 		return $this->_href;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function toString()
-	{
+	public function toString() {
 		$out = '';
 
 		if ($this->_href !== null) {
@@ -63,8 +58,7 @@ abstract class LinkRelUnique extends Helper
 	/**
 	 * @return string
 	 */
-	public function __toString()
-	{
+	public function __toString() {
 		return $this->toString();
 	}
 }

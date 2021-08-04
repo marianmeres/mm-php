@@ -9,8 +9,7 @@ use MM\Util\ClassUtil;
 /**
  * Iba bazalne na rychlo
  */
-class Translate implements TranslateInterface, \ArrayAccess
-{
+class Translate implements TranslateInterface, \ArrayAccess {
 	/**
 	 * Interne data v tvare: "jazyk" => array("kluc" => "preklad")
 	 * @var array
@@ -32,16 +31,14 @@ class Translate implements TranslateInterface, \ArrayAccess
 	/**
 	 * @param array $options
 	 */
-	public function __construct(array $options = null, $strict = true)
-	{
+	public function __construct(array $options = null, $strict = true) {
 		ClassUtil::setOptions($this, $options, $strict);
 	}
 
 	/**
 	 * @return mixed
 	 */
-	public function __invoke()
-	{
+	public function __invoke() {
 		$args = func_get_args();
 		return call_user_func_array([$this, 'translate'], $args);
 	}
@@ -51,8 +48,7 @@ class Translate implements TranslateInterface, \ArrayAccess
 	 * @return $this
 	 * @throws \InvalidArgumentException
 	 */
-	public function setLang($lang)
-	{
+	public function setLang($lang) {
 		// TODO: validate here
 		if (!preg_match('/^[a-z]{2}$/i', $lang)) {
 			throw new \InvalidArgumentException("Invalid lang '$lang'");
@@ -65,16 +61,14 @@ class Translate implements TranslateInterface, \ArrayAccess
 	 * @param $lang
 	 * @return string
 	 */
-	protected function _normalizeLang($lang)
-	{
+	protected function _normalizeLang($lang) {
 		return strtoupper($lang);
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getLang()
-	{
+	public function getLang() {
 		return $this->_lang;
 	}
 
@@ -83,8 +77,7 @@ class Translate implements TranslateInterface, \ArrayAccess
 	 * @param null $replaceArgs
 	 * @return mixed
 	 */
-	public function translate($key, $replaceArgs = null)
-	{
+	public function translate($key, $replaceArgs = null) {
 		$replace = (array) $replaceArgs;
 
 		// podporujeme array aj arguments notaciu
@@ -113,7 +106,7 @@ class Translate implements TranslateInterface, \ArrayAccess
 				unset($replace[key($replace)]);
 				return $out;
 			},
-			$str
+			$str,
 		);
 
 		return $str;
@@ -122,8 +115,7 @@ class Translate implements TranslateInterface, \ArrayAccess
 	/**
 	 * @return array
 	 */
-	public function getData()
-	{
+	public function getData() {
 		return $this->_data;
 	}
 
@@ -132,8 +124,7 @@ class Translate implements TranslateInterface, \ArrayAccess
 	 * @param null $lang
 	 * @return $this
 	 */
-	public function addTranslation(array $data, $lang = null)
-	{
+	public function addTranslation(array $data, $lang = null) {
 		if (null === $lang) {
 			$lang = $this->_lang;
 		}
@@ -167,8 +158,7 @@ class Translate implements TranslateInterface, \ArrayAccess
 	 * @param bool $reset
 	 * @return $this
 	 */
-	public function setTranslation(array $data, $reset = true)
-	{
+	public function setTranslation(array $data, $reset = true) {
 		if ($reset) {
 			$this->_data = [];
 		}
@@ -192,8 +182,7 @@ class Translate implements TranslateInterface, \ArrayAccess
 	 * @param $lang
 	 * @return mixed
 	 */
-	protected function _initializeData($lang)
-	{
+	protected function _initializeData($lang) {
 		// nejake defaultne loady tu napr...
 
 		// teraz iba takto
@@ -209,8 +198,7 @@ class Translate implements TranslateInterface, \ArrayAccess
 	 * @param null $lang
 	 * @return bool
 	 */
-	public function hasTranslationFor($key, $lang = null)
-	{
+	public function hasTranslationFor($key, $lang = null) {
 		if (!$lang) {
 			$lang = $this->_lang;
 		}
@@ -221,8 +209,7 @@ class Translate implements TranslateInterface, \ArrayAccess
 	 * @param mixed $offset
 	 * @return mixed
 	 */
-	public function offsetGet($offset)
-	{
+	public function offsetGet($offset) {
 		return $this->translate($offset);
 	}
 
@@ -231,8 +218,7 @@ class Translate implements TranslateInterface, \ArrayAccess
 	 * @param mixed $value
 	 * @return $this|void
 	 */
-	public function offsetSet($offset, $value)
-	{
+	public function offsetSet($offset, $value) {
 		return $this->addTranslation([$offset => $value]);
 	}
 
@@ -240,16 +226,14 @@ class Translate implements TranslateInterface, \ArrayAccess
 	 * @param mixed $offset
 	 * @return bool
 	 */
-	public function offsetExists($offset)
-	{
+	public function offsetExists($offset) {
 		return isset($this->_data[$this->getLang()][$offset]);
 	}
 
 	/**
 	 * @param mixed $offset
 	 */
-	public function offsetUnset($offset)
-	{
+	public function offsetUnset($offset) {
 		unset($this->_data[$this->getLang()][$offset]);
 	}
 }

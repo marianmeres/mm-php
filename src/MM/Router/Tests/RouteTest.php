@@ -10,10 +10,8 @@ require_once __DIR__ . '/_bootstrap.php';
 /**
  * @group mm-router
  */
-final class RouteTest extends TestCase
-{
-	public function testParseWorks()
-	{
+final class RouteTest extends TestCase {
+	public function testParseWorks() {
 		// prettier-ignore
 		$data = [
 			// no-match
@@ -77,18 +75,17 @@ final class RouteTest extends TestCase
 			$this->assertEquals(
 				$expected,
 				$actual,
-				"$route -> $input => " . json_encode($expected)
+				"$route -> $input => " . json_encode($expected),
 			);
 		}
 	}
 
-	public function testQueryParamsParsingWorksAndIsEnabledByDefault()
-	{
+	public function testQueryParamsParsingWorksAndIsEnabledByDefault() {
 		$actual = Route::factory('/foo/[bar]')->parse('/foo/bar?baz=ba%20t');
 		$this->assertEquals(
 			['baz' => 'ba t', 'bar' => 'bar'],
 			$actual,
-			json_encode($actual)
+			json_encode($actual),
 		);
 
 		// no match must still be no match
@@ -96,14 +93,12 @@ final class RouteTest extends TestCase
 		$this->assertEquals(null, $actual, json_encode($actual));
 	}
 
-	public function testPathParamsHavePriorityOverQueryParams()
-	{
+	public function testPathParamsHavePriorityOverQueryParams() {
 		$actual = Route::factory('/foo/[bar]')->parse('/foo/bar?bar=bat');
 		$this->assertEquals(['bar' => 'bar'], $actual, json_encode($actual));
 	}
 
-	public function testQueryParamsParsingCanBeDisabled()
-	{
+	public function testQueryParamsParsingCanBeDisabled() {
 		$actual = Route::factory('/foo/[bar]')->parse('/foo/bar?baz=bat', false);
 		$this->assertEquals(['bar' => 'bar?baz=bat'], $actual, json_encode($actual));
 		// note added slash

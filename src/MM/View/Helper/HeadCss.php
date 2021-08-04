@@ -8,8 +8,7 @@ namespace MM\View\Helper;
  * Class HeadCss
  * @package MM\View\Helper
  */
-class HeadCss extends ContainerOfStrings
-{
+class HeadCss extends ContainerOfStrings {
 	/**
 	 * @var bool
 	 */
@@ -23,8 +22,7 @@ class HeadCss extends ContainerOfStrings
 	/**
 	 * @return string
 	 */
-	public function toString()
-	{
+	public function toString() {
 		$out = '';
 		foreach ($this->_container as $css) {
 			$out .= "<style type='text/css'>\n$css\n</style>\n";

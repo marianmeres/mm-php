@@ -9,8 +9,7 @@ namespace MM\View\Helper;
 use MM\View\Helper;
 use MM\View\Exception;
 
-class HtmlBaseTag extends Helper
-{
+class HtmlBaseTag extends Helper {
 	/**
 	 * @var string
 	 */
@@ -26,8 +25,7 @@ class HtmlBaseTag extends Helper
 	 * @param null $target
 	 * @return $this
 	 */
-	public function __invoke($href = null, $target = null)
-	{
+	public function __invoke($href = null, $target = null) {
 		$href && $this->setHref($href);
 		$target && $this->setTarget($target);
 		return $this;
@@ -37,8 +35,7 @@ class HtmlBaseTag extends Helper
 	 * @param $href
 	 * @return $this
 	 */
-	public function setHref($href)
-	{
+	public function setHref($href) {
 		$this->_href = $href;
 		return $this;
 	}
@@ -47,8 +44,7 @@ class HtmlBaseTag extends Helper
 	 * @param $target
 	 * @return $this
 	 */
-	public function setTarget($target)
-	{
+	public function setTarget($target) {
 		$this->_target = $target;
 		return $this;
 	}
@@ -56,8 +52,7 @@ class HtmlBaseTag extends Helper
 	/**
 	 * @return string
 	 */
-	public function toString()
-	{
+	public function toString() {
 		$out = '';
 
 		if ($this->_href !== null) {
@@ -74,8 +69,7 @@ class HtmlBaseTag extends Helper
 	/**
 	 * @return string
 	 */
-	public function __toString()
-	{
+	public function __toString() {
 		return $this->toString();
 	}
 }

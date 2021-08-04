@@ -10,16 +10,14 @@ use MM\Util\Url;
 use MM\View\Helper;
 use MM\View\Exception;
 
-class LinkRelCanonical extends LinkRelUnique
-{
+class LinkRelCanonical extends LinkRelUnique {
 	protected $_rel = 'canonical';
 
 	/**
 	 * @param $href
 	 * @return $this
 	 */
-	public function setHref($href)
-	{
+	public function setHref($href) {
 		if (null != $href) {
 			$href = Canonicalize::url($href);
 		}

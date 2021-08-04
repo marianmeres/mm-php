@@ -8,8 +8,7 @@ namespace MM\Util;
  * Class ClassUtil
  * @package MM\Util
  */
-class ClassUtil
-{
+class ClassUtil {
 	/**
 	 * Sets options which have normalized setter, or exists as public properties
 	 * Normalized setter is considered "setSome" where "some" is key in options
@@ -20,8 +19,7 @@ class ClassUtil
 	 * @param bool $strict
 	 * @return int
 	 */
-	public static function setOptions($object, array $options = null, $strict = true)
-	{
+	public static function setOptions($object, array $options = null, $strict = true) {
 		if (!is_object($object)) {
 			throw new \InvalidArgumentException('First argument must be an object');
 		}
@@ -62,7 +60,7 @@ class ClassUtil
 			//
 			elseif ($strict) {
 				throw new \RuntimeException(
-					get_class($object) . ": Unknown option '$_key'"
+					get_class($object) . ": Unknown option '$_key'",
 				);
 			}
 		}
@@ -76,8 +74,7 @@ class ClassUtil
 	 * @param $fullNameOrClass
 	 * @return string
 	 */
-	public static function getLastSegmentName($fullNameOrClass)
-	{
+	public static function getLastSegmentName($fullNameOrClass) {
 		$name = is_object($fullNameOrClass)
 			? get_class($fullNameOrClass)
 			: (string) $fullNameOrClass;
@@ -99,8 +96,7 @@ class ClassUtil
 	 * @param bool $autoload
 	 * @return array
 	 */
-	public static function classUsesDeep($class, $autoload = true)
-	{
+	public static function classUsesDeep($class, $autoload = true) {
 		$traits = [];
 
 		// Get traits of all parent classes
@@ -131,8 +127,7 @@ class ClassUtil
 	 * @throws \ErrorException
 	 * @throws \Exception
 	 */
-	public static function classExists($className)
-	{
+	public static function classExists($className) {
 		// nizsim set-om a restore-om error handlera riesime to, ze chceme
 		// ticho vynutit nativny autoload ale uplne stisit via "@" ho zase
 		// nechceme...

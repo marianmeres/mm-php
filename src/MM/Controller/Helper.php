@@ -8,8 +8,7 @@ namespace MM\Controller;
  * Class Helper
  * @package MM\Controller
  */
-abstract class Helper
-{
+abstract class Helper {
 	/**
 	 * @var AbstractController
 	 */
@@ -18,8 +17,7 @@ abstract class Helper
 	/**
 	 * @param AbstractController $controller
 	 */
-	public function __construct(AbstractController $controller = null)
-	{
+	public function __construct(AbstractController $controller = null) {
 		if ($controller) {
 			$this->setController($controller);
 			$this->_init();
@@ -30,8 +28,7 @@ abstract class Helper
 	 * @param AbstractController $controller
 	 * @return $this
 	 */
-	public function setController(AbstractController $controller = null)
-	{
+	public function setController(AbstractController $controller = null) {
 		$this->_controller = $controller;
 		return $this;
 	}
@@ -39,7 +36,6 @@ abstract class Helper
 	/**
 	 * init hook
 	 */
-	protected function _init()
-	{
+	protected function _init() {
 	}
 }

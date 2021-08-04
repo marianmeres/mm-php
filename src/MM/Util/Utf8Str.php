@@ -5,14 +5,12 @@
  */
 namespace MM\Util;
 
-class Utf8Str
-{
+class Utf8Str {
 	/**
 	 * @param $str
 	 * @return string
 	 */
-	public static function replaceInvalidByteSequence($str)
-	{
+	public static function replaceInvalidByteSequence($str) {
 		// save current value
 		$old = mb_substitute_character();
 
@@ -32,8 +30,7 @@ class Utf8Str
 	 * @param $s
 	 * @return bool
 	 */
-	public static function isUtf8($s)
-	{
+	public static function isUtf8($s) {
 		for ($i = 0; $i < strlen($s); $i++) {
 			if (ord($s[$i]) < 0x80) {
 				continue;
@@ -79,8 +76,7 @@ class Utf8Str
 	 * @param $str
 	 * @return mixed|string
 	 */
-	public static function unaccent($str)
-	{
+	public static function unaccent($str) {
 		if (class_exists('Normalizer', false)) {
 			return self::normalizeUnaccentUtf8String($str);
 		}
@@ -98,8 +94,7 @@ class Utf8Str
 	 * @param $s
 	 * @return mixed
 	 */
-	public static function normalizeUnaccentUtf8String($s)
-	{
+	public static function normalizeUnaccentUtf8String($s) {
 		$original = $s;
 
 		// Normalizer-class missing!
@@ -179,8 +174,7 @@ class Utf8Str
 	 * @param  string $string  String to unaccent
 	 * @return string $string  Unaccented string
 	 */
-	public static function unaccentUtf8String($string)
-	{
+	public static function unaccentUtf8String($string) {
 		if (!preg_match('/[\x80-\xff]/', $string)) {
 			return $string;
 		}

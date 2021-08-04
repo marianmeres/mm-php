@@ -30,8 +30,7 @@ namespace MM\Controller;
  * Class Params
  * @package MM\Controller
  */
-class Params implements \ArrayAccess
-{
+class Params implements \ArrayAccess {
 	/**
 	 * @var Parameters
 	 */
@@ -60,8 +59,7 @@ class Params implements \ArrayAccess
 	/**
 	 * @param array $options
 	 */
-	public function __construct(array $options = [])
-	{
+	public function __construct(array $options = []) {
 		$params = [];
 
 		// convenience na pokrytie 99% use case-ov: bezne pole chapem ako "params"
@@ -99,8 +97,7 @@ class Params implements \ArrayAccess
 	 * Nullne vsetky interne kontajnre. Vhodne pri testoch.
 	 * @return $this
 	 */
-	public function reset()
-	{
+	public function reset() {
 		$this->_GET = null;
 		$this->_POST = null;
 		$this->_SERVER = null;
@@ -116,8 +113,7 @@ class Params implements \ArrayAccess
 	 * @param null $default
 	 * @return array|null
 	 */
-	public function get($key = null, $default = null)
-	{
+	public function get($key = null, $default = null) {
 		// ak key je null, tak vraciame vsetko mergnute spolu (podla priority)
 		if (null === $key) {
 			return $this->toArray();
@@ -148,12 +144,11 @@ class Params implements \ArrayAccess
 	 * Vrati vsetko mergnute podla priority
 	 * @return array
 	 */
-	public function toArray()
-	{
+	public function toArray() {
 		return array_merge(
 			$this->_POST()->getArrayCopy(),
 			$this->_GET()->getArrayCopy(),
-			$this->_params->getArrayCopy()
+			$this->_params->getArrayCopy(),
 		);
 	}
 
@@ -165,8 +160,7 @@ class Params implements \ArrayAccess
 	 * @param null $value
 	 * @return $this
 	 */
-	public function set($dataOrKey, $value = null)
-	{
+	public function set($dataOrKey, $value = null) {
 		if (is_array($dataOrKey)) {
 			$this->_params->exchangeArray($dataOrKey);
 		} elseif (null === $value && isset($this->_params[$dataOrKey])) {
@@ -183,8 +177,7 @@ class Params implements \ArrayAccess
 	 * @param $name
 	 * @return array|null
 	 */
-	public function __get($name)
-	{
+	public function __get($name) {
 		return $this->get($name);
 	}
 
@@ -194,8 +187,7 @@ class Params implements \ArrayAccess
 	 * @param $value
 	 * @return $this
 	 */
-	public function __set($name, $value)
-	{
+	public function __set($name, $value) {
 		return $this->set($name, $value);
 	}
 
@@ -203,16 +195,14 @@ class Params implements \ArrayAccess
 	 * @param $name
 	 * @return bool
 	 */
-	public function __isset($name)
-	{
+	public function __isset($name) {
 		return $this->get($name, null) !== null;
 	}
 
 	/**
 	 * @param $name
 	 */
-	public function __unset($name)
-	{
+	public function __unset($name) {
 		// do params kontajnera (s najvyssou prioritou) explictneme setneme null
 		// isset/get budu takto fungovat korektne, bez toho aby sme museli
 		// sahat do _GET a _POST
@@ -228,8 +218,7 @@ class Params implements \ArrayAccess
 	 * @note Umyselne nekonvencny nazov
 	 * @return \MM\Controller\Parameters
 	 */
-	public function _GET()
-	{
+	public function _GET() {
 		if (null === $this->_GET) {
 			$this->_GET = new Parameters($_GET); // defaults to php's superglobal
 		}
@@ -240,8 +229,7 @@ class Params implements \ArrayAccess
 	 * @note Umyselne nekonvencny nazov
 	 * @return \MM\Controller\Parameters
 	 */
-	public function _POST()
-	{
+	public function _POST() {
 		if (null === $this->_POST) {
 			$this->_POST = new Parameters($_POST); // defaults to php's superglobal
 		}
@@ -252,8 +240,7 @@ class Params implements \ArrayAccess
 	 * @note Umyselne nekonvencny nazov
 	 * @return \MM\Controller\Parameters
 	 */
-	public function _SERVER()
-	{
+	public function _SERVER() {
 		if (null === $this->_SERVER) {
 			$this->_SERVER = new Parameters($_SERVER); // defaults to php's superglobal
 		}
@@ -264,8 +251,7 @@ class Params implements \ArrayAccess
 	 * @note Umyselne nekonvencny nazov
 	 * @return \MM\Controller\Parameters
 	 */
-	public function _COOKIE()
-	{
+	public function _COOKIE() {
 		if (null === $this->_COOKIE) {
 			$this->_COOKIE = new Parameters($_COOKIE); // defaults to php's superglobal
 		}
@@ -281,8 +267,7 @@ class Params implements \ArrayAccess
 	 * @return $this
 	 * @throws \MM\Controller\Exception
 	 */
-	public function setInternal($which, $dataOrKey, $value = null)
-	{
+	public function setInternal($which, $dataOrKey, $value = null) {
 		if (!preg_match("/^_(GET|POST|SERVER|COOKIE)$/", $which)) {
 			throw new Exception("Invalid parameter '$which'");
 		}
@@ -310,8 +295,7 @@ class Params implements \ArrayAccess
 	 * @param mixed $value
 	 * @return $this|void
 	 */
-	public function offsetSet($offset, $value)
-	{
+	public function offsetSet($offset, $value) {
 		return $this->set($offset, $value);
 	}
 
@@ -320,8 +304,7 @@ class Params implements \ArrayAccess
 	 * @param mixed $offset
 	 * @return bool
 	 */
-	public function offsetExists($offset)
-	{
+	public function offsetExists($offset) {
 		// return isset($this->_params[$offset]);
 
 		// @mm nizsie myslim viac odpoveda zmyslu
@@ -333,8 +316,7 @@ class Params implements \ArrayAccess
 	 * @see \ArrayAccess
 	 * @param mixed $offset
 	 */
-	public function offsetUnset($offset)
-	{
+	public function offsetUnset($offset) {
 		unset($this->_params[$offset]);
 	}
 
@@ -343,8 +325,7 @@ class Params implements \ArrayAccess
 	 * @param mixed $offset
 	 * @return array|mixed|null
 	 */
-	public function offsetGet($offset)
-	{
+	public function offsetGet($offset) {
 		return $this->get($offset);
 	}
 }

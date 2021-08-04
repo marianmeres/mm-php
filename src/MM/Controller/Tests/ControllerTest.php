@@ -14,26 +14,22 @@ require_once __DIR__ . '/_bootstrap.php';
 /**
  * @group mm-controller
  */
-final class ControllerTest extends TestCase
-{
-	public function testSettingParamsAtConstructionWorks()
-	{
+final class ControllerTest extends TestCase {
+	public function testSettingParamsAtConstructionWorks() {
 		$c = new SimpleController(['foo' => 'bar']);
 		$this->assertEquals('bar', $c->params()->foo);
 	}
 
-	public function testDispatchByArgWorks()
-	{
+	public function testDispatchByArgWorks() {
 		$this->assertEquals(
 			'1test2',
 			SimpleController::factory()
 				->dispatch('test', false)
-				->toString()
+				->toString(),
 		);
 	}
 
-	public function testDispatchReturnsResponse()
-	{
+	public function testDispatchReturnsResponse() {
 		$c = new SimpleController();
 		$this->assertTrue($c->dispatch('test', false) instanceof Response);
 
@@ -47,8 +43,7 @@ final class ControllerTest extends TestCase
 		$this->assertEquals('bar2', $c->dispatch('foo', false)->__toString()); // test manual dispatching
 	}
 
-	public function testInvalidActionThrows()
-	{
+	public function testInvalidActionThrows() {
 		$c = new SimpleController();
 
 		try {
@@ -60,36 +55,31 @@ final class ControllerTest extends TestCase
 		$this->fail('Was expecting to throw');
 	}
 
-	public function testInvalidMethodThrows()
-	{
+	public function testInvalidMethodThrows() {
 		$this->expectException(Exception::class);
 		$c = new SimpleController();
 		$c->someNotExisting();
 	}
 
-	public function testOutputViaResponseSegments()
-	{
+	public function testOutputViaResponseSegments() {
 		$c = new SimpleController();
 		$this->assertEquals('abc2', $c->dispatch('segment', false)->__toString());
 	}
 
-	public function testOutputViaEchoAndResponseSegments()
-	{
+	public function testOutputViaEchoAndResponseSegments() {
 		$c = new SimpleController();
 		$this->assertEquals(
 			'abcecho2',
-			$c->dispatch('segment-and.echo', false)->__toString()
+			$c->dispatch('segment-and.echo', false)->__toString(),
 		);
 	}
 
-	public function testResetResponseOnDispatch()
-	{
+	public function testResetResponseOnDispatch() {
 		$c = new SimpleController();
 		$this->assertEquals('', $c->dispatch('dispatch/reset', false)->__toString());
 	}
 
-	public function testRequestParamsHaveLowerPriorityOverDefinedUserlandOnes()
-	{
+	public function testRequestParamsHaveLowerPriorityOverDefinedUserlandOnes() {
 		$c = new SimpleController([
 			'bull' => 'hovno', // bude ignorovane...
 		]);
@@ -97,8 +87,7 @@ final class ControllerTest extends TestCase
 		$this->assertEquals('shit', $c->params()->bull);
 	}
 
-	public function testSettingParamsProgramaticallyHasPriorityOverRequestOrDefinedOnes()
-	{
+	public function testSettingParamsProgramaticallyHasPriorityOverRequestOrDefinedOnes() {
 		$c = new SimpleController([
 			'bull' => 'hovno',
 		]);
@@ -108,8 +97,7 @@ final class ControllerTest extends TestCase
 		$this->assertEquals('hovno', $c->params()->bull);
 	}
 
-	public function testGettingRequestWorks()
-	{
+	public function testGettingRequestWorks() {
 		$request = [
 			'a' => '1',
 			'b' => '2',
@@ -124,21 +112,19 @@ final class ControllerTest extends TestCase
 		$this->assertEquals(3, $c->params()->get('c', 3));
 	}
 
-	public function testSettingExceptionManuallyWorks()
-	{
+	public function testSettingExceptionManuallyWorks() {
 		$c = new SimpleController(
 			[],
 			[
 				'exception' => new Exception('bullshit'),
-			]
+			],
 		);
 		$this->assertTrue($c->getException() instanceof \Exception);
 		$this->expectException(Exception::class);
 		$c->dispatch(null, false);
 	}
 
-	public function testResponseHeadersAccessorWorks()
-	{
+	public function testResponseHeadersAccessorWorks() {
 		$c = new SimpleController();
 		$response = $c->dispatch('redir', false);
 
@@ -146,8 +132,7 @@ final class ControllerTest extends TestCase
 		$this->assertEquals('http://nba.com', $response->getHeader('LOCATION')); // kluc bude normalizovany
 	}
 
-	public function testNotFoundSetProperResponseHeaderStatus()
-	{
+	public function testNotFoundSetProperResponseHeaderStatus() {
 		$c = new SimpleController();
 		try {
 			$c->dispatch('not-existing', false);
@@ -158,15 +143,13 @@ final class ControllerTest extends TestCase
 		$this->assertTrue($c->response()->isNotFound());
 	}
 
-	public function testAssertingExpectedParamsWorks()
-	{
+	public function testAssertingExpectedParamsWorks() {
 		$this->expectException(Exception::class);
 		$c = new SimpleController();
 		$c->assertExpectedParams(['one']);
 	}
 
-	public function testAssertingExpectedParamsWorks2()
-	{
+	public function testAssertingExpectedParamsWorks2() {
 		$params = ['one' => 1, 'two' => 2];
 		$c = new SimpleController($params);
 		$actual = $c->assertExpectedParams(array_keys($params));
@@ -174,16 +157,14 @@ final class ControllerTest extends TestCase
 		$this->assertEquals($actual, $params);
 	}
 
-	public function testSettingHelperManualyWorks()
-	{
+	public function testSettingHelperManualyWorks() {
 		$c = new SimpleController();
 		$c->setHelper('xxx', new ControllerHelper());
 
 		$this->assertEquals('bar', $c->getHelper('xxx')->foo());
 	}
 
-	public function testOutputDisabledWorks()
-	{
+	public function testOutputDisabledWorks() {
 		$c = new ObDisabledController();
 
 		ob_start();
@@ -196,8 +177,7 @@ final class ControllerTest extends TestCase
 		$resp->output();
 	}
 
-	public function testOutputDisabledWorks2()
-	{
+	public function testOutputDisabledWorks2() {
 		$c = new ObDisabledController();
 
 		ob_start();
@@ -212,8 +192,7 @@ final class ControllerTest extends TestCase
 		$this->assertEquals('response', ob_get_clean());
 	}
 
-	public function testOutputDisabledWorks3()
-	{
+	public function testOutputDisabledWorks3() {
 		$c = new ObDisabledController();
 
 		ob_start();
@@ -226,8 +205,7 @@ final class ControllerTest extends TestCase
 		$resp->output();
 	}
 
-	public function testOutputDisabledWorks4()
-	{
+	public function testOutputDisabledWorks4() {
 		// phpunit hack... read below...
 		$initialObLevel = ob_get_level();
 

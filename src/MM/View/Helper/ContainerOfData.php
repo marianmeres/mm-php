@@ -9,8 +9,7 @@ namespace MM\View\Helper;
 use MM\View\Helper;
 use MM\View\Exception;
 
-class ContainerOfData extends Helper implements \Countable
-{
+class ContainerOfData extends Helper implements \Countable {
 	/**
 	 * @var array
 	 */
@@ -21,8 +20,7 @@ class ContainerOfData extends Helper implements \Countable
 	 * @param $data
 	 * @return mixed
 	 */
-	protected function _validateAndNormalizeData($data)
-	{
+	protected function _validateAndNormalizeData($data) {
 		return $data;
 	}
 
@@ -30,8 +28,7 @@ class ContainerOfData extends Helper implements \Countable
 	 * @param $data
 	 * @return $this
 	 */
-	public function append($data)
-	{
+	public function append($data) {
 		$data = $this->_validateAndNormalizeData($data);
 		$this->_container[] = $data;
 		return $this;
@@ -41,8 +38,7 @@ class ContainerOfData extends Helper implements \Countable
 	 * @param $data
 	 * @return $this
 	 */
-	public function prepend($data)
-	{
+	public function prepend($data) {
 		$data = $this->_validateAndNormalizeData($data);
 		array_unshift($this->_container, $data);
 		return $this;
@@ -52,8 +48,7 @@ class ContainerOfData extends Helper implements \Countable
 	 * @param array $container
 	 * @return $this
 	 */
-	public function setContainer(array $container)
-	{
+	public function setContainer(array $container) {
 		$this->_container = $container;
 		return $this;
 	}
@@ -61,24 +56,21 @@ class ContainerOfData extends Helper implements \Countable
 	/**
 	 * @return array
 	 */
-	public function getContainer()
-	{
+	public function getContainer() {
 		return $this->_container;
 	}
 
 	/**
 	 * @return int
 	 */
-	public function count()
-	{
+	public function count() {
 		return count($this->_container);
 	}
 
 	/**
 	 * @return $this
 	 */
-	public function reverse()
-	{
+	public function reverse() {
 		$this->_container = array_reverse($this->_container);
 		return $this;
 	}
@@ -86,8 +78,7 @@ class ContainerOfData extends Helper implements \Countable
 	/**
 	 * To be overridden
 	 */
-	public function toString()
-	{
+	public function toString() {
 		return print_r($this->_container, true);
 	}
 
@@ -97,8 +88,7 @@ class ContainerOfData extends Helper implements \Countable
 	 *
 	 * @return string
 	 */
-	public function __toString()
-	{
+	public function __toString() {
 		return $this->toString();
 	}
 }

@@ -7,16 +7,13 @@ use PHPUnit\Framework\TestCase;
 /**
  * @group mm-util
  */
-class TranslateTest extends TestCase
-{
-	public function testDefaultLangIsEN()
-	{
+class TranslateTest extends TestCase {
+	public function testDefaultLangIsEN() {
 		$t = new Translate();
 		$this->assertEquals('EN', $t->getLang());
 	}
 
-	public function testTranslateWorks()
-	{
+	public function testTranslateWorks() {
 		$t = new Translate([
 			'lang' => 'de', // internally uppercase
 			'translation' => [

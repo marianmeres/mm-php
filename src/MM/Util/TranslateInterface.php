@@ -8,8 +8,7 @@ namespace MM\Util;
  * Interface TranslateInterface
  * @package MM\Util
  */
-interface TranslateInterface
-{
+interface TranslateInterface {
 	/**
 	 * @param $key
 	 * @param null $replaceArgs

@@ -8,8 +8,7 @@ namespace MM\View;
  * Class ViewAbstract
  * @package MM\View
  */
-abstract class ViewAbstract
-{
+abstract class ViewAbstract {
 	/**
 	 * @var array
 	 */
@@ -48,8 +47,7 @@ abstract class ViewAbstract
 	 * @param array $options
 	 * @throws Exception
 	 */
-	public function __construct(array $options = null)
-	{
+	public function __construct(array $options = null) {
 		if ($options) {
 			$this->setOptions($options);
 		}
@@ -60,16 +58,14 @@ abstract class ViewAbstract
 	/**
 	 * Init hook
 	 */
-	protected function _init()
-	{
+	protected function _init() {
 	}
 
 	/**
 	 * @param $flag
 	 * @return $this
 	 */
-	public function setStrictVars($flag)
-	{
+	public function setStrictVars($flag) {
 		$this->_strictVars = (bool) $flag;
 		return $this;
 	}
@@ -78,8 +74,7 @@ abstract class ViewAbstract
 	 * @param $flag
 	 * @return $this
 	 */
-	public function setAutoEscape($flag)
-	{
+	public function setAutoEscape($flag) {
 		$this->_autoEscape = (bool) $flag;
 		return $this;
 	}
@@ -87,8 +82,7 @@ abstract class ViewAbstract
 	/**
 	 * @return bool
 	 */
-	public function getAutoEscape()
-	{
+	public function getAutoEscape() {
 		return $this->_autoEscape;
 	}
 
@@ -96,8 +90,7 @@ abstract class ViewAbstract
 	 * @param View $view
 	 * @return $this
 	 */
-	public function setView(View $view = null)
-	{
+	public function setView(View $view = null) {
 		$this->_view = $view;
 		return $this;
 	}
@@ -105,8 +98,7 @@ abstract class ViewAbstract
 	/**
 	 * @return View
 	 */
-	public function view()
-	{
+	public function view() {
 		return $this->_view;
 	}
 
@@ -114,8 +106,7 @@ abstract class ViewAbstract
 	 * @param $dir
 	 * @return $this
 	 */
-	public function setTemplateDir($dir)
-	{
+	public function setTemplateDir($dir) {
 		$this->_templateDir = $dir;
 		return $this;
 	}
@@ -123,8 +114,7 @@ abstract class ViewAbstract
 	/**
 	 * @return string
 	 */
-	public function getTemplateDir()
-	{
+	public function getTemplateDir() {
 		return $this->_templateDir;
 	}
 
@@ -134,8 +124,7 @@ abstract class ViewAbstract
 	 * @return $this
 	 * @throws Exception
 	 */
-	public function setOptions(array $options)
-	{
+	public function setOptions(array $options) {
 		foreach ($options as $_key => $value) {
 			$key = str_replace('_', ' ', strtolower(trim($_key))); // under_scored to CamelCase
 			$key = str_replace(' ', '', ucwords($key));
@@ -152,8 +141,7 @@ abstract class ViewAbstract
 	 * @param array $vars
 	 * @return $this
 	 */
-	public function setVars(array $vars)
-	{
+	public function setVars(array $vars) {
 		$this->_vars = $vars;
 		return $this;
 	}
@@ -163,8 +151,7 @@ abstract class ViewAbstract
 	 * @param $key
 	 * @return mixed
 	 */
-	public function raw($key)
-	{
+	public function raw($key) {
 		if (null === $key) {
 			return $this->_vars;
 		}
@@ -174,8 +161,7 @@ abstract class ViewAbstract
 	/**
 	 * @return array
 	 */
-	public function dump()
-	{
+	public function dump() {
 		return $this->_vars;
 	}
 
@@ -183,16 +169,14 @@ abstract class ViewAbstract
 	 * @param $name
 	 * @return bool
 	 */
-	public function __isset($name)
-	{
+	public function __isset($name) {
 		return array_key_exists($name, $this->_vars);
 	}
 
 	/**
 	 * @param $name
 	 */
-	public function __unset($name)
-	{
+	public function __unset($name) {
 		if ($this->__isset($name)) {
 			unset($this->_vars[$name]);
 		}
@@ -202,8 +186,7 @@ abstract class ViewAbstract
 	 * @param $name
 	 * @return null|string
 	 */
-	public function __get($name)
-	{
+	public function __get($name) {
 		if ($this->__isset($name)) {
 			if (!$this->_autoEscape || !is_scalar($this->_vars[$name])) {
 				return $this->_vars[$name];
@@ -225,8 +208,7 @@ abstract class ViewAbstract
 	 * @param $value
 	 * @return $this
 	 */
-	public function __set($name, $value)
-	{
+	public function __set($name, $value) {
 		$this->_vars[$name] = $value;
 		return $this;
 	}
@@ -348,8 +330,7 @@ abstract class ViewAbstract
 	 * @param $val
 	 * @return string
 	 */
-	public function htmlspecialchars($val)
-	{
+	public function htmlspecialchars($val) {
 		return htmlspecialchars($val, ENT_COMPAT, 'UTF-8');
 	}
 
@@ -359,8 +340,7 @@ abstract class ViewAbstract
 	 * @param $template
 	 * @return string
 	 */
-	public function render($template)
-	{
+	public function render($template) {
 		return $this->renderScript($this->_templateDir . $template);
 	}
 
@@ -371,8 +351,7 @@ abstract class ViewAbstract
 	 * @return string
 	 * @throws \Exception
 	 */
-	public function renderScript($template)
-	{
+	public function renderScript($template) {
 		// exception vypluvame na cistej luke
 		ob_start();
 		try {

@@ -10,16 +10,13 @@ require_once __DIR__ . '/../_bootstrap.php';
 /**
  * @group mm-view
  */
-final class HeadTitleTest extends TestCase
-{
-	public function testHeadTitleIsEmptyByDefault()
-	{
+final class HeadTitleTest extends TestCase {
+	public function testHeadTitleIsEmptyByDefault() {
 		$h = new HeadTitle();
 		$this->assertEquals('<title></title>', trim((string) $h));
 	}
 
-	public function testHeadTitleWorks()
-	{
+	public function testHeadTitleWorks() {
 		$h = new HeadTitle();
 		$h->setSeparator(':');
 		$h->append('>');
@@ -39,8 +36,7 @@ final class HeadTitleTest extends TestCase
 		$this->assertEquals('<title>b:a</title>', trim((string) $h));
 	}
 
-	public function testWithView()
-	{
+	public function testWithView() {
 		$v = new View();
 		$this->assertEquals('<title>foo</title>', trim((string) $v->headTitle('foo')));
 	}

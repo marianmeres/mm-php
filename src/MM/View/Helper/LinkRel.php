@@ -9,18 +9,16 @@ use MM\View\Exception;
  * Class HeadCss
  * @package MM\View\Helper
  */
-class LinkRel extends ContainerOfData
-{
+class LinkRel extends ContainerOfData {
 	/**
 	 * @param $data
 	 * @return mixed
 	 * @throws Exception
 	 */
-	protected function _validateAndNormalizeData($data)
-	{
+	protected function _validateAndNormalizeData($data) {
 		if (!is_array($data) || empty($data['rel']) || !isset($data['href'])) {
 			throw new Exception(
-				"Expecting minimum data as ['link'=>'...', 'href' => '...']"
+				"Expecting minimum data as ['link'=>'...', 'href' => '...']",
 			);
 		}
 		ksort($data);
@@ -30,8 +28,7 @@ class LinkRel extends ContainerOfData
 	/**
 	 * @return $this
 	 */
-	public function removeDuplicateEntries()
-	{
+	public function removeDuplicateEntries() {
 		$found = [];
 		foreach ($this->_container as $k => $data) {
 			// $data is ksorted here
@@ -48,8 +45,7 @@ class LinkRel extends ContainerOfData
 	/**
 	 * @return string
 	 */
-	public function toString()
-	{
+	public function toString() {
 		$count = count($this);
 		if (!$count) {
 			return '';

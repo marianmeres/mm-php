@@ -9,7 +9,6 @@ namespace MM\View\Helper;
 use MM\View\Helper;
 use MM\View\Exception;
 
-class LinkRelNext extends LinkRelUnique
-{
+class LinkRelNext extends LinkRelUnique {
 	protected $_rel = 'next';
 }

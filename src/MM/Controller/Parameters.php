@@ -9,8 +9,7 @@ namespace MM\Controller;
  * Class Parameters
  * @package MM\Controller
  */
-class Parameters extends \ArrayObject
-{
+class Parameters extends \ArrayObject {
 	/**
 	 * Constructor
 	 *
@@ -19,8 +18,7 @@ class Parameters extends \ArrayObject
 	 *
 	 * @param array $values
 	 */
-	public function __construct(array $values = null)
-	{
+	public function __construct(array $values = null) {
 		if (null === $values) {
 			$values = [];
 		}
@@ -33,8 +31,7 @@ class Parameters extends \ArrayObject
 	 * @param array $values
 	 * @return $this
 	 */
-	public function fromArray(array $values)
-	{
+	public function fromArray(array $values) {
 		$this->exchangeArray($values);
 		return $this;
 	}
@@ -45,8 +42,7 @@ class Parameters extends \ArrayObject
 	 * @param $string
 	 * @return $this
 	 */
-	public function fromString($string)
-	{
+	public function fromString($string) {
 		$array = [];
 		parse_str($string, $array);
 		$this->fromArray($array);
@@ -58,8 +54,7 @@ class Parameters extends \ArrayObject
 	 *
 	 * @return array
 	 */
-	public function toArray()
-	{
+	public function toArray() {
 		return $this->getArrayCopy();
 	}
 
@@ -68,8 +63,7 @@ class Parameters extends \ArrayObject
 	 *
 	 * @return string
 	 */
-	public function toString()
-	{
+	public function toString() {
 		return http_build_query($this);
 	}
 
@@ -81,8 +75,7 @@ class Parameters extends \ArrayObject
 	 * @param mixed $name
 	 * @return mixed|null
 	 */
-	public function offsetGet($name)
-	{
+	public function offsetGet($name) {
 		if (isset($this[$name])) {
 			return parent::offsetGet($name);
 		}
@@ -94,8 +87,7 @@ class Parameters extends \ArrayObject
 	 * @param null $default
 	 * @return mixed|null
 	 */
-	public function get($name, $default = null)
-	{
+	public function get($name, $default = null) {
 		if (isset($this[$name])) {
 			return parent::offsetGet($name);
 		}
@@ -107,8 +99,7 @@ class Parameters extends \ArrayObject
 	 * @param mixed $value
 	 * @return $this
 	 */
-	public function set($name, $value)
-	{
+	public function set($name, $value) {
 		$this[$name] = $value;
 		return $this;
 	}

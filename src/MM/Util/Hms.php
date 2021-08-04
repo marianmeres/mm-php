@@ -1,10 +1,8 @@
 <?php
 namespace MM\Util;
 
-class Hms
-{
-	public static function get($timeInSeconds, $returnAsArray = false)
-	{
+class Hms {
+	public static function get($timeInSeconds, $returnAsArray = false) {
 		$s = $timeInSeconds % 60;
 		$m = (($timeInSeconds - $s) % 3600) / 60;
 

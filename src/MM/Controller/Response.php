@@ -7,8 +7,7 @@ use MM\Controller\Exception;
  * Class Response
  * @package MM\Controller
  */
-class Response implements \ArrayAccess
-{
+class Response implements \ArrayAccess {
 	/**
 	 * Suchy list podporovanych statusov a ich hlasok. Editovat podla potreby,
 	 * ale najskor na to nebude dovod. Prebrate z Zend\Http\Response
@@ -105,8 +104,7 @@ class Response implements \ArrayAccess
 	 * @param string $segment
 	 * @return Response
 	 */
-	public function setBody($value, $replace = true, $segment = 'default')
-	{
+	public function setBody($value, $replace = true, $segment = 'default') {
 		// ak je value array, tak reset celeho body
 		if (is_array($value)) {
 			$this->_body = $value;
@@ -134,8 +132,7 @@ class Response implements \ArrayAccess
 	 * @param bool $replace
 	 * @return $this
 	 */
-	public function setHeader($key, $value, $replace = true)
-	{
+	public function setHeader($key, $value, $replace = true) {
 		$key = $this->_normalizeHeaderKey($key);
 		$value = $this->_normalizeHeaderValue($value);
 
@@ -166,8 +163,7 @@ class Response implements \ArrayAccess
 	 * @return $this
 	 * @throws Exception
 	 */
-	public function setCookie($name, $value, array $options = [])
-	{
+	public function setCookie($name, $value, array $options = []) {
 		$name = trim($name);
 
 		// sanity check
@@ -253,8 +249,7 @@ class Response implements \ArrayAccess
 	 *
 	 * @return $this
 	 */
-	public function _uniquizeCookies()
-	{
+	public function _uniquizeCookies() {
 		$unique = [];
 		$cookieHdr = $this->_normalizeHeaderKey('Set-Cookie');
 		if (!empty($this->_headers[$cookieHdr])) {
@@ -273,8 +268,7 @@ class Response implements \ArrayAccess
 	 * @param $name
 	 * @return array|null
 	 */
-	public function getCookie($name)
-	{
+	public function getCookie($name) {
 		$cookies = $this->getCookies();
 
 		foreach ($cookies as $hdrString) {
@@ -299,8 +293,7 @@ class Response implements \ArrayAccess
 	/**
 	 * @return array
 	 */
-	public function getCookies()
-	{
+	public function getCookies() {
 		$cookieHdr = $this->_normalizeHeaderKey('Set-Cookie');
 		$cookies = [];
 		if (!empty($this->_headers[$cookieHdr])) {
@@ -317,8 +310,7 @@ class Response implements \ArrayAccess
 	 * @param array $options
 	 * @return $this
 	 */
-	public function unsetCookie($name, array $options = [])
-	{
+	public function unsetCookie($name, array $options = []) {
 		// nizsie (null hodnota) aj trigerne expires v minulosti
 		return $this->setCookie($name, null, $options);
 	}
@@ -327,8 +319,7 @@ class Response implements \ArrayAccess
 	 * Debug unfriendly cast to string (body only)
 	 * @return string
 	 */
-	public function __toString()
-	{
+	public function __toString() {
 		return $this->toString();
 	}
 
@@ -336,8 +327,7 @@ class Response implements \ArrayAccess
 	 * Debug friendly cast to string (body only)
 	 * @return string
 	 */
-	public function toString()
-	{
+	public function toString() {
 		ksort($this->_body);
 		return implode('', $this->_body);
 	}
@@ -347,8 +337,7 @@ class Response implements \ArrayAccess
 	 * @param null $default
 	 * @return array|null
 	 */
-	public function getBody($key = null, $default = null)
-	{
+	public function getBody($key = null, $default = null) {
 		if (null == $key) {
 			return $this->_body;
 		}
@@ -361,8 +350,7 @@ class Response implements \ArrayAccess
 	/**
 	 * @return bool
 	 */
-	public function isBodyEmpty()
-	{
+	public function isBodyEmpty() {
 		foreach ($this->_body as $key => $content) {
 			if ('' != $content) {
 				return false;
@@ -374,8 +362,7 @@ class Response implements \ArrayAccess
 	/**
 	 * @return Response
 	 */
-	public function reset()
-	{
+	public function reset() {
 		$this->setStatusCode(200);
 		$this->_body = [];
 		$this->_headers = [];
@@ -386,8 +373,7 @@ class Response implements \ArrayAccess
 	 * @param string $key
 	 * @return mixed
 	 */
-	public function getHeader($key)
-	{
+	public function getHeader($key) {
 		$key = $this->_normalizeHeaderKey($key);
 		return isset($this->_headers[$key]) ? $this->_headers[$key] : null;
 	}
@@ -395,8 +381,7 @@ class Response implements \ArrayAccess
 	/**
 	 * @return array
 	 */
-	public function getHeaders()
-	{
+	public function getHeaders() {
 		return $this->_headers;
 	}
 
@@ -405,8 +390,7 @@ class Response implements \ArrayAccess
 	 * @return $this
 	 * @throws Exception
 	 */
-	public function setStatusCode($value)
-	{
+	public function setStatusCode($value) {
 		if (!isset(self::$_statuses[$value])) {
 			throw new Exception("Uknown status '$value'");
 		}
@@ -418,24 +402,21 @@ class Response implements \ArrayAccess
 	 * @param $value
 	 * @return bool
 	 */
-	public function isValidStatusCode($value)
-	{
+	public function isValidStatusCode($value) {
 		return isset(self::$_statuses[$value]);
 	}
 
 	/**
 	 * @return int
 	 */
-	public function getStatusCode()
-	{
+	public function getStatusCode() {
 		return $this->_status;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getStatusCodeMessage()
-	{
+	public function getStatusCodeMessage() {
 		return self::$_statuses[$this->_status];
 	}
 
@@ -443,12 +424,11 @@ class Response implements \ArrayAccess
 	 * @param string $version
 	 * @return string
 	 */
-	public function getStatusAsString($version = '1.1')
-	{
+	public function getStatusAsString($version = '1.1') {
 		return sprintf(
 			"HTTP/$version %d %s",
 			$this->getStatusCode(),
-			$this->getStatusCodeMessage()
+			$this->getStatusCodeMessage(),
 		);
 	}
 
@@ -456,8 +436,7 @@ class Response implements \ArrayAccess
 	 * Output headers via php's header() function
 	 * @return $this
 	 */
-	public function send()
-	{
+	public function send() {
 		// ma zmysel vypluvat aj OK?
 		if (200 !== $this->getStatusCode()) {
 			header($this->getStatusAsString());
@@ -482,8 +461,7 @@ class Response implements \ArrayAccess
 	/**
 	 * Posle hlavicky a echne telo
 	 */
-	public function output()
-	{
+	public function output() {
 		echo $this->send();
 	}
 
@@ -491,8 +469,7 @@ class Response implements \ArrayAccess
 	 * Does the status code indicate a client error?
 	 * @return bool
 	 */
-	public function isClientError()
-	{
+	public function isClientError() {
 		$code = $this->getStatusCode();
 		return $code < 500 && $code >= 400;
 	}
@@ -501,8 +478,7 @@ class Response implements \ArrayAccess
 	 * Is the request forbidden due to ACLs?
 	 * @return bool
 	 */
-	public function isForbidden()
-	{
+	public function isForbidden() {
 		return 403 == $this->getStatusCode();
 	}
 
@@ -510,8 +486,7 @@ class Response implements \ArrayAccess
 	 * Does the status code indicate the resource is not found?
 	 * @return bool
 	 */
-	public function isNotFound()
-	{
+	public function isNotFound() {
 		return 404 === $this->getStatusCode();
 	}
 
@@ -519,8 +494,7 @@ class Response implements \ArrayAccess
 	 * Do we have a normal, OK response?
 	 * @return bool
 	 */
-	public function isOk()
-	{
+	public function isOk() {
 		return 200 === $this->getStatusCode();
 	}
 
@@ -528,8 +502,7 @@ class Response implements \ArrayAccess
 	 * Does the status code reflect a server error?
 	 * @return bool
 	 */
-	public function isServerError()
-	{
+	public function isServerError() {
 		$code = $this->getStatusCode();
 		return 500 <= $code && 600 > $code;
 	}
@@ -538,8 +511,7 @@ class Response implements \ArrayAccess
 	 * Do we have a redirect?
 	 * @return bool
 	 */
-	public function isRedirect()
-	{
+	public function isRedirect() {
 		$code = $this->getStatusCode();
 		return 300 <= $code && 400 > $code;
 	}
@@ -548,8 +520,7 @@ class Response implements \ArrayAccess
 	 * Was the response successful?
 	 * @return bool
 	 */
-	public function isSuccess()
-	{
+	public function isSuccess() {
 		$code = $this->getStatusCode();
 		return 200 <= $code && 300 > $code;
 	}
@@ -558,8 +529,7 @@ class Response implements \ArrayAccess
 	 * @param $key
 	 * @return string
 	 */
-	protected function _normalizeHeaderKey($key)
-	{
+	protected function _normalizeHeaderKey($key) {
 		// "nIeco-ta KE:" => "Nieco-Ta-Ke"
 		$key = trim(strtolower($key), ' :');
 		$key = ucwords(str_replace('-', ' ', $key));
@@ -571,8 +541,7 @@ class Response implements \ArrayAccess
 	 * @param $value
 	 * @return string
 	 */
-	protected function _normalizeHeaderValue($value)
-	{
+	protected function _normalizeHeaderValue($value) {
 		return trim($value);
 	}
 
@@ -581,8 +550,7 @@ class Response implements \ArrayAccess
 	 * @param $offset
 	 * @param $value
 	 */
-	public function offsetSet($offset, $value)
-	{
+	public function offsetSet($offset, $value) {
 		$this->setBody($value, true, $offset);
 	}
 
@@ -591,8 +559,7 @@ class Response implements \ArrayAccess
 	 * @param mixed $offset
 	 * @return bool
 	 */
-	public function offsetExists($offset)
-	{
+	public function offsetExists($offset) {
 		return isset($this->_body[$offset]);
 	}
 
@@ -600,8 +567,7 @@ class Response implements \ArrayAccess
 	 * @see \ArrayAccess
 	 * @param mixed $offset
 	 */
-	public function offsetUnset($offset)
-	{
+	public function offsetUnset($offset) {
 		unset($this->_body[$offset]);
 	}
 
@@ -610,32 +576,28 @@ class Response implements \ArrayAccess
 	 * @param mixed $offset
 	 * @return array|mixed|null
 	 */
-	public function offsetGet($offset)
-	{
+	public function offsetGet($offset) {
 		return $this->getBody($offset);
 	}
 
 	/**
 	 * sugar
 	 */
-	public function asText()
-	{
+	public function asText() {
 		return $this->setHeader('Content-type', 'text/plain; charset=UTF-8');
 	}
 
 	/**
 	 * sugar
 	 */
-	public function asJson()
-	{
+	public function asJson() {
 		return $this->setHeader('Content-type', 'application/json');
 	}
 
 	/**
 	 * sugar
 	 */
-	public function asHtml()
-	{
+	public function asHtml() {
 		return $this->setHeader('Content-type', 'text/html; charset=UTF-8');
 	}
 }

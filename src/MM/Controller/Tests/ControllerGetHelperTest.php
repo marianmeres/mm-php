@@ -10,14 +10,12 @@ require_once __DIR__ . '/_bootstrap.php';
 /**
  * @group mm-controller
  */
-final class ControllerGetHelperTest extends TestCase
-{
+final class ControllerGetHelperTest extends TestCase {
 	//
 	// Out-of-the-box helpers
 	//
 
-	public function testServerHelperWorks()
-	{
+	public function testServerHelperWorks() {
 		$c = new SimpleController();
 
 		$this->assertInstanceOf('\MM\Controller\Helper\Server', $c->server());
@@ -42,8 +40,7 @@ final class ControllerGetHelperTest extends TestCase
 		$this->assertEquals('2', $c->server()->remoteIp());
 	}
 
-	public function testServerIsHttpsWorks()
-	{
+	public function testServerIsHttpsWorks() {
 		$c = new SimpleController();
 		$this->assertFalse($c->server()->isHttps());
 

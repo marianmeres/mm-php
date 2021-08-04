@@ -11,8 +11,7 @@ use MM\View\Helper;
  * Class HeadCss
  * @package MM\View\Helper
  */
-class MetaNameTags extends Helper implements \Countable
-{
+class MetaNameTags extends Helper implements \Countable {
 	/**
 	 * @var array
 	 */
@@ -23,8 +22,7 @@ class MetaNameTags extends Helper implements \Countable
 	 * @param $content
 	 * @return $this
 	 */
-	public function set($name, $content)
-	{
+	public function set($name, $content) {
 		$name = $this->_normalizeName($name);
 		$this->_container[$name] = $content;
 		return $this;
@@ -34,8 +32,7 @@ class MetaNameTags extends Helper implements \Countable
 	 * @param $name
 	 * @return bool
 	 */
-	public function has($name)
-	{
+	public function has($name) {
 		$name = $this->_normalizeName($name);
 		return isset($this->_container[$name]);
 	}
@@ -44,38 +41,34 @@ class MetaNameTags extends Helper implements \Countable
 	 * @param $name
 	 * @return string
 	 */
-	protected function _normalizeName($name)
-	{
+	protected function _normalizeName($name) {
 		return strtolower($name);
 	}
 
 	/**
 	 * @return array
 	 */
-	public function getContainer()
-	{
+	public function getContainer() {
 		return $this->_container;
 	}
 
 	/**
 	 * @return int
 	 */
-	public function count()
-	{
+	public function count() {
 		return count($this->_container);
 	}
 
 	/**
 	 * @return string
 	 */
-	public function toString()
-	{
+	public function toString() {
 		$out = '';
 
 		foreach ($this->_container as $name => $content) {
 			$out .= sprintf(
 				"<meta name='$name' content='%s'/>\n",
-				htmlspecialchars($content)
+				htmlspecialchars($content),
 			);
 		}
 
@@ -85,8 +78,7 @@ class MetaNameTags extends Helper implements \Countable
 	/**
 	 * @return string
 	 */
-	public function __toString()
-	{
+	public function __toString() {
 		return $this->toString();
 	}
 }

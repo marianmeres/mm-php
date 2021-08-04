@@ -1,8 +1,7 @@
 <?php
 namespace MM\Util;
 
-class Uuid
-{
+class Uuid {
 	/**
 	 * http://stackoverflow.com/questions/2040240/php-function-to-generate-v4-uuid
 	 *
@@ -12,8 +11,7 @@ class Uuid
 	 *
 	 * @return string
 	 */
-	public static function get()
-	{
+	public static function get() {
 		$data = openssl_random_pseudo_bytes(16);
 
 		$data[6] = chr((ord($data[6]) & 0x0f) | 0x40); // set version to 0100
@@ -28,8 +26,7 @@ class Uuid
 	 * @param array|null $options
 	 * @return string
 	 */
-	public static function getShortUid($length = 10, array $options = null)
-	{
+	public static function getShortUid($length = 10, array $options = null) {
 		$c = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' . 'abcdefghijklmnopqrstuvwxyz' . '0123456789';
 		//. '-_'
 

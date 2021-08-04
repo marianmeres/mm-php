@@ -1,8 +1,7 @@
 <?php
 
 if (!function_exists('pr')) {
-	function pr(/* args */)
-	{
+	function pr(/* args */) {
 		$args = func_get_args();
 		foreach ($args as $x) {
 			if (is_bool($x) || is_null($x)) {
@@ -15,8 +14,7 @@ if (!function_exists('pr')) {
 }
 
 if (!function_exists('prx')) {
-	function prx(/* args */)
-	{
+	function prx(/* args */) {
 		call_user_func_array('pr', func_get_args());
 		exit();
 	}

@@ -3,3 +3,5 @@ singleQuote: true
 trailingComma: es5
 useTabs: true
 arrowParens: always
+phpVersion: "7.4"
+braceStyle: "1tbs"
