@@ -22,7 +22,7 @@ final class ViewTest extends TestCase {
 
 	public function testAccessingUndefinedVarTriggersNotice() {
 		$this->expectNotice();
-		$v = new View();
+		$v = new View(['strict_vars' => true]);
 		$v->some;
 	}
 

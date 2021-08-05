@@ -41,7 +41,7 @@ abstract class ViewAbstract {
 	 * Trigger notices when accessing undefined view vars?
 	 * @var bool
 	 */
-	private $_strictVars = true;
+	private $_strictVars = false;
 
 	/**
 	 * @param array $options
