@@ -141,8 +141,8 @@ abstract class ViewAbstract {
 	 * @param array $vars
 	 * @return $this
 	 */
-	public function setVars(array $vars) {
-		$this->_vars = $vars;
+	public function setVars(array $vars, $merge = false) {
+		$this->_vars = $merge ? array_merge($this->_vars, $vars) : $vars;
 		return $this;
 	}
 
@@ -340,8 +340,8 @@ abstract class ViewAbstract {
 	 * @param $template
 	 * @return string
 	 */
-	public function render($template, $ext = '.phtml') {
-		return $this->renderScript($this->_templateDir . $template);
+	public function render($template, array $vars = [], $ext = '.phtml') {
+		return $this->renderScript($this->_templateDir . $template, $vars, $ext);
 	}
 
 	/**
@@ -351,11 +351,13 @@ abstract class ViewAbstract {
 	 * @return string
 	 * @throws \Exception
 	 */
-	public function renderScript($template, $ext = '.phtml') {
+	public function renderScript($template, array $vars = [], $ext = '.phtml') {
 		// add extension if not exists
 		if ($ext && $ext !== strtolower(substr($template, -strlen($ext)))) {
 			$template .= $ext;
 		}
+
+		$this->setVars($vars, true);
 
 		// exception vypluvame na cistej luke
 		ob_start();

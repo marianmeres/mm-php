@@ -1,0 +1,5 @@
+<?php
+$vars = $this->dump();
+ksort($vars);
+echo implode('-', array_keys($vars)) . "|";
+echo implode('_', array_values($vars));

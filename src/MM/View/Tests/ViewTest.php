@@ -60,6 +60,18 @@ final class ViewTest extends TestCase {
 		$this->assertEquals('1', $v->render($tpl));
 	}
 
+	public function testPassingVarsToRenderMergesWithExisting() {
+		$v = new View();
+		$v->b = 2;
+		$v->a = 3;
+		$v->c = 3;
+		$tpl = __DIR__ . '/_tpl/dump-vars.phtml';
+		$this->assertEquals(
+			'a-b-c-d|1_2_3_4',
+			$v->render($tpl, ['a' => 1, 'b' => 2, 'd' => 4]),
+		);
+	}
+
 	public function testNonScalarTypesAreNotEscaped() {
 		$v = new View();
 		$v->a = new \stdClass();
