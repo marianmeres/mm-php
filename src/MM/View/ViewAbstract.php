@@ -340,7 +340,7 @@ abstract class ViewAbstract {
 	 * @param $template
 	 * @return string
 	 */
-	public function render($template) {
+	public function render($template, $ext = '.phtml') {
 		return $this->renderScript($this->_templateDir . $template);
 	}
 
@@ -351,7 +351,12 @@ abstract class ViewAbstract {
 	 * @return string
 	 * @throws \Exception
 	 */
-	public function renderScript($template) {
+	public function renderScript($template, $ext = '.phtml') {
+		// add extension if not exists
+		if ($ext && $ext !== strtolower(substr($template, -strlen($ext)))) {
+			$template .= $ext;
+		}
+
 		// exception vypluvame na cistej luke
 		ob_start();
 		try {
