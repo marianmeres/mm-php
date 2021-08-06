@@ -159,6 +159,13 @@ abstract class ViewAbstract {
 	}
 
 	/**
+	 * more intention friendly alias
+	 */
+	public function html($key) {
+		return $this->raw($key);
+	}
+
+	/**
 	 * @return array
 	 */
 	public function dump() {
