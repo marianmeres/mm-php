@@ -21,12 +21,6 @@ abstract class ViewAbstract {
 	protected $_helpers = [];
 
 	/**
-	 * Out-of-the-box "Two step view" design pattern
-	 * @var View
-	 */
-	private $_view;
-
-	/**
 	 * @var string
 	 */
 	private $_templateDir;
@@ -84,22 +78,6 @@ abstract class ViewAbstract {
 	 */
 	public function getAutoEscape() {
 		return $this->_autoEscape;
-	}
-
-	/**
-	 * @param View $view
-	 * @return $this
-	 */
-	public function setView(View $view = null) {
-		$this->_view = $view;
-		return $this;
-	}
-
-	/**
-	 * @return View
-	 */
-	public function view() {
-		return $this->_view;
 	}
 
 	/**
