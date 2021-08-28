@@ -1,7 +1,4 @@
 <?php
-/**
- * @author Marian Meres
- */
 namespace MM\Controller;
 
 /**
@@ -9,14 +6,8 @@ namespace MM\Controller;
  * @package MM\Controller
  */
 abstract class Helper {
-	/**
-	 * @var AbstractController
-	 */
-	protected $_controller;
+	protected ?AbstractController $_controller = null;
 
-	/**
-	 * @param AbstractController $controller
-	 */
 	public function __construct(AbstractController $controller = null) {
 		if ($controller) {
 			$this->setController($controller);
@@ -24,11 +15,7 @@ abstract class Helper {
 		}
 	}
 
-	/**
-	 * @param AbstractController $controller
-	 * @return $this
-	 */
-	public function setController(AbstractController $controller = null) {
+	public function setController(AbstractController $controller = null): Helper {
 		$this->_controller = $controller;
 		return $this;
 	}

@@ -4,6 +4,8 @@
  */
 namespace MM\Util;
 
+use JetBrains\PhpStorm\ArrayShape;
+
 /**
  * Class DbUtilPdo
  * @package MM\Util
@@ -30,62 +32,47 @@ class DbUtilPdo {
 	 * Na debug...
 	 * @var string|null
 	 */
-	public $logLabel;
+	public ?string $logLabel = null;
 
 	/**
 	 * Interny resource
-	 * @var \PDO
 	 */
-	protected $_resource;
+	protected ?\PDO $_resource = null;
 
 	/**
 	 * Optiony na connect ak nexistuje resource
-	 * @var array
 	 */
-	protected $_options = [];
+	protected array $_options = [];
 
 	/**
 	 * Pomocny flag... bude pouzity, len ak neexistuje nativna pdo (od php 5.3.3)
-	 * @var boolean
 	 */
-	protected $_inTransaction = false;
+	protected bool $_inTransaction = false;
 
 	/**
 	 * Primitivny logger quericiek poslanych db enginu. Ak null, tak deaktivovany.
 	 * Pochopitelne loguje len to, co sa posiela cez tento helper (neloguje na
 	 * urovni konekcie). Defaultne neaktivny.
-	 *
-	 * @var array|null
 	 */
-	protected $_queryLog;
+	protected ?array $_queryLog = null;
 
 	/**
 	 * Podobne ako vyssii $_queryLog, akurat neloguje samotne statementy, ale
 	 * iba suchy pocet queries... kedze toto nerobi ziaden overhead, robi to vzdy
 	 * a aktualne sa to neda vypnut (akurat resetnut)
-	 *
-	 * @var int
 	 */
-	protected $_queryLogCounter = 0;
+	protected int $_queryLogCounter = 0;
 
-	/**
-	 * @var \Closure|null
-	 */
-	public $logger;
+	public ?\Closure $logger = null;
 
 	/**
 	 * Toto je taky trosku hack kvoli sqlite ale moze to mat vyuzitie aj inde
 	 * Davam to ako public aby sa to dalo lahko editovat
-	 *
-	 * @var array
 	 */
-	public $autoInitCommands = [
+	public array $autoInitCommands = [
 		'sqlite' => ['PRAGMA foreign_keys = ON'],
 	];
 
-	/**
-	 * @param mixed $optionsOrResource
-	 */
 	public function __construct($optionsOrResource = null) {
 		if ($optionsOrResource instanceof \PDO) {
 			return $this->setResource($optionsOrResource);
@@ -100,30 +87,20 @@ class DbUtilPdo {
 
 	/**
 	 * De/Aktivuje logovanie quericiek.
-	 * @param  boolean $flag
-	 * @return bool
 	 */
-	public function activateQueryLog($flag = true) {
+	public function activateQueryLog(bool $flag = true): bool {
 		$oldValue = $this->_queryLog;
 		$this->_queryLog = $flag ? (array) $this->_queryLog : null;
 
 		// vratime bool ci bol prechadzajucu hodnotu
 		return is_array($oldValue);
-
-		//return $this;
 	}
 
-	/**
-	 * @return bool
-	 */
-	public function isQueryLogActive() {
+	public function isQueryLogActive(): bool {
 		return is_array($this->_queryLog);
 	}
 
-	/**
-	 * @return DbUtilPdo
-	 */
-	public function resetQueryLog() {
+	public function resetQueryLog(): DbUtilPdo {
 		// resetneme na cisty array iba ak je array, null ma specialny vyznam
 		// (deaktivovane logovanie)
 		if (is_array($this->_queryLog)) {
@@ -132,35 +109,23 @@ class DbUtilPdo {
 		return $this;
 	}
 
-	/**
-	 * @return array|null
-	 */
-	public function getQueryLog() {
+	public function getQueryLog(): ?array {
 		return $this->_queryLog;
 	}
 
-	/**
-	 * @return int
-	 */
-	public function getQueryLogCounter() {
+	public function getQueryLogCounter(): int {
 		return $this->_queryLogCounter;
 	}
 
-	/**
-	 * @return $this
-	 */
-	public function resetQueryLogCounter() {
+	public function resetQueryLogCounter(): DbUtilPdo {
 		$this->_queryLogCounter = 0;
 		return $this;
 	}
 
 	/**
 	 * Interny logger.
-	 * @param  string $sql
-	 * @param null $extra
-	 * @return DbUtilPdo
 	 */
-	protected function _log($sql, $extra = null) {
+	protected function _log(string $sql, $extra = null): DbUtilPdo {
 		// toto robime vzdy
 		$this->_queryLogCounter++;
 
@@ -212,23 +177,16 @@ class DbUtilPdo {
 
 	/**
 	 * Vrati driver connection resource
-	 * @return \PDO
 	 */
-	public function getResource() {
+	public function getResource(): \PDO {
 		return $this->connect()->_resource;
 	}
 
-	/**
-	 * @return boolean
-	 */
-	public function isConnected() {
+	public function isConnected(): bool {
 		return (bool) $this->_resource;
 	}
 
-	/**
-	 * @return array
-	 */
-	public function getOptions() {
+	public function getOptions(): array {
 		return $this->_options;
 	}
 
@@ -236,12 +194,8 @@ class DbUtilPdo {
 	 * Setne priamo resource konekcie. Sikovne ak treba tejto utilitke supnut
 	 * uz existujucu konnekciu odinokadial. Konkretny class musi zistit,
 	 * ci dany resource je pre neho validny.
-	 *
-	 * @param \PDO|null $pdo
-	 * @throws \InvalidArgumentException
-	 * @return DbUtilPdo
 	 */
-	public function setResource($pdo = null) {
+	public function setResource($pdo = null): DbUtilPdo {
 		// ak null tak reset a return early
 		if (null === $pdo) {
 			$this->_resource = null;
@@ -290,13 +244,8 @@ class DbUtilPdo {
 	 * )
 	 *
 	 * Umyselne ako handy staticka utilitka
-	 *
-	 * @param  array $options
-	 * @param  bool $debug
-	 * @throws \RuntimeException
-	 * @return \PDO
 	 */
-	public static function factoryResource(array $options, $debug = false) {
+	public static function factoryResource(array $options, bool $debug = false) {
 		$o = $options;
 		$dsn = '';
 
@@ -333,8 +282,8 @@ class DbUtilPdo {
 			$dsn .= ';port=' . $o['port'];
 		}
 
-		$username = isset($o['username']) ? $o['username'] : null;
-		$password = isset($o['password']) ? $o['password'] : null;
+		$username = $o['username'] ?? null;
+		$password = $o['password'] ?? null;
 
 		// unsetneme vsetko zname, a zvysok posleme ako driver specific optiony
 		$base = ['driver', 'hostname', 'database', 'port', 'username', 'password'];
@@ -357,10 +306,8 @@ class DbUtilPdo {
 
 	/**
 	 * Realne skusi connectnut db server;
-	 * @throws \RuntimeException
-	 * @return DbUtilPdo
 	 */
-	public function connect() {
+	public function connect(): DbUtilPdo {
 		if ($this->_resource) {
 			return $this;
 		}
@@ -379,19 +326,16 @@ class DbUtilPdo {
 
 	/**
 	 * Znici resource ak ho ma
-	 * @return DbUtilPdo
 	 */
-	public function disconnect() {
+	public function disconnect(): DbUtilPdo {
 		// $this->_options = array();
 		return $this->setResource(null);
 	}
 
 	/**
 	 * Vyrobi a vrati prepared statement
-	 * @param  string $sql
-	 * @return \PDOStatement
 	 */
-	public function prepare($sql) {
+	public function prepare(string $sql): \PDOStatement {
 		return $this->getResource()->prepare($sql);
 	}
 
@@ -423,8 +367,8 @@ class DbUtilPdo {
 	 * @param $fields
 	 * @param $table
 	 * @param null $where
-	 * @param array $addons
-	 * @return \PDOStatement
+	 * @param array|null $addons
+	 * @return false|mixed|\PDOStatement|string|void
 	 */
 	public function query($fields, $table, $where = null, array $addons = null) {
 		return $this->querySql(
@@ -438,8 +382,8 @@ class DbUtilPdo {
 	 * Vykona surovu query a vrati PDOStatement
 	 * @param $sql
 	 * @param null $where
-	 * @param array $addons
-	 * @return \PDOStatement
+	 * @param array|null $addons
+	 * @return false|mixed|\PDOStatement|string|void
 	 */
 	public function querySql($sql, $where = null, array $addons = null) {
 		$db = $this->getResource();
@@ -481,11 +425,11 @@ class DbUtilPdo {
 
 	/**
 	 * Vrati vsetky riadky so vsetkymi stlpcami
-	 * @param  string $fields
-	 * @param  string $table
-	 * @param  mixed $where
-	 * @param  mixed $addons
-	 * @return array
+	 * @param $fields
+	 * @param $table
+	 * @param null $where
+	 * @param array|null $addons
+	 * @return array|false
 	 */
 	public function fetchAll($fields, $table, $where = null, array $addons = null) {
 		$stmt = $this->query($fields, $table, $where, $addons);
@@ -494,10 +438,10 @@ class DbUtilPdo {
 
 	/**
 	 * Vrati vsetko pre (polo) surove sql
-	 * @param  string $sql
-	 * @param  mixed $where
-	 * @param  array $addons
-	 * @return array
+	 * @param $sql
+	 * @param null $where
+	 * @param array|null $addons
+	 * @return array|false
 	 */
 	public function fetchAllSql($sql, $where = null, array $addons = null) {
 		$stmt = $this->querySql($sql, $where, $addons);
@@ -506,14 +450,18 @@ class DbUtilPdo {
 
 	/**
 	 * Vrati prvy riadok z resultsetu ako assoc pole
-	 *
-	 * @param  string $fields
-	 * @param  string $table
-	 * @param  mixed $where
-	 * @param  array $addons
-	 * @return array|null
+	 * @param $fields
+	 * @param string $table
+	 * @param null $where
+	 * @param array|null $addons
+	 * @return mixed|null
 	 */
-	public function fetchRow($fields, $table, $where = null, array $addons = null) {
+	public function fetchRow(
+		$fields,
+		string $table,
+		$where = null,
+		array $addons = null
+	) {
 		$stmt = $this->query(
 			$fields,
 			$table,
@@ -531,11 +479,10 @@ class DbUtilPdo {
 
 	/**
 	 * fetch row pre surove sql
-	 *
-	 * @param  string $sql
-	 * @param  mixed $where
-	 * @param  array $addons
-	 * @return array|null
+	 * @param $sql
+	 * @param null $where
+	 * @param array|null $addons
+	 * @return mixed|null
 	 */
 	public function fetchRowSql($sql, $where = null, array $addons = null) {
 		$stmt = $this->querySql($sql, $where, $addons);
@@ -548,11 +495,11 @@ class DbUtilPdo {
 	 * Vrati pole hodnot prveho stlpca (0-ty index) zo vsetkych riadkov
 	 * v resultsete
 	 *
-	 * @param  string $fields
-	 * @param  string $table
-	 * @param  mixed $where
-	 * @param  array $addons
-	 * @return array|null
+	 * @param $fields
+	 * @param $table
+	 * @param null $where
+	 * @param array|null $addons
+	 * @return array|false|null
 	 */
 	public function fetchCol($fields, $table, $where = null, array $addons = null) {
 		$stmt = $this->query($fields, $table, $where, $addons);
@@ -563,10 +510,10 @@ class DbUtilPdo {
 	/**
 	 * fetch col pre surove sql
 	 *
-	 * @param  string $sql
-	 * @param  mixed $where
-	 * @param  array $addons
-	 * @return array|null
+	 * @param $sql
+	 * @param null $where
+	 * @param array|null $addons
+	 * @return array|false|null
 	 */
 	public function fetchColSql($sql, $where = null, array $addons = null) {
 		$stmt = $this->querySql($sql, $where, $addons);
@@ -577,11 +524,11 @@ class DbUtilPdo {
 	/**
 	 * Vrati hodnotu prveho stlpca v prvom riadku z resulsetu
 	 *
-	 * @param  string $fields
-	 * @param  string $table
-	 * @param  mixed $where
-	 * @param  array $addons
-	 * @return string|null
+	 * @param $fields
+	 * @param $table
+	 * @param null $where
+	 * @param array|null $addons
+	 * @return mixed|null
 	 */
 	public function fetchOne($fields, $table, $where = null, array $addons = null) {
 		$addons = (array) $addons;
@@ -598,11 +545,10 @@ class DbUtilPdo {
 
 	/**
 	 * fetch one pre surove sql
-	 *
-	 * @param  string $sql
-	 * @param  mixed $where
-	 * @param  array $addons
-	 * @return string|null
+	 * @param $sql
+	 * @param null $where
+	 * @param array|null $addons
+	 * @return mixed|null
 	 */
 	public function fetchOneSql($sql, $where = null, array $addons = null) {
 		$addons = (array) $addons;
@@ -620,56 +566,55 @@ class DbUtilPdo {
 	/**
 	 * Vrati pocet zaznamov z $table podla $where
 	 *
-	 * @param  string  $table
-	 * @param  mixed  $where
-	 * @param  boolean $debug
+	 * @param $table
+	 * @param null $where
+	 * @param false $debug
 	 * @return int
 	 */
-	public function fetchCount($table, $where = null, $debug = false) {
+	public function fetchCount($table, $where = null, bool $debug = false): int {
 		return (int) $this->fetchOne('COUNT(*) AS count', $table, $where, [
 			'debug' => $debug,
 		]);
 	}
 
 	/**
-	 * @param $keyCol
-	 * @param $valCol
-	 * @param $table
+	 * @param string $keyCol
+	 * @param string $valCol
+	 * @param string $table
 	 * @param null $where
-	 * @param array $addons
+	 * @param array|null $addons
 	 * @return array
 	 */
 	public function fetchPairs(
-		$keyCol,
-		$valCol,
-		$table,
+		string $keyCol,
+		string $valCol,
+		string $table,
 		$where = null,
 		array $addons = null
-	) {
+	): array {
 		$stmt = $this->query("$keyCol, $valCol", $table, $where, $addons);
 		return $stmt->fetchAll(\PDO::FETCH_KEY_PAIR);
 	}
 
 	/**
-	 * @param $sql
+	 * @param string $sql
 	 * @param null $where
-	 * @param array $addons
+	 * @param array|null $addons
 	 * @return array
 	 */
-	public function fetchPairsSql($sql, $where = null, array $addons = null) {
+	public function fetchPairsSql(
+		string $sql,
+		$where = null,
+		array $addons = null
+	): array {
 		$stmt = $this->querySql($sql, $where, $addons);
 		return $stmt->fetchAll(\PDO::FETCH_KEY_PAIR);
 	}
 
 	/**
 	 * Insertne $data do $table
-	 *
-	 * @param  string  $table
-	 * @param  array   $data
-	 * @param  boolean $debug
-	 * @return int
 	 */
-	public function insert($table, array $data, $debug = false) {
+	public function insert(string $table, array $data, $debug = false) {
 		$db = $this->getResource();
 
 		if (empty($data)) {
@@ -715,11 +660,7 @@ class DbUtilPdo {
 		return $out;
 	}
 
-	/**
-	 * @param  string $name
-	 * @return int
-	 */
-	public function lastInsertId($name = null) {
+	public function lastInsertId(string $name = null): int {
 		$db = $this->getResource();
 
 		// rychly hack pre postgres... POZOR: mozu nastat situacie kedy toto
@@ -747,12 +688,6 @@ class DbUtilPdo {
 
 	/**
 	 * Updadne $data v $table podla $where
-	 *
-	 * @param  string  $table
-	 * @param  array   $data
-	 * @param  mixed  $where
-	 * @param  boolean $debug
-	 * @return int      affected rows
 	 */
 	public function update($table, array $data, $where, $debug = false) {
 		$db = $this->getResource();
@@ -815,12 +750,6 @@ class DbUtilPdo {
 	 *
 	 * Tu umyselne where davam ako povinny argument do signatury, aby sa omylom
 	 * vsetko nezmazalo. Nicmenej where moze byt null (co skonci ako noop)
-	 *
-	 * @param $table
-	 * @param $where
-	 * @param array $addons
-	 * @param bool $debug
-	 * @return int|string|void
 	 */
 	public function delete($table, $where, array $addons = null, $debug = false) {
 		$db = $this->getResource();
@@ -864,11 +793,8 @@ class DbUtilPdo {
 
 	/**
 	 * Quotne identifikator (nazov stlpca/tabulky) aby bol safe v sql
-	 *
-	 * @param  string $identifier
-	 * @return string
 	 */
-	public function qi($identifier) {
+	public function qi(string $identifier): string {
 		// return early ak $identifier obsahuje "." to nechceme quotovat
 		if (false !== strpos($identifier, '.')) {
 			return $identifier;
@@ -885,12 +811,8 @@ class DbUtilPdo {
 
 	/**
 	 * Quotne hodnotu aby bola safe v sql
-	 *
-	 * @param $value
-	 * @param int $valueTypeHint
-	 * @return string
 	 */
-	public function qv($value, $valueTypeHint = \PDO::PARAM_STR) {
+	public function qv($value, int $valueTypeHint = \PDO::PARAM_STR): string {
 		// Scalar variables are: integer, float, string or boolean
 		if (is_scalar($value)) {
 			return $this->getResource()->quote($value, $valueTypeHint);
@@ -910,10 +832,8 @@ class DbUtilPdo {
 	 * Skusi zistit ci sme vo vnutri transakcie (fallbackuje na nativnu PDO
 	 * funkcionalitu, ak je k dispozicii). Vlastna detekcia bude fungovat,
 	 * len ak bola transakcia zacata via tento helper...
-	 *
-	 * @return bool
 	 */
-	public function inTransaction() {
+	public function inTransaction(): bool {
 		$db = $this->getResource();
 
 		if (method_exists($db, 'inTransaction')) {
@@ -925,11 +845,8 @@ class DbUtilPdo {
 
 	/**
 	 * Zacne transakciu
-	 *
-	 * @param  boolean $strict
-	 * @return DbUtilPdo
 	 */
-	public function begin($strict = true) {
+	public function begin(bool $strict = true): DbUtilPdo {
 		$db = $this->getResource();
 
 		if ($strict || !$this->inTransaction()) {
@@ -946,11 +863,8 @@ class DbUtilPdo {
 	/**
 	 * Komitne. Ak $strict je false, tak realne posle serveru prikaz na komit
 	 * iba ak interny flag hovori ze sme v transakcii, inak ticho ignoruje.
-	 *
-	 * @param  boolean $strict
-	 * @return DbUtilPdo
 	 */
-	public function commit($strict = true) {
+	public function commit(bool $strict = true): DbUtilPdo {
 		$db = $this->getResource();
 
 		if ($strict || $this->inTransaction()) {
@@ -966,11 +880,8 @@ class DbUtilPdo {
 	/**
 	 * Rollbackne. Ak $strict je false, tak realne posle serveru prikaz na rollback
 	 * iba ak interny flag hovori ze sme v transakcii, inak ticho ignoruje.
-	 *
-	 * @param  boolean $strict
-	 * @return DbUtilPdo
 	 */
-	public function rollback($strict = true) {
+	public function rollback(bool $strict = true): DbUtilPdo {
 		$db = $this->getResource();
 
 		if ($strict || $this->inTransaction()) {
@@ -988,12 +899,11 @@ class DbUtilPdo {
 	 * "col!", "col<", "col>", "col<>", "col>=", "col<=" a ine...
 	 *
 	 * Pozor: ak najde match, tak ho z nazvu vyreze ($col je referencovany)
-	 *
-	 * @param  string  $col
-	 * @param  boolean $forceNOT
-	 * @return string
 	 */
-	protected static function _getOptionalSignFromColNotation(&$col, $forceNOT = false) {
+	protected static function _getOptionalSignFromColNotation(
+		string &$col,
+		bool $forceNOT = false
+	): string {
 		$sign = '';
 
 		// match na 2 posledne znaky
@@ -1006,7 +916,7 @@ class DbUtilPdo {
 		}
 
 		// match na 1 posledny znak
-		elseif (preg_match("/^(!|<|>|=|~)$/", substr($col, -1), $m)) {
+		elseif (preg_match("/^([!<>=~])$/", substr($col, -1), $m)) {
 			$sign = $m[1] == '!' ? ' <> ' : " $m[1] ";
 			if (' ~ ' == $sign) {
 				$sign = ' LIKE ';
@@ -1026,11 +936,8 @@ class DbUtilPdo {
 	 * Toto davam aj ako public - prax ukazuje, ze sa to hodi... ale chova sa to
 	 * trosku rozdielne - nemodifikuje to priamo $col a defaultne vracia "="
 	 * a nie empty string
-	 *
-	 * @param $col
-	 * @return array
 	 */
-	public static function getSignFromColNotation($col) {
+	public static function getSignFromColNotation($col): array {
 		$pseudoClone = $col . '';
 		$sign = trim(self::_getOptionalSignFromColNotation($pseudoClone, false));
 		return [
@@ -1056,12 +963,8 @@ class DbUtilPdo {
 	 * array("id~" => 'abc')       ---> id LIKE 'abc'
 	 * array("id!~" => 'abc')      ---> id NOT LIKE 'abc'
 	 * array("=" => "nedotknute")  ---> nedotknute
-	 *
-	 * @param  mixed $where
-	 * @param  string $operator
-	 * @return string
 	 */
-	public function buildSqlWhere($where = null, $operator = 'AND') {
+	public function buildSqlWhere($where = null, string $operator = 'AND'): string {
 		$sql = '';
 
 		if (is_array($where)) {
@@ -1124,11 +1027,7 @@ class DbUtilPdo {
 		return ' ' . rtrim($sql);
 	}
 
-	/**
-	 * @param  array $addons
-	 * @return string
-	 */
-	public function buildSqlAddons(array $addons = null) {
+	public function buildSqlAddons(array $addons = null): string {
 		$sql = ' ';
 
 		if (!empty($addons['group_by'])) {
@@ -1150,40 +1049,22 @@ class DbUtilPdo {
 		return rtrim($sql);
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getDriverName() {
+	public function getDriverName(): string {
 		return strtolower($this->getResource()->getAttribute(\PDO::ATTR_DRIVER_NAME));
 	}
 
-	/**
-	 * Sugar
-	 * @return bool
-	 */
-	public function isSqlite() {
+	public function isSqlite(): bool {
 		return 'sqlite' == $this->getDriverName();
 	}
 
-	/**
-	 * Sugar
-	 * @return bool
-	 */
-	public function isMysql() {
+	public function isMysql(): bool {
 		return 'mysql' == $this->getDriverName();
 	}
 
-	/**
-	 * Sugar
-	 * @return bool
-	 */
-	public function isPgsql() {
+	public function isPgsql(): bool {
 		return 'pgsql' == $this->getDriverName();
 	}
 
-	/**
-	 * @return array
-	 */
 	public function getTables($details = false) {
 		$out = [];
 
@@ -1216,12 +1097,8 @@ class DbUtilPdo {
 
 	/**
 	 * Vrati zakladne data o stlpcoch pre danu tabulku
-	 *
-	 * @param $tableName
-	 * @return array
-	 * @throws \Exception
 	 */
-	public function getColumns($tableName) {
+	public function getColumns(string $tableName): array {
 		$out = [];
 		$tableName = $this->qv($tableName);
 

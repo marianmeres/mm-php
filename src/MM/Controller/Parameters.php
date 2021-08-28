@@ -11,12 +11,8 @@ namespace MM\Controller;
  */
 class Parameters extends \ArrayObject {
 	/**
-	 * Constructor
-	 *
 	 * Enforces that we have an array, and enforces parameter access to array
 	 * elements.
-	 *
-	 * @param array $values
 	 */
 	public function __construct(array $values = null) {
 		if (null === $values) {
@@ -27,22 +23,16 @@ class Parameters extends \ArrayObject {
 
 	/**
 	 * Populate from native PHP array
-	 *
-	 * @param array $values
-	 * @return $this
 	 */
-	public function fromArray(array $values) {
+	public function fromArray(array $values): Parameters {
 		$this->exchangeArray($values);
 		return $this;
 	}
 
 	/**
 	 * Populate from query string
-	 *
-	 * @param $string
-	 * @return $this
 	 */
-	public function fromString($string) {
+	public function fromString(string $string): Parameters {
 		$array = [];
 		parse_str($string, $array);
 		$this->fromArray($array);
@@ -51,19 +41,15 @@ class Parameters extends \ArrayObject {
 
 	/**
 	 * Serialize to native PHP array
-	 *
-	 * @return array
 	 */
-	public function toArray() {
+	public function toArray(): array {
 		return $this->getArrayCopy();
 	}
 
 	/**
 	 * Serialize to query string
-	 *
-	 * @return string
 	 */
-	public function toString() {
+	public function toString(): string {
 		return http_build_query($this);
 	}
 
@@ -71,22 +57,14 @@ class Parameters extends \ArrayObject {
 	 * Retrieve by key
 	 *
 	 * Returns null if the key does not exist.
-	 *
-	 * @param mixed $name
-	 * @return mixed|null
 	 */
-	public function offsetGet($name) {
-		if (isset($this[$name])) {
-			return parent::offsetGet($name);
+	public function offsetGet($key) {
+		if (isset($this[$key])) {
+			return parent::offsetGet($key);
 		}
 		return null;
 	}
 
-	/**
-	 * @param $name
-	 * @param null $default
-	 * @return mixed|null
-	 */
 	public function get($name, $default = null) {
 		if (isset($this[$name])) {
 			return parent::offsetGet($name);
@@ -94,12 +72,7 @@ class Parameters extends \ArrayObject {
 		return $default;
 	}
 
-	/**
-	 * @param string|array $name
-	 * @param mixed $value
-	 * @return $this
-	 */
-	public function set($name, $value) {
+	public function set(string $name, $value): Parameters {
 		$this[$name] = $value;
 		return $this;
 	}

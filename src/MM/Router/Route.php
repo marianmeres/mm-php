@@ -7,9 +7,9 @@ use MM\Util\Str;
 class Route {
 	const SPLITTER = '/';
 
-	protected $_route;
+	protected string $_route;
 
-	protected $_parsed;
+	protected array $_parsed;
 
 	public function __construct(string $route) {
 		$this->_route = $route;
@@ -72,7 +72,7 @@ class Route {
 		return $out;
 	}
 
-	public function parse(string $url, bool $allowQueryParams = true) {
+	public function parse(string $url, bool $allowQueryParams = true): ?array {
 		$matched = [];
 
 		$qPos = strpos($url, '?');

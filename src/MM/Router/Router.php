@@ -2,14 +2,16 @@
 
 namespace MM\Router;
 
+use phpDocumentor\Reflection\Types\Callable_;
+
 class Router {
-	protected $_routes = [];
+	protected array $_routes = [];
 
 	protected $_catchAll;
 
-	protected $_current = ['route' => null, 'params' => null, 'label' => null];
+	protected array $_current = ['route' => null, 'params' => null, 'label' => null];
 
-	protected $_subscriptions = [];
+	protected array $_subscriptions = [];
 
 	public function __construct(array $config = []) {
 		foreach ($config as $route => $cb) {
@@ -17,12 +19,12 @@ class Router {
 		}
 	}
 
-	public function reset() {
+	public function reset(): Router {
 		$this->_routes = [];
 		return $this;
 	}
 
-	public function current() {
+	public function current(): array {
 		return $this->_current;
 	}
 
@@ -39,7 +41,7 @@ class Router {
 				$this->_routes[] = [
 					new Route($route),
 					$cb,
-					array_key_exists('allowQueryParams', $addons) ? !!$addons['allowQueryParams'] : true,
+                    !array_key_exists('allowQueryParams', $addons) || !!$addons['allowQueryParams'],
 					array_key_exists('label', $addons) ? $addons['label'] : null,
 				];
 			}
@@ -83,12 +85,11 @@ class Router {
 		$this->_subscriptions[] = $fn;
 		$fn($this->current());
 
-		$unsubscribe = function () use ($fn) {
+		// return unsubscribe fn
+		return function () use ($fn) {
 			if (($key = array_search($fn, $this->_subscriptions)) !== false) {
 				unset($this->_subscriptions[$key]);
 			}
 		};
-
-		return $unsubscribe;
 	}
 }

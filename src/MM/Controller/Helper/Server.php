@@ -4,71 +4,57 @@ namespace MM\Controller\Helper;
 use MM\Controller\Helper;
 
 class Server extends Helper {
-	/**
-	 * @return $this
-	 */
-	public function __invoke() {
+	public function __invoke(): Server {
 		return $this;
 	}
 
-	/**
-	 * @return bool
-	 */
-	public function isAjax() {
+	public function isAjax(): bool {
 		return $this->getHeader('X_REQUESTED_WITH') == 'XMLHttpRequest';
 	}
 
-	/**
-	 * @return mixed
-	 */
-	public function getRequestMethod() {
+	public function getRequestMethod(): string {
 		return $this->_controller->params()->_SERVER()->REQUEST_METHOD;
 	}
 
 	/**
-	 * The POST method is used to submit an entity to the specified resource, often causing a change in state or side effects on the server
-	 * @return bool
+	 * The POST method is used to submit an entity to the specified resource,
+	 * often causing a change in state or side effects on the server
 	 */
-	public function isPost() {
+	public function isPost(): bool {
 		return $this->_controller->params()->_SERVER()->REQUEST_METHOD == 'POST';
 	}
 
 	/**
-	 * The GET method requests a representation of the specified resource. Requests using GET should only retrieve data.
-	 * @return bool
+	 * The GET method requests a representation of the specified resource.
+	 * Requests using GET should only retrieve data.
 	 */
-	public function isGet() {
+	public function isGet(): bool {
 		return $this->_controller->params()->_SERVER()->REQUEST_METHOD == 'GET';
 	}
 
 	/**
-	 * The PUT method replaces all current representations of the target resource with the request payload.
-	 * @return bool
+	 * The PUT method replaces all current representations of the target resource
+	 * with the request payload.
 	 */
-	public function isPut() {
+	public function isPut(): bool {
 		return $this->_controller->params()->_SERVER()->REQUEST_METHOD == 'PUT';
 	}
 
 	/**
 	 * The DELETE method deletes the specified resource.
-	 * @return bool
 	 */
-	public function isDelete() {
+	public function isDelete(): bool {
 		return $this->_controller->params()->_SERVER()->REQUEST_METHOD == 'DELETE';
 	}
 
 	/**
 	 * The PATCH method is used to apply partial modifications to a resource.
-	 * @return bool
 	 */
-	public function isPatch() {
+	public function isPatch(): bool {
 		return $this->_controller->params()->_SERVER()->REQUEST_METHOD == 'PATCH';
 	}
 
-	/**
-	 * @return bool
-	 */
-	public function isHttps() {
+	public function isHttps(): bool {
 		// http://php.net/manual/en/reserved.variables.server.php
 		$https = strtolower($this->_controller->params()->_SERVER()->HTTPS);
 
@@ -82,10 +68,7 @@ class Server extends Helper {
 		return 'off' != $https;
 	}
 
-	/**
-	 * @return string|null
-	 */
-	public function remoteIp() {
+	public function remoteIp(): ?string {
 		$keys = ['HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'REMOTE_ADDR'];
 		foreach ($keys as $key) {
 			if ($ip = $this->_controller->params()->_SERVER()->$key) {
@@ -95,10 +78,6 @@ class Server extends Helper {
 		return null;
 	}
 
-	/**
-	 * @param $header
-	 * @return bool
-	 */
 	public function getHeader($header) {
 		// Try to get it from the $_SERVER array first
 		$temp = 'HTTP_' . strtoupper(str_replace('-', '_', $header));

@@ -19,3 +19,10 @@ if (!function_exists('prx')) {
 		exit();
 	}
 }
+
+if (!function_exists('prxh')) {
+	function prxh(/* args */) {
+		header('Content-type: text/plain');
+		call_user_func_array('prx', func_get_args());
+	}
+}

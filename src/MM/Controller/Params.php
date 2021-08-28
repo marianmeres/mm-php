@@ -31,34 +31,16 @@ namespace MM\Controller;
  * @package MM\Controller
  */
 class Params implements \ArrayAccess {
-	/**
-	 * @var Parameters
-	 */
-	protected $_GET;
+	protected ?Parameters $_GET = null;
 
-	/**
-	 * @var Parameters
-	 */
-	protected $_POST;
+	protected ?Parameters $_POST = null;
 
-	/**
-	 * @var Parameters
-	 */
-	protected $_SERVER;
+	protected ?Parameters $_SERVER = null;
 
-	/**
-	 * @var Parameters
-	 */
-	protected $_COOKIE;
+	protected ?Parameters $_COOKIE = null;
 
-	/**
-	 * @var Parameters
-	 */
-	protected $_params;
+	protected ?Parameters $_params = null;
 
-	/**
-	 * @param array $options
-	 */
 	public function __construct(array $options = []) {
 		$params = [];
 
@@ -93,11 +75,8 @@ class Params implements \ArrayAccess {
 		}
 	}
 
-	/**
-	 * Nullne vsetky interne kontajnre. Vhodne pri testoch.
-	 * @return $this
-	 */
-	public function reset() {
+	// Nullne vsetky interne kontajnre. Vhodne pri testoch.
+	public function reset(): Params {
 		$this->_GET = null;
 		$this->_POST = null;
 		$this->_SERVER = null;
@@ -108,12 +87,8 @@ class Params implements \ArrayAccess {
 
 	/**
 	 * Main API. Skusi najst a vratit parameter. Postupuje podla poradia priority.
-	 *
-	 * @param null $key
-	 * @param null $default
-	 * @return array|null
 	 */
-	public function get($key = null, $default = null) {
+	public function get(string $key = null, $default = null) {
 		// ak key je null, tak vraciame vsetko mergnute spolu (podla priority)
 		if (null === $key) {
 			return $this->toArray();
@@ -142,9 +117,8 @@ class Params implements \ArrayAccess {
 
 	/**
 	 * Vrati vsetko mergnute podla priority
-	 * @return array
 	 */
-	public function toArray() {
+	public function toArray(): array {
 		return array_merge(
 			$this->_POST()->getArrayCopy(),
 			$this->_GET()->getArrayCopy(),
@@ -155,12 +129,8 @@ class Params implements \ArrayAccess {
 	/**
 	 * Main API. Un/setne hodnotu (alebo vsetko) do interneho "_params" kontainera.
 	 * Tato setnuta hodnota bude mat prioritu nad _GET a _POST.
-	 *
-	 * @param $dataOrKey
-	 * @param null $value
-	 * @return $this
 	 */
-	public function set($dataOrKey, $value = null) {
+	public function set($dataOrKey, $value = null): Params {
 		if (is_array($dataOrKey)) {
 			$this->_params->exchangeArray($dataOrKey);
 		} elseif (null === $value && isset($this->_params[$dataOrKey])) {
@@ -174,8 +144,6 @@ class Params implements \ArrayAccess {
 
 	/**
 	 * Magic accessor. Main API.
-	 * @param $name
-	 * @return array|null
 	 */
 	public function __get($name) {
 		return $this->get($name);
@@ -183,25 +151,15 @@ class Params implements \ArrayAccess {
 
 	/**
 	 * Magic mutator. Main API.
-	 * @param $name
-	 * @param $value
-	 * @return $this
 	 */
 	public function __set($name, $value) {
 		return $this->set($name, $value);
 	}
 
-	/**
-	 * @param $name
-	 * @return bool
-	 */
-	public function __isset($name) {
+	public function __isset($name): bool {
 		return $this->get($name, null) !== null;
 	}
 
-	/**
-	 * @param $name
-	 */
 	public function __unset($name) {
 		// do params kontajnera (s najvyssou prioritou) explictneme setneme null
 		// isset/get budu takto fungovat korektne, bez toho aby sme museli
@@ -216,9 +174,8 @@ class Params implements \ArrayAccess {
 
 	/**
 	 * @note Umyselne nekonvencny nazov
-	 * @return \MM\Controller\Parameters
 	 */
-	public function _GET() {
+	public function _GET(): Parameters {
 		if (null === $this->_GET) {
 			$this->_GET = new Parameters($_GET); // defaults to php's superglobal
 		}
@@ -227,9 +184,8 @@ class Params implements \ArrayAccess {
 
 	/**
 	 * @note Umyselne nekonvencny nazov
-	 * @return \MM\Controller\Parameters
 	 */
-	public function _POST() {
+	public function _POST(): Parameters {
 		if (null === $this->_POST) {
 			$this->_POST = new Parameters($_POST); // defaults to php's superglobal
 		}
@@ -238,9 +194,8 @@ class Params implements \ArrayAccess {
 
 	/**
 	 * @note Umyselne nekonvencny nazov
-	 * @return \MM\Controller\Parameters
 	 */
-	public function _SERVER() {
+	public function _SERVER(): Parameters {
 		if (null === $this->_SERVER) {
 			$this->_SERVER = new Parameters($_SERVER); // defaults to php's superglobal
 		}
@@ -249,9 +204,8 @@ class Params implements \ArrayAccess {
 
 	/**
 	 * @note Umyselne nekonvencny nazov
-	 * @return \MM\Controller\Parameters
 	 */
-	public function _COOKIE() {
+	public function _COOKIE(): Parameters {
 		if (null === $this->_COOKIE) {
 			$this->_COOKIE = new Parameters($_COOKIE); // defaults to php's superglobal
 		}
@@ -260,14 +214,8 @@ class Params implements \ArrayAccess {
 
 	/**
 	 * Un/Setne hodnotu do "_*" kontainerov. Mimo testov nie je dovod volat.
-	 *
-	 * @param $which
-	 * @param $dataOrKey
-	 * @param null $value
-	 * @return $this
-	 * @throws \MM\Controller\Exception
 	 */
-	public function setInternal($which, $dataOrKey, $value = null) {
+	public function setInternal($which, $dataOrKey, $value = null): Params {
 		if (!preg_match("/^_(GET|POST|SERVER|COOKIE)$/", $which)) {
 			throw new Exception("Invalid parameter '$which'");
 		}
@@ -290,21 +238,11 @@ class Params implements \ArrayAccess {
 		return $this;
 	}
 
-	/**
-	 * @param mixed $offset
-	 * @param mixed $value
-	 * @return $this|void
-	 */
 	public function offsetSet($offset, $value) {
 		return $this->set($offset, $value);
 	}
 
-	/**
-	 * @see \ArrayAccess
-	 * @param mixed $offset
-	 * @return bool
-	 */
-	public function offsetExists($offset) {
+	public function offsetExists($offset): bool {
 		// return isset($this->_params[$offset]);
 
 		// @mm nizsie myslim viac odpoveda zmyslu
@@ -312,19 +250,10 @@ class Params implements \ArrayAccess {
 		return isset($p[$offset]);
 	}
 
-	/**
-	 * @see \ArrayAccess
-	 * @param mixed $offset
-	 */
 	public function offsetUnset($offset) {
 		unset($this->_params[$offset]);
 	}
 
-	/**
-	 * @see \ArrayAccess
-	 * @param mixed $offset
-	 * @return array|mixed|null
-	 */
 	public function offsetGet($offset) {
 		return $this->get($offset);
 	}

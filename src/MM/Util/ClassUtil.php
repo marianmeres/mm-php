@@ -13,13 +13,12 @@ class ClassUtil {
 	 * Sets options which have normalized setter, or exists as public properties
 	 * Normalized setter is considered "setSome" where "some" is key in options
 	 * Feature: "under_scored" keys are also normalized to "camelCased"
-	 *
-	 * @param $object
-	 * @param array $options
-	 * @param bool $strict
-	 * @return int
 	 */
-	public static function setOptions($object, array $options = null, $strict = true) {
+	public static function setOptions(
+		$object,
+		array $options = null,
+		bool $strict = true
+	): int {
 		if (!is_object($object)) {
 			throw new \InvalidArgumentException('First argument must be an object');
 		}
@@ -70,11 +69,8 @@ class ClassUtil {
 
 	/**
 	 * Gets last segment (after last "_" or "\") from class or class name.
-	 *
-	 * @param $fullNameOrClass
-	 * @return string
 	 */
-	public static function getLastSegmentName($fullNameOrClass) {
+	public static function getLastSegmentName($fullNameOrClass): string {
 		$name = is_object($fullNameOrClass)
 			? get_class($fullNameOrClass)
 			: (string) $fullNameOrClass;
@@ -91,12 +87,8 @@ class ClassUtil {
 	/**
 	 * Gets list of **all** traits recursively which $class uses
 	 * Taken from: http://www.php.net/manual/en/function.class-uses.php
-	 *
-	 * @param $class
-	 * @param bool $autoload
-	 * @return array
 	 */
-	public static function classUsesDeep($class, $autoload = true) {
+	public static function classUsesDeep($class, bool $autoload = true): array {
 		$traits = [];
 
 		// Get traits of all parent classes
@@ -121,13 +113,8 @@ class ClassUtil {
 
 	/**
 	 * Skusi ticho autoloadnut classname.
-	 *
-	 * @param $className
-	 * @return bool
-	 * @throws \ErrorException
-	 * @throws \Exception
 	 */
-	public static function classExists($className) {
+	public static function classExists(string $className): bool {
 		// nizsim set-om a restore-om error handlera riesime to, ze chceme
 		// ticho vynutit nativny autoload ale uplne stisit via "@" ho zase
 		// nechceme...

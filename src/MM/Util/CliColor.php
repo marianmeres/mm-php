@@ -12,7 +12,7 @@ class CliColor {
 	/**
 	 * @var array
 	 */
-	protected static $_ANSI_CODES = [
+	protected static array $_ANSI_CODES = [
 		'off' => 0,
 		'bold' => 1,
 		'italic' => 3,
@@ -40,12 +40,7 @@ class CliColor {
 		'white_bg' => 47,
 	];
 
-	/**
-	 * @param $str
-	 * @param $color
-	 * @return string
-	 */
-	public static function set($str, $color) {
+	public static function set($str, $color): string {
 		$colors = explode('+', $color);
 		$out = '';
 		$isColored = false;
@@ -70,59 +65,31 @@ class CliColor {
 	 * nizsie su aliasy
 	 */
 
-	/**
-	 * @param $s
-	 * @return string
-	 */
-	public static function red($s) {
+	public static function red($s): string {
 		return self::set($s, 'red');
 	}
 
-	/**
-	 * @param $s
-	 * @return string
-	 */
-	public static function green($s) {
+	public static function green($s): string {
 		return self::set($s, 'green');
 	}
 
-	/**
-	 * @param $s
-	 * @return string
-	 */
-	public static function yellow($s) {
+	public static function yellow($s): string {
 		return self::set($s, 'yellow');
 	}
 
-	/**
-	 * @param $s
-	 * @return string
-	 */
-	public static function blue($s) {
+	public static function blue($s): string {
 		return self::set($s, 'blue');
 	}
 
-	/**
-	 * @param $s
-	 * @return string
-	 */
-	public static function magenta($s) {
+	public static function magenta($s): string {
 		return self::set($s, 'magenta');
 	}
 
-	/**
-	 * @param $s
-	 * @return string
-	 */
-	public static function cyan($s) {
+	public static function cyan($s): string {
 		return self::set($s, 'cyan');
 	}
 
-	/**
-	 * @param $s
-	 * @return string
-	 */
-	public static function white($s) {
+	public static function white($s): string {
 		return self::set($s, 'white');
 	}
 }

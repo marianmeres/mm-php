@@ -17,38 +17,21 @@ abstract class AbstractController {
 	/**
 	 * Internal container for _GET, _POST, _SERVER and custom data.
 	 * Usage: $this->params()->key
-	 *
-	 * @var Params
 	 */
-	protected $_params;
+	protected ?Params $_params = null;
 
-	/**
-	 * @var Response
-	 */
-	protected $_response;
+	protected ?Response $_response = null;
 
-	/**
-	 * Last thrown exception
-	 * @var Exception
-	 */
-	protected $_exception;
+	// Last thrown exception
+	protected ?\Exception $_exception = null;
 
-	/**
-	 * Internal test helper flag (mainly to rethrow exceptions)
-	 * @var bool
-	 */
-	public $testMode = false;
+	// Internal test helper flag (mainly to rethrow exceptions)
+	public bool $testMode = false;
 
-	/**
-	 * Instantiated helper instances
-	 * @var array
-	 */
-	protected $_helpers = [];
+	// Instantiated helper instances
+	protected array $_helpers = [];
 
-	/**
-	 * @var bool
-	 */
-	protected $_obEnabled = true;
+	protected bool $_obEnabled = true;
 
 	/**
 	 *
@@ -189,13 +172,9 @@ abstract class AbstractController {
 		return self::_normalizeActionName($action) . 'Action';
 	}
 
-	/**
-	 * @throws Exception
-	 * @throws Exception\PageNotFound
-	 */
 	public function __call(string $name, array $arguments) {
 		// najskor skusime handler akcie
-		if ('Action' == substr($name, -6)) {
+		if ('Action' === substr($name, -6)) {
 			throw new Exception\PageNotFound("Missing action handler for '$name'", 404);
 		}
 
@@ -208,7 +187,7 @@ abstract class AbstractController {
 	 *
 	 * Outputs by default
 	 */
-	public function dispatch(string $action = null, bool $output = true) {
+	public function dispatch(string $action = null, bool $output = true): ?Response {
 		// jednotlive kroky (vratane erroru) bufferujeme samostatne aby sme
 		// mali segmenty pod kontrolou v kazdom z nich
 		//
@@ -266,11 +245,13 @@ abstract class AbstractController {
 			$this->response()->setBody($errBody, false);
 		}
 
-		if ($output) {
-			return $this->response()->output();
+		if (!$output) {
+			return $this->response();
 		}
 
-		return $this->response();
+		$this->response()->output();
+
+		return null;
 	}
 
 	/**
@@ -403,9 +384,6 @@ abstract class AbstractController {
 		);
 	}
 
-	/**
-	 * @throws Exception
-	 */
 	public function setHelpers(array $nameToFqn): AbstractController {
 		foreach ($nameToFqn as $name => $fqn) {
 			$this->setHelper($name, $fqn);
@@ -413,10 +391,7 @@ abstract class AbstractController {
 		return $this;
 	}
 
-	/**
-	 * @throws Exception
-	 */
-	public function getHelper(string $name, $fallbackFqnOrInstance = null): Helper {
+	public function getHelper(string $name, $fallbackFqnOrInstance = null): ?Helper {
 		$name = $this->_normalizeHelperName($name);
 
 		//
@@ -441,18 +416,12 @@ abstract class AbstractController {
 		return $this->_helpers[$name];
 	}
 
-	/**
-	 * @param $name
-	 * @return bool
-	 */
-	public function hasHelper($name) {
+	public function hasHelper(string $name): bool {
 		$name = $this->_normalizeHelperName($name);
 		return isset($this->_helpers[$name]);
 	}
 
-	/**
-	 * Built in helper
-	 */
+	// Built in helper
 	public function server(): Server {
 		return $this->getHelper('server', Server::class);
 	}

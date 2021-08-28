@@ -96,15 +96,12 @@ class Response implements \ArrayAccess {
 	 */
 	protected $_status = 200;
 
-	/**
-	 * Sets/appends body segment
-	 *
-	 * @param string $value
-	 * @param bool $replace
-	 * @param string $segment
-	 * @return Response
-	 */
-	public function setBody($value, $replace = true, $segment = 'default') {
+	// Sets/appends body segment
+	public function setBody(
+		$value,
+		bool $replace = true,
+		string $segment = 'default'
+	): Response {
 		// ak je value array, tak reset celeho body
 		if (is_array($value)) {
 			$this->_body = $value;
@@ -126,13 +123,11 @@ class Response implements \ArrayAccess {
 		return $this;
 	}
 
-	/**
-	 * @param $key
-	 * @param $value
-	 * @param bool $replace
-	 * @return $this
-	 */
-	public function setHeader($key, $value, $replace = true) {
+	public function setHeader(
+		string $key,
+		string $value,
+		bool $replace = true
+	): Response {
 		$key = $this->_normalizeHeaderKey($key);
 		$value = $this->_normalizeHeaderValue($value);
 
@@ -156,14 +151,8 @@ class Response implements \ArrayAccess {
 	 *
 	 * DISCLAIMER: ziadnu RFC cookie specifikaciu som nikdy necital... jedine
 	 * toto: http://en.wikipedia.org/wiki/HTTP_cookie
-	 *
-	 * @param $name
-	 * @param $value
-	 * @param array $options
-	 * @return $this
-	 * @throws Exception
 	 */
-	public function setCookie($name, $value, array $options = []) {
+	public function setCookie(string $name, $value, array $options = []): Response {
 		$name = trim($name);
 
 		// sanity check
@@ -244,12 +233,8 @@ class Response implements \ArrayAccess {
 		return $this;
 	}
 
-	/**
-	 * Interny helper - prejde vsetky cookies a necha len poslednu podla mena
-	 *
-	 * @return $this
-	 */
-	public function _uniquizeCookies() {
+	// Interny helper - prejde vsetky cookies a necha len poslednu podla mena
+	public function _uniquizeCookies(): Response {
 		$unique = [];
 		$cookieHdr = $this->_normalizeHeaderKey('Set-Cookie');
 		if (!empty($this->_headers[$cookieHdr])) {
@@ -262,13 +247,8 @@ class Response implements \ArrayAccess {
 		return $this;
 	}
 
-	/**
-	 * Navratova hodnota tu mimickuje parametre vyssej setCookie
-	 *
-	 * @param $name
-	 * @return array|null
-	 */
-	public function getCookie($name) {
+	// Navratova hodnota tu mimickuje parametre vyssej setCookie
+	public function getCookie($name): ?array {
 		$cookies = $this->getCookies();
 
 		foreach ($cookies as $hdrString) {
@@ -290,10 +270,7 @@ class Response implements \ArrayAccess {
 		return null;
 	}
 
-	/**
-	 * @return array
-	 */
-	public function getCookies() {
+	public function getCookies(): array {
 		$cookieHdr = $this->_normalizeHeaderKey('Set-Cookie');
 		$cookies = [];
 		if (!empty($this->_headers[$cookieHdr])) {
@@ -305,39 +282,24 @@ class Response implements \ArrayAccess {
 	/**
 	 * When deleting a cookie you should assure that the expiration date is in
 	 * the past, to trigger the removal mechanism in your browser.
-	 *
-	 * @param $name
-	 * @param array $options
-	 * @return $this
 	 */
-	public function unsetCookie($name, array $options = []) {
+	public function unsetCookie(string $name, array $options = []): Response {
 		// nizsie (null hodnota) aj trigerne expires v minulosti
 		return $this->setCookie($name, null, $options);
 	}
 
-	/**
-	 * Debug unfriendly cast to string (body only)
-	 * @return string
-	 */
-	public function __toString() {
+	// Debug unfriendly cast to string (body only)
+	public function __toString(): string {
 		return $this->toString();
 	}
 
-	/**
-	 * Debug friendly cast to string (body only)
-	 * @return string
-	 */
-	public function toString() {
+	// Debug friendly cast to string (body only)
+	public function toString(): string {
 		ksort($this->_body);
 		return implode('', $this->_body);
 	}
 
-	/**
-	 * @param null $key
-	 * @param null $default
-	 * @return array|null
-	 */
-	public function getBody($key = null, $default = null) {
+	public function getBody(string $key = null, $default = null) {
 		if (null == $key) {
 			return $this->_body;
 		}
@@ -347,10 +309,7 @@ class Response implements \ArrayAccess {
 		return $default;
 	}
 
-	/**
-	 * @return bool
-	 */
-	public function isBodyEmpty() {
+	public function isBodyEmpty(): bool {
 		foreach ($this->_body as $key => $content) {
 			if ('' != $content) {
 				return false;
@@ -359,38 +318,23 @@ class Response implements \ArrayAccess {
 		return true;
 	}
 
-	/**
-	 * @return Response
-	 */
-	public function reset() {
+	public function reset(): Response {
 		$this->setStatusCode(200);
 		$this->_body = [];
 		$this->_headers = [];
 		return $this;
 	}
 
-	/**
-	 * @param string $key
-	 * @return mixed
-	 */
-	public function getHeader($key) {
+	public function getHeader(string $key): ?string {
 		$key = $this->_normalizeHeaderKey($key);
-		return isset($this->_headers[$key]) ? $this->_headers[$key] : null;
+		return $this->_headers[$key] ?? null;
 	}
 
-	/**
-	 * @return array
-	 */
-	public function getHeaders() {
+	public function getHeaders(): array {
 		return $this->_headers;
 	}
 
-	/**
-	 * @param $value
-	 * @return $this
-	 * @throws Exception
-	 */
-	public function setStatusCode($value) {
+	public function setStatusCode(int $value): Response {
 		if (!isset(self::$_statuses[$value])) {
 			throw new Exception("Uknown status '$value'");
 		}
@@ -398,33 +342,19 @@ class Response implements \ArrayAccess {
 		return $this;
 	}
 
-	/**
-	 * @param $value
-	 * @return bool
-	 */
-	public function isValidStatusCode($value) {
+	public function isValidStatusCode($value): bool {
 		return isset(self::$_statuses[$value]);
 	}
 
-	/**
-	 * @return int
-	 */
-	public function getStatusCode() {
+	public function getStatusCode(): int {
 		return $this->_status;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getStatusCodeMessage() {
+	public function getStatusCodeMessage(): string {
 		return self::$_statuses[$this->_status];
 	}
 
-	/**
-	 * @param string $version
-	 * @return string
-	 */
-	public function getStatusAsString($version = '1.1') {
+	public function getStatusAsString(string $version = '1.1'): string {
 		return sprintf(
 			"HTTP/$version %d %s",
 			$this->getStatusCode(),
@@ -432,11 +362,8 @@ class Response implements \ArrayAccess {
 		);
 	}
 
-	/**
-	 * Output headers via php's header() function
-	 * @return $this
-	 */
-	public function send() {
+	// Outputs headers via php's header() function
+	public function send(): Response {
 		// ma zmysel vypluvat aj OK?
 		if (200 !== $this->getStatusCode()) {
 			header($this->getStatusAsString());
@@ -458,146 +385,88 @@ class Response implements \ArrayAccess {
 		return $this;
 	}
 
-	/**
-	 * Posle hlavicky a echne telo
-	 */
-	public function output() {
+	// Send headers + echo body
+	public function output(): void {
 		echo $this->send();
 	}
 
-	/**
-	 * Does the status code indicate a client error?
-	 * @return bool
-	 */
-	public function isClientError() {
+	// Does the status code indicate a client error?
+	public function isClientError(): bool {
 		$code = $this->getStatusCode();
 		return $code < 500 && $code >= 400;
 	}
 
-	/**
-	 * Is the request forbidden due to ACLs?
-	 * @return bool
-	 */
-	public function isForbidden() {
+	// Is the request forbidden due to ACLs?
+	public function isForbidden(): bool {
 		return 403 == $this->getStatusCode();
 	}
 
-	/**
-	 * Does the status code indicate the resource is not found?
-	 * @return bool
-	 */
-	public function isNotFound() {
+	// Does the status code indicate the resource is not found?
+	public function isNotFound(): bool {
 		return 404 === $this->getStatusCode();
 	}
 
-	/**
-	 * Do we have a normal, OK response?
-	 * @return bool
-	 */
-	public function isOk() {
+	// Do we have a normal, OK response?
+	public function isOk(): bool {
 		return 200 === $this->getStatusCode();
 	}
 
-	/**
-	 * Does the status code reflect a server error?
-	 * @return bool
-	 */
-	public function isServerError() {
+	// Does the status code reflect a server error?
+	public function isServerError(): bool {
 		$code = $this->getStatusCode();
 		return 500 <= $code && 600 > $code;
 	}
 
-	/**
-	 * Do we have a redirect?
-	 * @return bool
-	 */
-	public function isRedirect() {
+	public function isRedirect(): bool {
 		$code = $this->getStatusCode();
 		return 300 <= $code && 400 > $code;
 	}
 
-	/**
-	 * Was the response successful?
-	 * @return bool
-	 */
-	public function isSuccess() {
+	// Was the response successful?
+	public function isSuccess(): bool {
 		$code = $this->getStatusCode();
 		return 200 <= $code && 300 > $code;
 	}
 
-	/**
-	 * @param $key
-	 * @return string
-	 */
-	protected function _normalizeHeaderKey($key) {
+	protected function _normalizeHeaderKey(string $key): string {
 		// "nIeco-ta KE:" => "Nieco-Ta-Ke"
 		$key = trim(strtolower($key), ' :');
 		$key = ucwords(str_replace('-', ' ', $key));
-		$key = str_replace(' ', '-', $key);
-		return $key;
+		return str_replace(' ', '-', $key);
 	}
 
-	/**
-	 * @param $value
-	 * @return string
-	 */
-	protected function _normalizeHeaderValue($value) {
+	protected function _normalizeHeaderValue(string $value): string {
 		return trim($value);
 	}
 
-	/**
-	 * @see \ArrayAccess
-	 * @param $offset
-	 * @param $value
-	 */
 	public function offsetSet($offset, $value) {
 		$this->setBody($value, true, $offset);
 	}
 
-	/**
-	 * @see \ArrayAccess
-	 * @param mixed $offset
-	 * @return bool
-	 */
-	public function offsetExists($offset) {
+	public function offsetExists($offset): bool {
 		return isset($this->_body[$offset]);
 	}
 
-	/**
-	 * @see \ArrayAccess
-	 * @param mixed $offset
-	 */
 	public function offsetUnset($offset) {
 		unset($this->_body[$offset]);
 	}
 
-	/**
-	 * @see \ArrayAccess
-	 * @param mixed $offset
-	 * @return array|mixed|null
-	 */
-	public function offsetGet($offset) {
+	public function offsetGet($offset): ?array {
 		return $this->getBody($offset);
 	}
 
-	/**
-	 * sugar
-	 */
-	public function asText() {
+	// sugar
+	public function asText(): Response {
 		return $this->setHeader('Content-type', 'text/plain; charset=UTF-8');
 	}
 
-	/**
-	 * sugar
-	 */
-	public function asJson() {
+	// sugar
+	public function asJson(): Response {
 		return $this->setHeader('Content-type', 'application/json');
 	}
 
-	/**
-	 * sugar
-	 */
-	public function asHtml() {
+	// sugar
+	public function asHtml(): Response {
 		return $this->setHeader('Content-type', 'text/html; charset=UTF-8');
 	}
 }
