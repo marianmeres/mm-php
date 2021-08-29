@@ -1,16 +1,10 @@
 <?php
-/**
- * @author Marian Meres
- */
+
 namespace MM\View\Helper;
 
 use MM\View\Helper;
 use MM\View\Exception;
 
-/**
- * Class ContainerOfStrings
- * @package MM\View\Helper
- */
 class ContainerOfStrings extends Helper implements \Countable {
 	/**
 	 * @var array

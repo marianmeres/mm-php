@@ -1,13 +1,7 @@
 <?php
-/**
- * @author Marian Meres
- */
+
 namespace MM\View\Helper;
 
-/**
- * Class HeadScriptSrc
- * @package MM\View\Helper
- */
 class HeadScriptSrc extends ContainerOfStrings {
 	/**
 	 * @var bool

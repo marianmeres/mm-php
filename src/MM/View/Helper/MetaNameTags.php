@@ -1,16 +1,10 @@
 <?php
-/**
- * @author Marian Meres
- */
+
 namespace MM\View\Helper;
 
 use MM\View\Exception;
 use MM\View\Helper;
 
-/**
- * Class HeadCss
- * @package MM\View\Helper
- */
 class MetaNameTags extends Helper implements \Countable {
 	/**
 	 * @var array

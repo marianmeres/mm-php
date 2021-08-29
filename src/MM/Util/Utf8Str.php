@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 /**
  * Portnute veci z webu roznych miest do MM\Util
  * @author www

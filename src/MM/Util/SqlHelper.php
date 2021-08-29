@@ -1,12 +1,7 @@
-<?php
-/**
- * @author Marian Meres
- */
+<?php declare(strict_types=1);
+
 namespace MM\Util;
 
-/**
- *
- */
 class SqlHelper {
 	/**
 	 * @param array $custom

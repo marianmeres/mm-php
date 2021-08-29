@@ -1,7 +1,5 @@
 <?php
-/**
- * @author Marian Meres
- */
+
 namespace MM\View;
 
 use MM\View\Helper\BodyTagClass;
@@ -23,10 +21,6 @@ use MM\View\Helper\LinkRelPrev;
 use MM\View\Helper\MetaNameTags;
 use MM\View\Helper\OpenGraphData;
 
-/**
- * Class View
- * @package MM\View
- */
 class View extends ViewAbstract {
 	/**
 	 * @var mixed

@@ -1,10 +1,8 @@
 <?php
+declare(strict_types=1);
+
 namespace MM\Controller;
 
-/**
- * Class Helper
- * @package MM\Controller
- */
 abstract class Helper {
 	protected ?AbstractController $_controller = null;
 

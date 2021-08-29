@@ -1,13 +1,7 @@
-<?php
-/**
- * @author Marian Meres
- */
+<?php declare(strict_types=1);
+
 namespace MM\Util;
 
-/**
- * Class ClassUtil
- * @package MM\Util
- */
 class ClassUtil {
 	/**
 	 * Sets options which have normalized setter, or exists as public properties

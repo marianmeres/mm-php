@@ -1,13 +1,7 @@
-<?php
-/**
- * @author Marian Meres
- */
+<?php declare(strict_types=1);
+
 namespace MM\Util;
 
-/**
- * Interface TranslateInterface
- * @package MM\Util
- */
 interface TranslateInterface {
 	/**
 	 * @param $key

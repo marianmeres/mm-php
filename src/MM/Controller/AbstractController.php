@@ -1,8 +1,6 @@
 <?php
-/**
- * Inspired by ZF1. Simplified.
- * @author  Marian Meres
- */
+declare(strict_types=1);
+
 namespace MM\Controller;
 
 use MM\Controller\Exception;
@@ -11,7 +9,7 @@ use MM\Controller\Helper\Server;
 
 /**
  * Class AbstractController
- * @package MM\Controller
+ * Inspired by ZF1. Simplified.
  */
 abstract class AbstractController {
 	/**

@@ -1,12 +1,6 @@
-<?php
-/**
- * @author Marian Meres
- */
+<?php declare(strict_types=1);
+
 namespace MM\View;
 
-/**
- * Class Exception
- * @package MM\View
- */
 class Exception extends \Exception {
 }

@@ -2,6 +2,7 @@
 
 namespace MM\Controller\Tests;
 
+use DateTimeInterface;
 use MM\Controller\Exception;
 use MM\Controller\Response;
 use PHPUnit\Framework\TestCase;
@@ -129,21 +130,21 @@ final class ResponseTest extends TestCase {
 		$this->assertEquals(
 			$c[1],
 			'c=d; domain=www.nba.com; path=/; expires=' .
-				date(\DateTime::COOKIE, time() + $dur),
+				date(DateTimeInterface::COOKIE, time() + $dur),
 		);
 		$this->assertEquals(
 			$c[2],
-			sprintf('e=f; expires=%s; secure; httponly', date(\DateTime::COOKIE, $exp)),
+			sprintf('e=f; expires=%s; secure; httponly', date(DateTimeInterface::COOKIE, $exp)),
 		);
 
 		// _COOKIE
-		$this->assertEquals($_COOKIE['a'], 'b');
-		$this->assertEquals($_COOKIE['c'], 'd');
-		$this->assertEquals($_COOKIE['e'], 'f');
+		$this->assertEquals('b', $_COOKIE['a']);
+		$this->assertEquals('d', $_COOKIE['c']);
+		$this->assertEquals('f', $_COOKIE['e']);
 
 		//
 		$c = $r->getCookie('a');
-		$this->assertEquals($c, ['a', 'b', []]);
+		$this->assertEquals(['a', 'b', []], $c);
 
 		$c = $r->getCookie('c');
 		$this->assertEquals($c, [

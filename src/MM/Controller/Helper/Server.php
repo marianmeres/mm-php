@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace MM\Controller\Helper;
 
 use MM\Controller\Helper;
@@ -56,7 +58,7 @@ class Server extends Helper {
 
 	public function isHttps(): bool {
 		// http://php.net/manual/en/reserved.variables.server.php
-		$https = strtolower($this->_controller->params()->_SERVER()->HTTPS);
+		$https = strtolower(strval($this->_controller->params()->_SERVER()->HTTPS));
 
 		// Set to a non-empty value if the script was queried through the HTTPS protocol.
 		if (empty($https)) {

@@ -1,12 +1,12 @@
 <?php
+declare(strict_types=1);
+
 namespace MM\Controller;
 
+use DateTimeInterface;
+use JetBrains\PhpStorm\Pure;
 use MM\Controller\Exception;
 
-/**
- * Class Response
- * @package MM\Controller
- */
 class Response implements \ArrayAccess {
 	/**
 	 * Suchy list podporovanych statusov a ich hlasok. Editovat podla potreby,
@@ -14,7 +14,7 @@ class Response implements \ArrayAccess {
 	 *
 	 * @var array
 	 */
-	protected static $_statuses = [
+	protected static array $_statuses = [
 		// INFORMATIONAL CODES
 		100 => 'Continue',
 		101 => 'Switching Protocols',
@@ -83,18 +83,18 @@ class Response implements \ArrayAccess {
 	 * Telo responsu, rozdelene na segmenty. Defaultny segment sa vola "default"
 	 * @var array
 	 */
-	protected $_body = [];
+	protected array $_body = [];
 
 	/**
 	 * @var array
 	 */
-	protected $_headers = [];
+	protected array $_headers = [];
 
 	/**
 	 * Current http status code
 	 * @var int
 	 */
-	protected $_status = 200;
+	protected int $_status = 200;
 
 	// Sets/appends body segment
 	public function setBody(
@@ -173,7 +173,7 @@ class Response implements \ArrayAccess {
 		$pairs = ["$name=$value"];
 
 		array_walk($options, function ($v, $k) {
-			return strtolower($v);
+			return strtolower("$v");
 		});
 
 		if (!empty($options['domain'])) {
@@ -202,8 +202,8 @@ class Response implements \ArrayAccess {
 			$expires = time() + (int) $options['lifetime'];
 		}
 		if (!empty($expires)) {
-			if (preg_match('/\d+/', $expires)) {
-				$expires = date(\DateTime::COOKIE, $expires);
+			if (preg_match('/\d+/', "$expires")) {
+				$expires = date(DateTimeInterface::COOKIE, $expires);
 			}
 			$pairs[] = "expires=$expires";
 		}
@@ -261,7 +261,7 @@ class Response implements \ArrayAccess {
 				$options = [];
 				foreach ($pairs as $pair) {
 					$kv = explode('=', trim($pair));
-					$options[trim($kv[0])] = isset($kv[1]) ? $kv[1] : null;
+					$options[trim($kv[0])] = $kv[1] ?? null;
 				}
 				$out[] = $options;
 				return $out;

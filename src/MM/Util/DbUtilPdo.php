@@ -1,15 +1,10 @@
 <?php
-/**
- * @author Marian Meres
- */
+
 namespace MM\Util;
 
 use JetBrains\PhpStorm\ArrayShape;
 
 /**
- * Class DbUtilPdo
- * @package MM\Util
- *
  * PDO helper. Features:
  * - unified api
  * - auto input escape (in typical scenarios)
@@ -1015,12 +1010,12 @@ class DbUtilPdo {
 					$sql .= sprintf("$operator %s%s ", $this->qi($col), $val);
 				}
 			}
-		} elseif ('' != trim($where)) {
+		} elseif (null !== $where && '' !== trim($where)) {
 			$sql .= "$operator $where";
 		}
 
 		// odrezeme $operator zlava
-		if (0 === strpos($sql, $operator)) {
+		if (str_starts_with($sql, $operator)) {
 			$sql = substr($sql, strlen($operator));
 		}
 

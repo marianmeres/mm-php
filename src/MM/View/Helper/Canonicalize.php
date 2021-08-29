@@ -1,15 +1,10 @@
 <?php
-/**
- * @author Marian Meres
- */
+
 namespace MM\View\Helper;
 use MM\Util\Url;
 use MM\View\Exception;
 use MM\View\Helper;
 
-/**
- * @package MM\View\Helper
- */
 class Canonicalize extends Helper {
 	/**
 	 * @param $url

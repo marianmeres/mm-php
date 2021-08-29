@@ -1,13 +1,7 @@
 <?php
-/**
- * @author Marian Meres
- */
+
 namespace MM\View;
 
-/**
- * Class ViewAbstract
- * @package MM\View
- */
 abstract class ViewAbstract {
 	/**
 	 * @var array

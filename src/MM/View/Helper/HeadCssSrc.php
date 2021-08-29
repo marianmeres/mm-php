@@ -1,13 +1,6 @@
 <?php
-/**
- * @author Marian Meres
- */
 namespace MM\View\Helper;
 
-/**
- * Class HeadCssSrc
- * @package MM\View\Helper
- */
 class HeadCssSrc extends ContainerOfStrings {
 	/**
 	 * @var bool

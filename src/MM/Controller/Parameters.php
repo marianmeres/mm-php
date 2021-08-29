@@ -1,14 +1,12 @@
 <?php
-/**
- * Ported/Inspired from Zend\Stdlib\Parameters
- */
+declare(strict_types=1);
 
 namespace MM\Controller;
 
 /**
- * Class Parameters
- * @package MM\Controller
+ * Ported/Inspired from Zend\Stdlib\Parameters
  */
+
 class Parameters extends \ArrayObject {
 	/**
 	 * Enforces that we have an array, and enforces parameter access to array

@@ -1,13 +1,6 @@
 <?php
-/**
- * @author Marian Meres
- */
 namespace MM\View;
 
-/**
- * Class Helper
- * @package MM\View
- */
 class Helper {
 	/**
 	 * @var View

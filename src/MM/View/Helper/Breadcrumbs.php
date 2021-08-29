@@ -1,13 +1,8 @@
 <?php
-/**
- * @author Marian Meres
- */
+
 namespace MM\View\Helper;
 use MM\View\Exception;
 
-/**
- * @package MM\View\Helper
- */
 class Breadcrumbs extends ContainerOfData {
 	public $screenReaderOnlyCssClassname = 'sr-only';
 	public $ariaTitleContent = 'Breadcrumb navigation';

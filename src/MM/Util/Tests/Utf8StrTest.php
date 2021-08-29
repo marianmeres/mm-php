@@ -1,7 +1,5 @@
 <?php
-/**
- * @author Marian Meres
- */
+
 namespace MM\Util\Tests;
 
 use MM\Util\Utf8Str;

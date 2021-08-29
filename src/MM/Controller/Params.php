@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Obal nad parametrami controllera. Pod parametrami sa tu mysli:
  * _GET, _POST, _SERVER a "custom", kde "custom" maju najvyssiu prioritu.
@@ -22,14 +24,9 @@
  * _GET(), _POST(), _SERVER() aby explicitne odrazali co znamenaju.
  *
  * @todo cookie?
- * @author Marian Meres
  */
 namespace MM\Controller;
 
-/**
- * Class Params
- * @package MM\Controller
- */
 class Params implements \ArrayAccess {
 	protected ?Parameters $_GET = null;
 

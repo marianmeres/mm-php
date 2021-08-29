@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace MM\Util\Tests\ClassUtil;
 
@@ -10,6 +11,6 @@ class DummyChild extends DummyParent {
 	/**
 	 * Umyslne overridneme so zlou signaturou
 	 */
-	public function foo($wrong) {
+	public function foo(array $x, array $y) {
 	}
 }

@@ -1,14 +1,7 @@
 <?php
-/**
- * @author Marian Meres
- */
 namespace MM\View\Helper;
 use MM\View\Exception;
 
-/**
- * Class HeadCss
- * @package MM\View\Helper
- */
 class LinkRel extends ContainerOfData {
 	/**
 	 * @param $data

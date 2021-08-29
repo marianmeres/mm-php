@@ -32,7 +32,7 @@ class ClassUtilTest extends TestCase {
 		];
 		$actual = ClassUtil::classUsesDeep('MM\Util\Tests\ClassUtil\Potomok');
 
-		$this->assertEquals(count($expected), count($actual));
+		$this->assertSameSize($expected, $actual);
 
 		// kedze poradie najskor neviem garantovat, tak si to loopneme
 		// lebo priame porovnanie by nemuselo sediet
@@ -54,8 +54,9 @@ class ClassUtilTest extends TestCase {
 		ClassUtil::classExists('MM\Util\Tests\ClassUtil\Dummy2');
 	}
 
-	public function testClassExistsPhpErrorExceptionInClassIsRethrown() {
-		$this->expectException(ErrorException::class);
-		ClassUtil::classExists('MM\Util\Tests\ClassUtil\DummyChild');
-	}
+	// pre php 8 je toto zbytocne
+	// public function testClassExistsPhpErrorExceptionInClassIsRethrown() {
+	// 	$this->expectException(ErrorException::class);
+	// 	ClassUtil::classExists('MM\Util\Tests\ClassUtil\DummyChild');
+	// }
 }

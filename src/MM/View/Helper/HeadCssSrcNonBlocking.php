@@ -1,13 +1,7 @@
 <?php
-/**
- * @author Marian Meres
- */
+
 namespace MM\View\Helper;
 
-/**
- * Class HeadCssSrcNonBlocking
- * @package MM\View\Helper
- */
 class HeadCssSrcNonBlocking extends HeadCssSrc {
 	/**
 	 * @return string

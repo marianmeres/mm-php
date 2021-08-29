@@ -1,13 +1,7 @@
-<?php
-/**
- * @author Marian Meres
- */
+<?php declare(strict_types=1);
+
 namespace MM\Util;
 
-/**
- * Class Xml
- * @package MM\Util
- */
 class Xml {
 	/**
 	 * Intentionally not using DOM, pure string stuff
@@ -88,8 +82,8 @@ class Xml {
 							// force array
 							$attrs .= sprintf(
 								' %s="%s"',
-								htmlspecialchars($ak),
-								htmlspecialchars($av),
+								htmlspecialchars("$ak"),
+								htmlspecialchars("$av"),
 							);
 						}
 
@@ -127,7 +121,7 @@ class Xml {
 				} elseif ('' == "$value") {
 					$out .= "$_pad<$_tag1/>$n";
 				} else {
-					$out .= "$_pad<$_tag1>" . htmlspecialchars($value) . "</$_tag2>$n";
+					$out .= "$_pad<$_tag1>" . htmlspecialchars("$value") . "</$_tag2>$n";
 				}
 			}
 
