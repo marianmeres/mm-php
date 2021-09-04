@@ -9,7 +9,7 @@ class ContainerOfData extends Helper implements \Countable {
 	protected array $_container = [];
 
 	// To be extended. Default noop.
-	protected function _validateAndNormalizeData($data): mixed {
+	protected function _validateAndNormalizeData($data) {
 		return $data;
 	}
 
