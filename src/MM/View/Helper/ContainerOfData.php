@@ -1,8 +1,4 @@
-<?php
-/**
- * Author: mm
- * Date: 22/07/15
- */
+<?php declare(strict_types=1);
 
 namespace MM\View\Helper;
 
@@ -10,67 +6,39 @@ use MM\View\Helper;
 use MM\View\Exception;
 
 class ContainerOfData extends Helper implements \Countable {
-	/**
-	 * @var array
-	 */
-	protected $_container = [];
+	protected array $_container = [];
 
-	/**
-	 * To be extended. Default noop.
-	 * @param $data
-	 * @return mixed
-	 */
-	protected function _validateAndNormalizeData($data) {
+	// To be extended. Default noop.
+	protected function _validateAndNormalizeData($data): mixed {
 		return $data;
 	}
 
-	/**
-	 * @param $data
-	 * @return $this
-	 */
-	public function append($data) {
+	public function append($data): static {
 		$data = $this->_validateAndNormalizeData($data);
 		$this->_container[] = $data;
 		return $this;
 	}
 
-	/**
-	 * @param $data
-	 * @return $this
-	 */
-	public function prepend($data) {
+	public function prepend($data): static {
 		$data = $this->_validateAndNormalizeData($data);
 		array_unshift($this->_container, $data);
 		return $this;
 	}
 
-	/**
-	 * @param array $container
-	 * @return $this
-	 */
-	public function setContainer(array $container) {
+	public function setContainer(array $container): static {
 		$this->_container = $container;
 		return $this;
 	}
 
-	/**
-	 * @return array
-	 */
-	public function getContainer() {
+	public function getContainer(): array {
 		return $this->_container;
 	}
 
-	/**
-	 * @return int
-	 */
-	public function count() {
+	public function count(): int {
 		return count($this->_container);
 	}
 
-	/**
-	 * @return $this
-	 */
-	public function reverse() {
+	public function reverse(): static {
 		$this->_container = array_reverse($this->_container);
 		return $this;
 	}
@@ -78,7 +46,7 @@ class ContainerOfData extends Helper implements \Countable {
 	/**
 	 * To be overridden
 	 */
-	public function toString() {
+	public function toString(): bool|string {
 		return print_r($this->_container, true);
 	}
 

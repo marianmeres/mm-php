@@ -134,7 +134,10 @@ final class ResponseTest extends TestCase {
 		);
 		$this->assertEquals(
 			$c[2],
-			sprintf('e=f; expires=%s; secure; httponly', date(DateTimeInterface::COOKIE, $exp)),
+			sprintf(
+				'e=f; expires=%s; secure; httponly',
+				date(DateTimeInterface::COOKIE, $exp),
+			),
 		);
 
 		// _COOKIE

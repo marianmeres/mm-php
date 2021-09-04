@@ -1,27 +1,21 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace MM\View\Helper;
 use MM\View\Exception;
 
 class LinkRel extends ContainerOfData {
-	/**
-	 * @param $data
-	 * @return mixed
-	 * @throws Exception
-	 */
+
 	protected function _validateAndNormalizeData($data) {
 		if (!is_array($data) || empty($data['rel']) || !isset($data['href'])) {
 			throw new Exception(
-				"Expecting minimum data as ['link'=>'...', 'href' => '...']",
+				"Expecting minimum data as ['link'=>'...', 'rel' => '...']",
 			);
 		}
 		ksort($data);
 		return $data;
 	}
 
-	/**
-	 * @return $this
-	 */
-	public function removeDuplicateEntries() {
+	public function removeDuplicateEntries(): static {
 		$found = [];
 		foreach ($this->_container as $k => $data) {
 			// $data is ksorted here
@@ -35,10 +29,7 @@ class LinkRel extends ContainerOfData {
 		return $this;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function toString() {
+	public function toString(): string {
 		$count = count($this);
 		if (!$count) {
 			return '';
