@@ -1,25 +1,16 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace MM\View\Helper;
 
 class HeadCss extends ContainerOfStrings {
-	/**
-	 * @var bool
-	 */
-	protected $_unique = false;
+	protected bool $_unique = false;
 
-	/**
-	 * @var bool
-	 */
-	protected $_escape = false;
+	protected bool $_doEscape = false;
 
-	/**
-	 * @return string
-	 */
-	public function toString() {
+	public function toString(): string {
 		$out = '';
-		foreach ($this->_container as $css) {
-			$out .= "<style type='text/css'>\n$css\n</style>\n";
+		foreach ($this->_getMaybeEscaped() as $css) {
+			$out .= "<style>\n$css\n</style>\n";
 		}
 		return $out;
 	}

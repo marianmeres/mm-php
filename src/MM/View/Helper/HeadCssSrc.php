@@ -1,21 +1,13 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace MM\View\Helper;
 
 class HeadCssSrc extends ContainerOfStrings {
-	/**
-	 * @var bool
-	 */
-	protected $_unique = true;
+	protected bool $_unique = true;
 
-	/**
-	 * @var bool
-	 */
-	protected $_escape = false;
+	protected bool $_doEscape = false;
 
-	/**
-	 * @return string
-	 */
-	public function toString() {
+	public function toString(): string {
 		$out = '';
 		foreach ($this->_container as $src) {
 			$out .= "<link href='$src' rel='stylesheet'>\n";

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace MM\View\Helper;
 
@@ -6,72 +6,37 @@ use MM\View\Helper;
 use MM\View\Exception;
 
 class ContainerOfStrings extends Helper implements \Countable {
-	/**
-	 * @var array
-	 */
-	protected $_container = [];
+	protected array $_container = [];
 
-	/**
-	 * @var string
-	 */
-	protected $_separator = '';
+	protected string $_separator = '';
 
-	/**
-	 * Whether to force unique vals in container or not
-	 * @var bool
-	 */
-	protected $_unique = true;
+	protected bool $_unique = true;
 
-	/**
-	 * @var bool
-	 */
-	protected $_escape = true;
+	protected bool $_doEscape = true;
 
-	/**
-	 * @param null $strings
-	 * @param string $method
-	 * @param null $escape
-	 * @return $this
-	 * @throws Exception
-	 */
-	public function __invoke($strings = null, $method = 'append', $escape = null) {
-		if ($strings) {
+	public function __invoke($strings = null, $method = 'append'): static {
+		if (!empty($strings)) {
 			if (!preg_match('/append|prepend|replace/', $method)) {
 				throw new Exception("Unknown method '$method'");
 			}
-			$this->$method($strings, $escape);
+			$this->$method($strings);
 		}
 		return $this;
 	}
 
-	/**
-	 * @param null $strings
-	 * @param null $escape
-	 * @return $this
-	 */
-	public function replace($strings = null, $escape = null) {
+	public function replace($strings): static {
 		$this->_container = [];
-		if ($strings) {
-			$this->append($strings, $escape);
+		if (!empty($strings)) {
+			$this->append($strings);
 		}
 		return $this;
 	}
 
-	/**
-	 * @param $strings
-	 * @param null $escape
-	 * @return $this
-	 */
-	public function append($strings, $escape = null) {
-		if (null === $escape) {
-			$escape = $this->_escape;
-		}
-
+	public function append($strings): static {
 		foreach ((array) $strings as $string) {
-			if ($escape) {
-				$string = $this->_escape($string);
+			if ($string !== null) { // feature!
+				$this->_container[] = $string;
 			}
-			$this->_container[] = $string;
 		}
 
 		if ($this->_unique) {
@@ -81,22 +46,10 @@ class ContainerOfStrings extends Helper implements \Countable {
 		return $this;
 	}
 
-	/**
-	 * @param $strings
-	 * @param null $escape
-	 * @return $this
-	 */
-	public function prepend($strings, $escape = null) {
-		if (null === $escape) {
-			$escape = $this->_escape;
-		}
-
+	public function prepend($strings): static {
 		//
 		$strings = array_reverse((array) $strings);
 		foreach ($strings as $string) {
-			if ($escape) {
-				$string = $this->_escape($string);
-			}
 			array_unshift($this->_container, $string);
 		}
 
@@ -107,93 +60,75 @@ class ContainerOfStrings extends Helper implements \Countable {
 		return $this;
 	}
 
-	/**
-	 * @param $strings
-	 * @return $this
-	 */
-	public function remove($strings) {
+	public function remove($strings): static {
 		$this->_container = array_diff($this->_container, (array) $strings);
 		return $this;
 	}
 
-	/**
-	 * @param array $container
-	 * @return $this
-	 */
-	public function setContainer(array $container) {
+	public function replaceLast(string|null $string): static {
+		$lastIdx = max(count($this->_container) - 1, 0);
+
+		// empty means unset
+		if ($string === null || $string === '') {
+			unset($this->_container[$lastIdx]);
+			return $this;
+		}
+
+		$this->_container[$lastIdx] = $string;
+		return $this;
+	}
+
+	public function setContainer(array $container): static {
 		$this->_container = $container;
 		return $this;
 	}
 
-	/**
-	 * @return array
-	 */
-	public function getContainer() {
+	public function getContainer(): array {
 		return $this->_container;
 	}
 
-	/**
-	 * @param $val
-	 * @return string
-	 */
-	protected function _escape($val) {
+	protected function _escaper($val): string {
 		return htmlspecialchars($val, ENT_COMPAT, 'UTF-8');
 	}
 
-	/**
-	 * @param $flag
-	 * @return $this
-	 */
-	public function setEscape($flag) {
-		$this->_escape = (bool) $flag;
+	public function setDoEscape($flag): static {
+		$this->_doEscape = (bool) $flag;
 		return $this;
 	}
 
-	/**
-	 * @param $flag
-	 * @return $this
-	 */
-	public function setUnique($flag) {
+	public function setUnique($flag): static {
 		$this->_unique = (bool) $flag;
 		return $this;
 	}
 
-	/**
-	 * @param $sep
-	 * @return $this
-	 */
-	public function setSeparator($sep) {
+	public function setSeparator($sep): static {
 		$this->_separator = $sep;
 		return $this;
 	}
 
-	/**
-	 * @return $this
-	 */
-	public function reverse() {
+	public function reverse(): static {
 		$this->_container = array_reverse($this->_container);
 		return $this;
 	}
 
-	/**
-	 * @return int
-	 */
-	public function count() {
+	public function count(): int {
 		return count($this->_container);
 	}
 
-	/**
-	 * To be overridden
-	 */
-	public function toString() {
-		return implode($this->_separator, $this->_container);
+	protected function _getMaybeEscaped(): array {
+		if ($this->_doEscape) {
+			return array_map(fn ($v) => $this->_escaper($v), $this->_container);
+		}
+		return $this->_container;
+	}
+
+	public function toString(): string {
+		return implode($this->_separator, $this->_getMaybeEscaped());
 	}
 
 	/**
 	 * to avoid ambiguos "method __toString cannot throw exceptions" use
 	 * the above toString
-	 *
-	 * @return string
 	 */
 	public function __toString() {
 		return $this->toString();

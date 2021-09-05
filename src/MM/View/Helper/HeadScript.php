@@ -6,12 +6,12 @@ class HeadScript extends ContainerOfStrings {
 	/**
 	 * @var bool
 	 */
-	protected $_unique = false;
+	protected bool $_unique = false;
 
 	/**
 	 * @var bool
 	 */
-	protected $_escape = false;
+	protected bool $_doEscape = false;
 
 	/**
 	 * @return string

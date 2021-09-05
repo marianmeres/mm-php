@@ -8,7 +8,7 @@ class LinkRel extends ContainerOfData {
 	protected function _validateAndNormalizeData(array $data): array {
 		if (!is_array($data) || empty($data['rel']) || !isset($data['href'])) {
 			throw new Exception(
-				"Expecting minimum data as ['link'=>'...', 'rel' => '...']",
+				"Expecting minimum data as ['href'=>'...', 'rel' => '...']",
 			);
 		}
 		ksort($data);

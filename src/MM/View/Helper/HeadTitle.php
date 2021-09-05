@@ -2,11 +2,13 @@
 namespace MM\View\Helper;
 
 class HeadTitle extends ContainerOfStrings {
-	protected $_separator = ' | ';
-	protected $_unique = false;
-	protected $_escape = true;
+	protected string $_separator = ' | ';
+	protected bool $_unique = false;
+	protected bool $_doEscape = true;
 
-	public function toString() {
-		return '<title>' . implode($this->_separator, $this->_container) . "</title>\n";
+	public function toString(): string {
+		return '<title>' .
+			implode($this->_separator, $this->_getMaybeEscaped()) .
+			"</title>\n";
 	}
 }

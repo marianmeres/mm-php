@@ -22,9 +22,12 @@ final class BreadcrumbsTest extends TestCase {
 
 		// aspon nieco...
 		$this->assertMatchesRegularExpression("/href='\/'/", $out);
-		$this->assertMatchesRegularExpression("/>Home</", $out);
-		$this->assertMatchesRegularExpression("/>Page</", $out);
+		$this->assertMatchesRegularExpression('/>Home</', $out);
+		$this->assertMatchesRegularExpression('/>Page</', $out);
 		$this->assertDoesNotMatchRegularExpression("/href='\/page'/", $out);
 
+		$this->assertCount(2, $h);
+		$h->replaceLast([]);
+		$this->assertCount(1, $h);
 	}
 }

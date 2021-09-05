@@ -44,8 +44,15 @@ class ContainerOfData extends Helper implements \Countable {
 	}
 
 	public function replaceLast(array $data): static {
-		$data = $this->_validateAndNormalizeData($data);
 		$lastIdx = max(count($this->_container) - 1, 0);
+
+		// empty array means unset
+		if (empty($data)) {
+			unset($this->_container[$lastIdx]);
+			return $this;
+		}
+
+		$data = $this->_validateAndNormalizeData($data);
 		$this->_container[$lastIdx] = $data;
 		return $this;
 	}

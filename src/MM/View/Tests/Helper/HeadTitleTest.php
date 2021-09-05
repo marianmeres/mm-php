@@ -20,12 +20,13 @@ final class HeadTitleTest extends TestCase {
 		$h = new HeadTitle();
 		$h->setSeparator(':');
 		$h->append('>');
-		$h->append('>', false);
+		$h->append('>');
 		$h->prepend('pre');
 		$h->append('post');
 
-		$exp = '<title>pre:&gt;:>:post</title>';
-		$this->assertEquals($exp, trim((string) $h));
+		$this->assertEquals('<title>pre:&gt;:&gt;:post</title>', trim((string) $h));
+		$h->setDoEscape(false);
+		$this->assertEquals('<title>pre:>:>:post</title>', trim((string) $h));
 
 		$h->setContainer([]);
 		$this->assertEquals('<title></title>', trim((string) $h));
@@ -39,5 +40,22 @@ final class HeadTitleTest extends TestCase {
 	public function testWithView() {
 		$v = new View();
 		$this->assertEquals('<title>foo</title>', trim((string) $v->headTitle('foo')));
+	}
+
+	public function testReplaceLastWorks() {
+		$h = new HeadTitle();
+		$h->setSeparator(':');
+		$h->append('a');
+		$h->append(['b', 'c']);
+		$this->assertEquals('<title>a:b:c</title>', trim((string) $h));
+
+		$h->replaceLast('d');
+		$this->assertEquals('<title>a:b:d</title>', trim((string) $h));
+
+		$h->replaceLast(null);
+		$this->assertEquals('<title>a:b</title>', trim((string) $h));
+
+		$h->replaceLast('');
+		$this->assertEquals('<title>a</title>', trim((string) $h));
 	}
 }

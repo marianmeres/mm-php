@@ -1,26 +1,13 @@
-<?php
-/**
- * Author: mm
- * Date: 22/07/15
- */
+<?php declare(strict_types=1);
 
 namespace MM\View\Helper;
 
 class BodyTagClass extends ContainerOfStrings {
-	/**
-	 * @var bool
-	 */
-	protected $_unique = true;
+	protected bool $_unique = true;
 
-	/**
-	 * @var string
-	 */
-	protected $_separator = ' ';
+	protected string $_separator = ' ';
 
-	/**
-	 * @return string
-	 */
-	public function toString() {
-		return implode($this->_separator, $this->_container);
+	public function toString(): string {
+		return implode($this->_separator, $this->_getMaybeEscaped());
 	}
 }
