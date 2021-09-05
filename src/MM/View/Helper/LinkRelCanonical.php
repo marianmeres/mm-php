@@ -7,7 +7,7 @@ use MM\View\Helper;
 use MM\View\Exception;
 
 class LinkRelCanonical extends LinkRelUnique {
-	protected string $_rel = 'canonical';
+	protected ?string $_rel = 'canonical';
 
 	public function setHref($href): static {
 		if (null != $href) {
