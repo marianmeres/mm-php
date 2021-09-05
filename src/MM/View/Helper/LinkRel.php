@@ -5,7 +5,7 @@ use MM\View\Exception;
 
 class LinkRel extends ContainerOfData {
 
-	protected function _validateAndNormalizeData($data) {
+	protected function _validateAndNormalizeData(array $data): array {
 		if (!is_array($data) || empty($data['rel']) || !isset($data['href'])) {
 			throw new Exception(
 				"Expecting minimum data as ['link'=>'...', 'rel' => '...']",

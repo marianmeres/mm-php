@@ -1,29 +1,21 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace MM\View\Helper;
 use MM\View\Exception;
 
 class Breadcrumbs extends ContainerOfData {
-	public $screenReaderOnlyCssClassname = 'sr-only';
-	public $ariaTitleContent = 'Breadcrumb navigation';
-	public $customCssClass = '';
+	public string $screenReaderOnlyCssClassname = 'visually-hidden';
+	public string $ariaTitleContent = 'Breadcrumb navigation';
+	public string $customCssClass = '';
 
-	/**
-	 * @param $data
-	 * @return mixed
-	 * @throws Exception
-	 */
-	protected function _validateAndNormalizeData($data) {
+	protected function _validateAndNormalizeData(array $data): array {
 		if (!is_array($data) || empty($data['label']) || !isset($data['href'])) {
 			throw new Exception("Expecting data as ['label'=>'...', 'href' => '...']");
 		}
 		return $data;
 	}
 
-	/**
-	 * @return $this
-	 */
-	public function removeDuplicateEntries() {
+	public function removeDuplicateEntries(): static {
 		$hrefsFound = [];
 		foreach ($this->_container as $k => $data) {
 			if (!isset($hrefsFound[$data['href']])) {
@@ -41,10 +33,8 @@ class Breadcrumbs extends ContainerOfData {
 	 *
 	 * @see http://schema.org/BreadcrumbList
 	 * @see https://developers.google.com/structured-data/breadcrumbs?rd=1
-	 *
-	 * @return string
 	 */
-	public function toString() {
+	public function toString(): string {
 		$count = count($this);
 		if (!$count) {
 			return '';

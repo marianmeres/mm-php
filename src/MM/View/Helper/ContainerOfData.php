@@ -9,17 +9,17 @@ class ContainerOfData extends Helper implements \Countable {
 	protected array $_container = [];
 
 	// To be extended. Default noop.
-	protected function _validateAndNormalizeData($data) {
+	protected function _validateAndNormalizeData(array $data): array {
 		return $data;
 	}
 
-	public function append($data): static {
+	public function append(array $data): static {
 		$data = $this->_validateAndNormalizeData($data);
 		$this->_container[] = $data;
 		return $this;
 	}
 
-	public function prepend($data): static {
+	public function prepend(array $data): static {
 		$data = $this->_validateAndNormalizeData($data);
 		array_unshift($this->_container, $data);
 		return $this;
