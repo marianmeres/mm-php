@@ -53,10 +53,7 @@ class MetaNameTags extends Helper implements \Countable {
 		return count($this->_container);
 	}
 
-	/**
-	 * @return string
-	 */
-	public function toString() {
+	public function toString(): string {
 		$out = '';
 
 		foreach ($this->_container as $name => $content) {

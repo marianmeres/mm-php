@@ -1,8 +1,4 @@
-<?php
-/**
- * Author: mm
- * Date: 22/07/15
- */
+<?php declare(strict_types=1);
 
 namespace MM\View\Helper;
 
@@ -11,13 +7,9 @@ use MM\View\Helper;
 use MM\View\Exception;
 
 class LinkRelCanonical extends LinkRelUnique {
-	protected $_rel = 'canonical';
+	protected string $_rel = 'canonical';
 
-	/**
-	 * @param $href
-	 * @return $this
-	 */
-	public function setHref($href) {
+	public function setHref($href): static {
 		if (null != $href) {
 			$href = Canonicalize::url($href);
 		}

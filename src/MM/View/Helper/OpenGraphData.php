@@ -97,10 +97,7 @@ class OpenGraphData extends Helper implements \Countable {
 		return $this;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function toString() {
+	public function toString(): string {
 		$out = '';
 
 		foreach ($this->_data as $property => $content) {

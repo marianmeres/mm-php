@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace MM\View\Helper;
 use MM\Util\Url;
@@ -6,19 +6,11 @@ use MM\View\Exception;
 use MM\View\Helper;
 
 class Canonicalize extends Helper {
-	/**
-	 * @param $url
-	 * @return string
-	 */
-	public function __invoke($url) {
+	public function __invoke($url): string {
 		return self::url($url);
 	}
 
-	/**
-	 * @param $url
-	 * @return string
-	 */
-	public static function url($url) {
+	public static function url($url): string {
 		$parts = Url::parse($url);
 		if (!empty($parts['path'])) {
 			$parts['path'] = self::path($parts['path']);
@@ -26,11 +18,7 @@ class Canonicalize extends Helper {
 		return Url::build($parts);
 	}
 
-	/**
-	 * @param $path
-	 * @return array|string
-	 */
-	public static function path($path) {
+	public static function path($path): string {
 		$out = [];
 
 		// normalize directory separator (use "/")
@@ -53,14 +41,14 @@ class Canonicalize extends Helper {
 		$out = implode('/', $out);
 
 		//
-		if ('./' == $first2) {
+		if ('./' === $first2) {
 			$out = "./$out";
-		} elseif ('/' == substr($first2, 0, 1)) {
+		} elseif (str_starts_with($first2, '/')) {
 			$out = "/$out";
 		}
 
 		// add trailing slash if there was one
-		if ($last == '/') {
+		if ($last === '/') {
 			$out = rtrim($out, '/') . '/';
 		}
 

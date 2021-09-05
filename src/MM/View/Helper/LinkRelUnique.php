@@ -1,8 +1,4 @@
-<?php
-/**
- * Author: mm
- * Date: 22/07/15
- */
+<?php declare(strict_types=1);
 
 namespace MM\View\Helper;
 
@@ -10,42 +6,25 @@ use MM\View\Helper;
 use MM\View\Exception;
 
 abstract class LinkRelUnique extends Helper {
-	protected $_rel;
+	protected ?string $_rel = null;
 
-	/**
-	 * @var string
-	 */
-	protected $_href;
+	protected ?string $_href = null;
 
-	/**
-	 * @param null $href
-	 * @return $this
-	 */
-	public function __invoke($href = null) {
+	public function __invoke($href = null): static {
 		$href && $this->setHref($href);
 		return $this;
 	}
 
-	/**
-	 * @param $href
-	 * @return $this
-	 */
-	public function setHref($href) {
+	public function setHref($href): static {
 		$this->_href = $href;
 		return $this;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getHref() {
+	public function getHref(): ?string {
 		return $this->_href;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function toString() {
+	public function toString(): string {
 		$out = '';
 
 		if ($this->_href !== null) {
@@ -55,9 +34,6 @@ abstract class LinkRelUnique extends Helper {
 		return $out;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function __toString() {
 		return $this->toString();
 	}

@@ -1,58 +1,33 @@
-<?php
-/**
- * Author: mm
- * Date: 22/07/15
- */
+<?php declare(strict_types=1);
 
 namespace MM\View\Helper;
 
 use MM\View\Helper;
 use MM\View\Exception;
+use PhpParser\Node\Scalar\String_;
 
 class HtmlBaseTag extends Helper {
-	/**
-	 * @var string
-	 */
-	protected $_href;
+	protected ?string $_href = null;
 
-	/**
-	 * @var string
-	 */
-	protected $_target;
+	protected ?string $_target = null;
 
-	/**
-	 * @param null $href
-	 * @param null $target
-	 * @return $this
-	 */
-	public function __invoke($href = null, $target = null) {
+	public function __invoke($href = null, $target = null): static {
 		$href && $this->setHref($href);
 		$target && $this->setTarget($target);
 		return $this;
 	}
 
-	/**
-	 * @param $href
-	 * @return $this
-	 */
-	public function setHref($href) {
+	public function setHref($href): static {
 		$this->_href = $href;
 		return $this;
 	}
 
-	/**
-	 * @param $target
-	 * @return $this
-	 */
-	public function setTarget($target) {
+	public function setTarget($target): static {
 		$this->_target = $target;
 		return $this;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function toString() {
+	public function toString(): string {
 		$out = '';
 
 		if ($this->_href !== null) {
@@ -66,9 +41,6 @@ class HtmlBaseTag extends Helper {
 		return $out;
 	}
 
-	/**
-	 * @return string
-	 */
 	public function __toString() {
 		return $this->toString();
 	}
