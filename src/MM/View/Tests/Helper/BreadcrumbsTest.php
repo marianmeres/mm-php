@@ -15,7 +15,8 @@ final class BreadcrumbsTest extends TestCase {
 		$h = new Breadcrumbs();
 
 		$h->append(['label' => 'Home', 'href' => '/']);
-		$h->append(['label' => 'Page', 'href' => '/page']);
+		$h->append(['label' => 'Page', 'href' => '/foo']);
+		$h->replaceLast(['label' => 'Page', 'href' => '/page']);
 		$out = $h->toString();
 		// prx($out);
 
