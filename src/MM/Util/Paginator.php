@@ -6,104 +6,59 @@ namespace MM\Util;
  * Nothing fancy, just basic calculations.
  */
 class Paginator implements \Countable {
-	/**
-	 * @var int
-	 */
-	protected $_itemsTotal;
+	protected int $_itemsTotal;
 
-	/**
-	 * @var int
-	 */
-	protected $_itemsPerPage;
+	protected int $_itemsPerPage;
 
-	/**
-	 * @var int
-	 */
-	protected $_currentPageId;
+	protected int $_currentPageId;
 
-	/**
-	 * @param $total
-	 * @param int $perPage
-	 * @param int $currentPage
-	 */
-	public function __construct($total, $perPage = 10, $currentPage = 1) {
+	public function __construct($total, int $perPage = 10, int $currentPage = 1) {
 		$this->setItemsTotal($total);
 		$this->setItemsPerPage($perPage);
 		$this->setCurrentPageId($currentPage);
 	}
 
-	/**
-	 * @param int $total
-	 * @return $this
-	 */
-	public function setItemsTotal($total) {
+	public function setItemsTotal(int $total): static {
 		$this->_itemsTotal = (int) $total;
 		return $this;
 	}
 
-	/**
-	 * @return int
-	 */
-	public function getItemsTotal() {
+	public function getItemsTotal(): int {
 		return $this->_itemsTotal;
 	}
 
-	/**
-	 * @param int $count
-	 * @return $this
-	 */
-	public function setItemsPerPage($count) {
+	public function setItemsPerPage(int $count): static	{
 		$this->_itemsPerPage = max(1, (int) $count);
 		return $this;
 	}
 
-	/**
-	 * @return int
-	 */
-	public function getItemsPerPage() {
+	public function getItemsPerPage(): int {
 		return $this->_itemsPerPage;
 	}
 
-	/**
-	 * @param $id
-	 * @return $this
-	 */
-	public function setCurrentPageId($id) {
-		$this->_currentPageId = max(1, (int) $id);
+	public function setCurrentPageId(int $id): static {
+		$this->_currentPageId = max(1, $id);
 		return $this;
 	}
 
-	/**
-	 * @return int
-	 */
-	public function getCurrentPageId() {
+	public function getCurrentPageId(): int {
 		return $this->_currentPageId;
 	}
 
-	/**
-	 * @return int float
-	 */
-	public function getPageCount() {
-		return ceil($this->_itemsTotal / $this->_itemsPerPage);
+	public function getPageCount(): int {
+		return (int) ceil($this->_itemsTotal / $this->_itemsPerPage);
 	}
 
-	/**
-	 * @return int
-	 */
-	public function count() {
+	public function count(): int {
 		return $this->getPageCount();
 	}
 
 	/**
 	 * Returns interval from (exclusive) - to (inclusive); Offset is considered
 	 * as postgres does: OFFSET says to skip that many rows before beginning to return rows.
-	 *
-	 * @param null $pageId
-	 * @param bool|true $noInterval
-	 * @return array|int
 	 */
-	public function getOffsetByPageId($pageId = null, $noInterval = true) {
-		$pageId = null == $pageId ? $this->_currentPageId : (int) $pageId;
+	public function getOffsetByPageId($pageId = null, bool $noInterval = true): int|array {
+		$pageId = null === $pageId ? $this->_currentPageId : (int) $pageId;
 
 		$out = [
 			max($this->_itemsPerPage * ($pageId - 1), 0),
@@ -115,27 +70,15 @@ class Paginator implements \Countable {
 		return $out;
 	}
 
-	/**
-	 * @return int
-	 */
-	public function getOffset() {
+	public function getOffset(): int {
 		return $this->getOffsetByPageId(null);
 	}
 
-	/**
-	 * @return int
-	 */
-	public function getLimit() {
+	public function getLimit(): int {
 		return $this->_itemsPerPage;
 	}
 
-	/**
-	 * @param $offset
-	 * @return mixed
-	 */
-	public function getPageIdByOffset($offset) {
-		$offset = (int) $offset;
-
+	public function getPageIdByOffset(int $offset): int {
 		// moze byt aj zaporny, vtedy odratavam s total items
 		if ($offset < 0) {
 			$offset = max(0, $this->_itemsTotal + $offset);
@@ -144,14 +87,10 @@ class Paginator implements \Countable {
 		// OFFSET says to skip that many rows before beginning to return rows.
 		$offset++;
 
-		return max(ceil($offset / $this->_itemsPerPage), 1);
+		return (int) max(ceil($offset / $this->_itemsPerPage), 1);
 	}
 
-	/**
-	 * @param null $page
-	 * @return bool
-	 */
-	public function isOutOfBounds($page = null) {
+	public function isOutOfBounds($page = null): bool {
 		if (null === $page) {
 			$page = $this->_currentPageId;
 		}
@@ -160,64 +99,45 @@ class Paginator implements \Countable {
 		return max($this->getPageCount(), 1) < (int) $page;
 	}
 
-	/**
-	 * @param null $page
-	 * @return bool|int
-	 */
-	public function getNextPageId($page = null) {
+	public function getNextPageId(?int $page = null): bool|int {
 		if (null === $page) {
 			$page = $this->_currentPageId;
 		}
-		$page = (int) $page;
+		// $page = (int) $page;
 
 		$n = $page + 1;
 		return $this->getPageCount() >= $n ? $n : false;
 	}
 
-	/**
-	 * @param null $page
-	 * @return bool|int
-	 */
-	public function getPreviousPageId($page = null) {
+	public function getPreviousPageId(?int $page = null): bool|int {
 		if (null === $page) {
 			$page = $this->_currentPageId;
 		}
-		$page = (int) $page;
+		// $page = (int) $page;
 
 		$p = (int) max(0, min($page - 1, $this->getPageCount() - 1));
 		return $p != 0 ? $p : false;
 	}
 
-	/**
-	 * @param null $page
-	 * @return bool
-	 */
-	public function isLastPageId($page = null) {
+	public function isLastPageId(?int $page = null): bool {
 		if (null === $page) {
 			$page = $this->_currentPageId;
 		}
-		$page = (int) $page;
+		// $page = (int) $page;
 
-		return $page == $this->getPageCount();
+		return $page === $this->getPageCount();
 	}
 
-	/**
-	 * @param null $page
-	 * @return bool
-	 */
-	function isFirstPageId($page = null) {
+	function isFirstPageId(?int $page = null): bool {
 		if (null === $page) {
 			$page = $this->_currentPageId;
 		}
-		$page = (int) $page;
+		// $page = (int) $page;
 
-		return $page == 1;
+		return $page === 1;
 	}
 
-	/**
-	 * @return array
-	 */
-	public function dump() {
+	public function dump(): array {
 		return [
 			'itemsTotal' => $this->getItemsTotal(),
 			'itemsPerPage' => $this->getItemsPerPage(),
