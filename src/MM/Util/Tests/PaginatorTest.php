@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace MM\Util\Tests;
 
 use MM\Util\Paginator;
@@ -13,7 +14,7 @@ class PaginatorTest extends TestCase {
 
 		$this->assertEquals(10, $p->getLimit());
 
-		$this->assertEquals(11, count($p));
+		$this->assertCount(11, $p);
 		$this->assertEquals(11, $p->getPageCount());
 
 		// OFFSET says to skip that many rows before beginning to return rows.

@@ -5,13 +5,9 @@ namespace MM\Util;
 class Url {
 	/**
 	 * Trosku normalizuje chovanie parse_url
-	 *
-	 * @param $url
-	 * @param null $component
-	 * @return array
 	 */
-	public static function parse($url, $component = null) {
-		$urlParts = array_merge(
+	public static function parse($url, $component = null): array|string {
+		$parsed = array_merge(
 			[
 				'scheme' => '',
 				'user' => '',
@@ -25,12 +21,17 @@ class Url {
 			(array) parse_url($url),
 		);
 
-		if (null == $component) {
-			return $urlParts;
+		if ($parsed['query']) {
+			// note: druhy arg je tu referencia na output... cize prepiseme query
+			parse_str($parsed['query'], $parsed['query']);
 		}
 
-		if (isset($urlParts[$component])) {
-			return $urlParts[$component];
+		if (null == $component) {
+			return $parsed;
+		}
+
+		if (isset($parsed[$component])) {
+			return $parsed[$component];
 		}
 
 		throw new \InvalidArgumentException("Invalid component '$component'");
@@ -39,13 +40,14 @@ class Url {
 	/**
 	 * Vysklada url podla casti. Nieco ako opozit k parse_url.
 	 * Stoji za poznamku, ze neriesi ziadne pokrocile validovanie...
-	 *
-	 * @param array $urlParts
-	 * @return string
 	 */
-	public static function build(array $urlParts) {
+	public static function build(array $urlParts): string {
 		$scheme = $user = $pass = $host = $hostname = $port = $path = $query = $fragment =
 			'';
+
+		if (!empty($urlParts['query']) && is_array($urlParts['query'])) {
+			$urlParts['query'] = http_build_query($urlParts['query']);
+		}
 
 		$urlParts = array_merge(
 			[
@@ -100,12 +102,8 @@ class Url {
 	 * HTTP_HOST versus SERVER_NAME?
 	 * http://stackoverflow.com/questions/2297403/http-host-vs-server-name
 	 * http://stackoverflow.com/questions/1459739/php-serverhttp-host-vs-serverserver-name-am-i-understanding-the-ma
-	 *
-	 * @param array $server
-	 * @param string $hostKey
-	 * @return string
 	 */
-	public static function serverUrl(array $server = null, $hostKey = 'SERVER_NAME') {
+	public static function serverUrl(array|null $server = null, string $hostKey = 'SERVER_NAME'): string {
 		if (!$server) {
 			$server = $_SERVER;
 		}
