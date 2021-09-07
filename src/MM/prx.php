@@ -23,6 +23,7 @@ if (!function_exists('prx')) {
 if (!function_exists('prxh')) {
 	function prxh(/* args */) {
 		header('Content-type: text/plain');
+		echo "\n";
 		call_user_func_array('prx', func_get_args());
 	}
 }
