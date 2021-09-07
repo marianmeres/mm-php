@@ -98,6 +98,18 @@ class Url {
 		return $url;
 	}
 
+	public static function withQueryVars(string $url, array $vars): string {
+		$parsed = Url::parse($url);
+
+		// merge parsed with arg, filter nulls
+		$parsed['query'] = array_filter(
+			array_merge($parsed['query'], $vars), fn ($v) => $v !== null
+		);
+		ksort($parsed['query']);
+
+		return Url::build($parsed);
+	}
+
 	/**
 	 * HTTP_HOST versus SERVER_NAME?
 	 * http://stackoverflow.com/questions/2297403/http-host-vs-server-name

@@ -30,4 +30,20 @@ final class UrlTest extends TestCase {
 		$this->assertEquals('value', $p['query']['arg']);
 		$this->assertEquals('bar', $p['query']['foo']);
 	}
+
+	public function testWithQueryVarsWorks() {
+		$actual = Url::withQueryVars(
+			'http://username:password@hostname/path?arg=value&foo=bar#anchor', [
+				'x' => 'y',
+				'arg' => null,
+				'foo' => 'baz',
+				'baz' => 'bat',
+			]
+		);
+
+		// query is modified and sorted
+		$expected = 'http://username:password@hostname/path?baz=bat&foo=baz&x=y#anchor';
+
+		$this->assertEquals($expected, $actual);
+	}
 }
