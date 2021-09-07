@@ -10,12 +10,12 @@ class Paginator implements \Countable {
 
 	protected int $_itemsPerPage;
 
-	protected int $_currentPageId;
+	protected int $_currentPage;
 
 	public function __construct($total, int $perPage = 10, int $currentPage = 1) {
 		$this->setItemsTotal($total);
 		$this->setItemsPerPage($perPage);
-		$this->setCurrentPageId($currentPage);
+		$this->setCurrentPage($currentPage);
 	}
 
 	public function setItemsTotal(int $total): static {
@@ -36,13 +36,13 @@ class Paginator implements \Countable {
 		return $this->_itemsPerPage;
 	}
 
-	public function setCurrentPageId(int $id): static {
-		$this->_currentPageId = max(1, $id);
+	public function setCurrentPage(int $id): static {
+		$this->_currentPage = max(1, $id);
 		return $this;
 	}
 
-	public function getCurrentPageId(): int {
-		return $this->_currentPageId;
+	public function getCurrentPage(): int {
+		return $this->_currentPage;
 	}
 
 	public function getPageCount(): int {
@@ -57,12 +57,12 @@ class Paginator implements \Countable {
 	 * Returns interval from (exclusive) - to (inclusive); Offset is considered
 	 * as postgres does: OFFSET says to skip that many rows before beginning to return rows.
 	 */
-	public function getOffsetByPageId($pageId = null, bool $noInterval = true): int|array {
-		$pageId = null === $pageId ? $this->_currentPageId : (int) $pageId;
+	public function getOffsetByPage($page = null, bool $noInterval = true): int|array {
+		$page = null === $page ? $this->_currentPage : (int) $page;
 
 		$out = [
-			max($this->_itemsPerPage * ($pageId - 1), 0),
-			min($this->_itemsTotal, $this->_itemsPerPage * $pageId),
+			max($this->_itemsPerPage * ($page - 1), 0),
+			min($this->_itemsTotal, $this->_itemsPerPage * $page),
 		];
 		if ($noInterval) {
 			return $out[0];
@@ -71,14 +71,14 @@ class Paginator implements \Countable {
 	}
 
 	public function getOffset(): int {
-		return $this->getOffsetByPageId(null);
+		return $this->getOffsetByPage(null);
 	}
 
 	public function getLimit(): int {
 		return $this->_itemsPerPage;
 	}
 
-	public function getPageIdByOffset(int $offset): int {
+	public function getPageByOffset(int $offset): int {
 		// moze byt aj zaporny, vtedy odratavam s total items
 		if ($offset < 0) {
 			$offset = max(0, $this->_itemsTotal + $offset);
@@ -92,16 +92,16 @@ class Paginator implements \Countable {
 
 	public function isOutOfBounds($page = null): bool {
 		if (null === $page) {
-			$page = $this->_currentPageId;
+			$page = $this->_currentPage;
 		}
 
 		// lebo page 0 neexistuje, tak max(..., 1)
 		return max($this->getPageCount(), 1) < (int) $page;
 	}
 
-	public function getNextPageId(?int $page = null): bool|int {
+	public function getNextPage(?int $page = null): bool|int {
 		if (null === $page) {
-			$page = $this->_currentPageId;
+			$page = $this->_currentPage;
 		}
 		// $page = (int) $page;
 
@@ -109,9 +109,9 @@ class Paginator implements \Countable {
 		return $this->getPageCount() >= $n ? $n : false;
 	}
 
-	public function getPreviousPageId(?int $page = null): bool|int {
+	public function getPreviousPage(?int $page = null): bool|int {
 		if (null === $page) {
-			$page = $this->_currentPageId;
+			$page = $this->_currentPage;
 		}
 		// $page = (int) $page;
 
@@ -119,18 +119,18 @@ class Paginator implements \Countable {
 		return $p != 0 ? $p : false;
 	}
 
-	public function isLastPageId(?int $page = null): bool {
+	public function isLastPage(?int $page = null): bool {
 		if (null === $page) {
-			$page = $this->_currentPageId;
+			$page = $this->_currentPage;
 		}
 		// $page = (int) $page;
 
 		return $page === $this->getPageCount();
 	}
 
-	function isFirstPageId(?int $page = null): bool {
+	function isFirstPage(?int $page = null): bool {
 		if (null === $page) {
-			$page = $this->_currentPageId;
+			$page = $this->_currentPage;
 		}
 		// $page = (int) $page;
 
@@ -141,14 +141,14 @@ class Paginator implements \Countable {
 		return [
 			'itemsTotal' => $this->getItemsTotal(),
 			'itemsPerPage' => $this->getItemsPerPage(),
-			'currentPageId' => $this->getCurrentPageId(),
+			'currentPage' => $this->getCurrentPage(),
 			'pageCount' => $this->getPageCount(),
-			'offsetByPageId' => $this->getOffsetByPageId(),
+			'offsetByPage' => $this->getOffsetByPage(),
 			'isOutOfBounds' => $this->isOutOfBounds(),
-			'nextPageId' => $this->getNextPageId(),
-			'previousPageId' => $this->getPreviousPageId(),
-			'isLastPageId' => $this->isLastPageId(),
-			'isFirstPageId' => $this->isFirstPageId(),
+			'nextPage' => $this->getNextPage(),
+			'previousPage' => $this->getPreviousPage(),
+			'isLastPage' => $this->isLastPage(),
+			'isFirstPage' => $this->isFirstPage(),
 		];
 	}
 }
