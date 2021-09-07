@@ -45,7 +45,7 @@ class Url {
 		$scheme = $user = $pass = $host = $hostname = $port = $path = $query = $fragment =
 			'';
 
-		if (!empty($urlParts['query']) && is_array($urlParts['query'])) {
+		if (is_array($urlParts['query'])) {
 			$urlParts['query'] = http_build_query($urlParts['query']);
 		}
 
@@ -65,13 +65,13 @@ class Url {
 		extract($urlParts);
 
 		// 'http://username:password@hostname/path?arg=value#anchor';
-		$url = '//';
+		$url = '';
 
-		if ('' != $scheme) {
-			$url = "$scheme:$url";
+		if ('' !== $scheme) {
+			$url = "$scheme://";
 		}
 
-		if ('' != $user) {
+		if ('' !== $user) {
 			$url .= $user;
 			if ('' != $pass) {
 				$url .= ":$pass";
@@ -81,13 +81,13 @@ class Url {
 
 		$url .= rtrim($host, '/');
 
-		if ('' != $port) {
+		if ('' !== $port) {
 			$url .= ":$port";
 		}
 
 		$url .= '/' . ltrim($path, '/');
 
-		if ('' != $query) {
+		if ('' !== $query) {
 			$url .= "?$query";
 		}
 
@@ -100,10 +100,12 @@ class Url {
 
 	public static function withQueryVars(string $url, array $vars): string {
 		$parsed = Url::parse($url);
+		$parsed['query'] = $parsed['query'] === '' ? [] : $parsed['query'];
 
 		// merge parsed with arg, filter nulls
 		$parsed['query'] = array_filter(
-			array_merge($parsed['query'], $vars), fn ($v) => $v !== null
+			array_merge($parsed['query'], $vars),
+			fn($v) => $v !== null,
 		);
 		ksort($parsed['query']);
 
@@ -115,7 +117,10 @@ class Url {
 	 * http://stackoverflow.com/questions/2297403/http-host-vs-server-name
 	 * http://stackoverflow.com/questions/1459739/php-serverhttp-host-vs-serverserver-name-am-i-understanding-the-ma
 	 */
-	public static function serverUrl(array|null $server = null, string $hostKey = 'SERVER_NAME'): string {
+	public static function serverUrl(
+		array|null $server = null,
+		string $hostKey = 'SERVER_NAME'
+	): string {
 		if (!$server) {
 			$server = $_SERVER;
 		}
