@@ -64,6 +64,11 @@ final class RouteTest extends TestCase {
 			['/foo/[bar]?/[baz]?',        '/foo',             []],
 			['/foo/[bar]?/[baz]?',        '/foo/bar',         [ 'bar' => 'bar' ]],
 			['/foo/[bar]?/[baz]?',        '/foo/bar/baz',     [ 'bar' => 'bar', 'baz' => 'baz' ]],
+			// spread params
+			['/js/[...path]',             '/js/foo/bar/baz.js', [ 'path' => 'foo/bar/baz.js' ]],
+			['/js/[root]/[...path]',      '/js/foo/bar/baz.js', [ 'root' => 'foo', 'path' => 'bar/baz.js' ]],
+			['/js/[...path]/[file]',      '/js/foo/bar/baz.js', [ 'path' => 'foo/bar', 'file' => 'baz.js' ]],
+			['/[...path]/[file]',         '/foo/bar/baz.js',    [ 'path' => 'foo/bar', 'file' => 'baz.js' ]],
 		];
 
 		foreach ($data as $row) {
@@ -105,4 +110,19 @@ final class RouteTest extends TestCase {
 		$actual = Route::factory('/foo/[bar]')->parse('/foo/bar/?baz=bat', false);
 		$this->assertEquals(null, $actual, json_encode($actual));
 	}
+
+	public function testSpreadParamMustNotBeOptional() {
+		$this->expectException(\Error::class);
+		Route::factory('[...path]?');
+	}
+
+	public function testThereCanBeOnlyOneSpreadSegment() {
+		$this->expectException(\Error::class);
+		Route::factory('/foo/[...some]/bar/[...another]');
+	}
+
+	// public function testFoo() {
+	// 	$actual = Route::factory('/js/[...path]/[file]')->parse('/js/foo/bar/baz.js');
+	// 	prx($actual);
+	// }
 }

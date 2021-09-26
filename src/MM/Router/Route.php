@@ -12,9 +12,12 @@ class Route {
 
 	protected array $_parsed;
 
+	protected int $_parsedCount;
+
 	public function __construct(string $route) {
 		$this->_route = $route;
 		$this->_parsed = static::_parse($this->_route);
+		$this->_parsedCount = count($this->_parsed);
 	}
 
 	public static function factory(string $route): Route {
@@ -41,11 +44,27 @@ class Route {
 		$segments = static::_sanitizeAndSplit($route);
 		$out = [];
 
+		$wasSpread = false;
 		foreach ($segments as $segment) {
 			$name = null;
+
 			$isOptional = Str::endsWith($segment, '?');
 			if ($isOptional) {
 				$segment = substr($segment, 0, -1);
+			}
+
+			$isSpread = Str::startsWith($segment, '[...');
+			if ($isSpread) {
+				// these two asserts are for sanity... otherwise the parsing logic would need
+				// to be much more complicated while still lacking reasonable use case
+				if ($isOptional) {
+					throw new \Error("Spread segment must not be marked as optional");
+				}
+				if ($wasSpread) {
+					throw new \Error("Multiple spread segments are invalid");
+				}
+				$wasSpread = true;
+				$segment = '[' . substr($segment, 4);
 			}
 
 			$test = '/^' . preg_quote($segment, '/') . '$/';
@@ -67,6 +86,7 @@ class Route {
 				'name' => $name,
 				'test' => $test,
 				'isOptional' => $isOptional,
+				'isSpread' => $isSpread,
 			];
 		}
 
@@ -84,6 +104,35 @@ class Route {
 		}
 
 		$segments = static::_sanitizeAndSplit($url);
+
+		// SPREAD PARAMS DANCING BLOCK - if there are "spread" definitions we need to adjust input
+		// that is "group" (join) segments that were initially splitted
+		$hasSpread = !!count(array_filter($this->_parsed, fn ($v) => !!$v['isSpread']));
+		if ($hasSpread) {
+			$newSegments = [];
+			foreach ($this->_parsed as $i => $p) {
+				$inSpread = $p['isSpread'];
+				if ($inSpread) {
+					// there are defined segments after the "spread" definition
+					if (array_key_exists($i + 1, $this->_parsed)) {
+						$newSegments[] = join(
+							self::SPLITTER,
+							array_slice($segments, 0, $this->_parsedCount - $i)
+						);
+						$segments = array_slice($segments, $this->_parsedCount - $i);
+					}
+					// there are no more defined segments
+					else {
+						$newSegments[] = join(self::SPLITTER, $segments);
+						break;
+					}
+				} else {
+					$newSegments = array_merge($newSegments, array_slice($segments, 0, 1));
+					$segments = array_slice($segments, 1);
+				}
+			}
+			$segments = $newSegments;
+		}
 
 		// minimum required (not optional) segments length
 		$reqLen = 0;
