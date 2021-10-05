@@ -6,7 +6,8 @@
   "scripts": {
     "prettier": "prettier --write \"src/**/*.php\"",
     "test": "./phpunit src",
-    "build": "php ./composer.phar dumpautoload -o"
+    "build": "php ./composer.phar dumpautoload -o",
+    "update": "php ./composer.phar update"
   },
   "author": "Marian Meres <marian@meres.sk>",
   "license": "ISC",
