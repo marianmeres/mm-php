@@ -56,7 +56,7 @@ class Parameters extends \ArrayObject {
 	 *
 	 * Returns null if the key does not exist.
 	 */
-	public function offsetGet($key) {
+	public function offsetGet($key): mixed {
 		if (isset($this[$key])) {
 			return parent::offsetGet($key);
 		}

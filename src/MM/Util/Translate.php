@@ -26,9 +26,6 @@ class Translate implements TranslateInterface, \ArrayAccess {
 	 */
 	public $placeholder = 'XXX';
 
-	/**
-	 * @param array $options
-	 */
 	public function __construct(array $options = null, $strict = true) {
 		ClassUtil::setOptions($this, $options, $strict);
 	}
@@ -203,35 +200,19 @@ class Translate implements TranslateInterface, \ArrayAccess {
 		return isset($this->_data[$lang][$key]);
 	}
 
-	/**
-	 * @param mixed $offset
-	 * @return mixed
-	 */
-	public function offsetGet($offset) {
+	public function offsetGet($offset): mixed {
 		return $this->translate($offset);
 	}
 
-	/**
-	 * @param mixed $offset
-	 * @param mixed $value
-	 * @return $this|void
-	 */
-	public function offsetSet($offset, $value) {
-		return $this->addTranslation([$offset => $value]);
+	public function offsetSet($offset, $value): void {
+		$this->addTranslation([$offset => $value]);
 	}
 
-	/**
-	 * @param mixed $offset
-	 * @return bool
-	 */
-	public function offsetExists($offset) {
+	public function offsetExists($offset): bool {
 		return isset($this->_data[$this->getLang()][$offset]);
 	}
 
-	/**
-	 * @param mixed $offset
-	 */
-	public function offsetUnset($offset) {
+	public function offsetUnset($offset): void {
 		unset($this->_data[$this->getLang()][$offset]);
 	}
 }

@@ -235,8 +235,8 @@ class Params implements \ArrayAccess {
 		return $this;
 	}
 
-	public function offsetSet($offset, $value) {
-		return $this->set($offset, $value);
+	public function offsetSet($offset, $value): void {
+		$this->set($offset, $value);
 	}
 
 	public function offsetExists($offset): bool {
@@ -247,11 +247,11 @@ class Params implements \ArrayAccess {
 		return isset($p[$offset]);
 	}
 
-	public function offsetUnset($offset) {
+	public function offsetUnset($offset): void {
 		unset($this->_params[$offset]);
 	}
 
-	public function offsetGet($offset) {
+	public function offsetGet($offset): mixed {
 		return $this->get($offset);
 	}
 }

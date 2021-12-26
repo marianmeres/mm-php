@@ -439,7 +439,7 @@ class Response implements \ArrayAccess {
 		return trim($value);
 	}
 
-	public function offsetSet($offset, $value) {
+	public function offsetSet($offset, $value): void {
 		$this->setBody($value, true, $offset);
 	}
 
@@ -447,11 +447,11 @@ class Response implements \ArrayAccess {
 		return isset($this->_body[$offset]);
 	}
 
-	public function offsetUnset($offset) {
+	public function offsetUnset($offset): void {
 		unset($this->_body[$offset]);
 	}
 
-	public function offsetGet($offset): ?array {
+	public function offsetGet($offset): mixed {
 		return $this->getBody($offset);
 	}
 
