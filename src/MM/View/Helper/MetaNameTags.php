@@ -6,50 +6,28 @@ use MM\View\Exception;
 use MM\View\Helper;
 
 class MetaNameTags extends Helper implements \Countable {
-	/**
-	 * @var array
-	 */
-	protected $_container = [];
+	protected array $_container = [];
 
-	/**
-	 * @param $name
-	 * @param $content
-	 * @return $this
-	 */
-	public function set($name, $content) {
+	public function set($name, $content): self {
 		$name = $this->_normalizeName($name);
 		$this->_container[$name] = $content;
 		return $this;
 	}
 
-	/**
-	 * @param $name
-	 * @return bool
-	 */
-	public function has($name) {
+	public function has($name): bool {
 		$name = $this->_normalizeName($name);
 		return isset($this->_container[$name]);
 	}
 
-	/**
-	 * @param $name
-	 * @return string
-	 */
-	protected function _normalizeName($name) {
+	protected function _normalizeName($name): string {
 		return strtolower($name);
 	}
 
-	/**
-	 * @return array
-	 */
-	public function getContainer() {
+	public function getContainer(): array {
 		return $this->_container;
 	}
 
-	/**
-	 * @return int
-	 */
-	public function count() {
+	public function count(): int {
 		return count($this->_container);
 	}
 
@@ -66,10 +44,7 @@ class MetaNameTags extends Helper implements \Countable {
 		return $out;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function __toString() {
+	public function __toString(): string {
 		return $this->toString();
 	}
 }
