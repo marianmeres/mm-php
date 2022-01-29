@@ -57,10 +57,7 @@ class ContainerOfData extends Helper implements \Countable {
 		return $this;
 	}
 
-	/**
-	 * To be overridden
-	 */
-	public function toString(): bool|string {
+	public function toString(): string {
 		return print_r($this->_container, true);
 	}
 

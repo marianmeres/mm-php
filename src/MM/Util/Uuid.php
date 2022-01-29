@@ -9,10 +9,8 @@ class Uuid {
 	 * Note: pokial tomu spravne rozumiem, toto sice vyrobi skutocne nahodny a formalne
 	 * spravny uuid, neviem vsak ci to koser z "datoveho" pohladu, lebo prve byty
 	 * by mali byt timestamp based...
-	 *
-	 * @return string
 	 */
-	public static function get() {
+	public static function get(): string {
 		$data = openssl_random_pseudo_bytes(16);
 
 		$data[6] = chr((ord($data[6]) & 0x0f) | 0x40); // set version to 0100

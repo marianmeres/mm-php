@@ -27,7 +27,7 @@ class View extends ViewAbstract {
 	/**
 	 * Trick to make clean scoped template. Taken from ZF1.
 	 */
-	protected function _run() {
+	protected function _run(): void {
 		// http://php.net/manual/en/function.include.php
 		// ... It is possible to execute a return statement inside an included file
 		// in order to terminate processing in that file and return to the script

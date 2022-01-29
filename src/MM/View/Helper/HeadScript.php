@@ -7,9 +7,6 @@ class HeadScript extends ContainerOfStrings {
 
 	protected bool $_doEscape = false;
 
-	/**
-	 * @return string
-	 */
 	public function toString(): string {
 		$out = '';
 		foreach ($this->_container as $string) {

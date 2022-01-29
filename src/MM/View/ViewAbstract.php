@@ -46,10 +46,7 @@ abstract class ViewAbstract {
 		return $this;
 	}
 
-	/**
-	 * @return bool
-	 */
-	public function getAutoEscape() {
+	public function getAutoEscape(): bool {
 		return $this->_autoEscape;
 	}
 
@@ -58,10 +55,7 @@ abstract class ViewAbstract {
 		return $this;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getTemplateDir() {
+	public function getTemplateDir(): string {
 		return $this->_templateDir;
 	}
 
@@ -103,10 +97,7 @@ abstract class ViewAbstract {
 		return $this->raw($key);
 	}
 
-	/**
-	 * @return array
-	 */
-	public function dump() {
+	public function dump(): array {
 		return $this->_vars;
 	}
 
@@ -140,114 +131,6 @@ abstract class ViewAbstract {
 	public function __set($name, $value): void {
 		$this->_vars[$name] = $value;
 	}
-
-	// /**
-	//  * @param $name
-	//  * @param $arguments
-	//  * @throws Exception
-	//  */
-	// public function __call($name, $arguments)
-	// {
-	//     throw new Exception(
-	//         "Missing view method '$name'; Hint: magic helpers were removed"
-	//     );
-	// }
-
-	// protected function _normalizeHelperName($name)
-	// {
-	//     return strtolower($name);
-	// }
-
-	// /**
-	//  * @param $name
-	//  * @param null $fqnOrInstance
-	//  * @param bool $reset
-	//  * @return $this
-	//  * @throws Exception
-	//  */
-	// public function setHelper($name, $fqnOrInstance = null, $reset = false)
-	// {
-	//     $name = $this->_normalizeHelperName($name);
-
-	//     //
-	//     if ($reset) {
-	//         unset($this->_helpers[$name]);
-	//     }
-	//     // ak neresetujeme a uz nieco existuje, tak return early, pouzijeme to co mame
-	//     elseif (isset($this->_helpers[$name])) {
-	//         return $this;
-	//     }
-
-	//     // ak posielame null, tak return early nic
-	//     if (null === $fqnOrInstance) {
-	//         return $this;
-	//     }
-
-	//     // povolujeme string alebo uz hotovu Helper instanciu
-	//     if (is_string($fqnOrInstance) || $fqnOrInstance instanceof Helper) {
-	//         $this->_helpers[$name] = $fqnOrInstance;
-	//         return $this;
-	//     }
-
-	//     // ak sme tu tak neznamy typ
-	//     throw new Exception(
-	//         "Invalid view helper. Expecting either fully qualified "
-	//         . "class name or actual Helper instance"
-	//     );
-	// }
-
-	// /**
-	//  * @param array $nameToFqn
-	//  * @throws Exception
-	//  */
-	// public function setHelpers(array $nameToFqn)
-	// {
-	//     foreach ($nameToFqn as $name => $fqn) {
-	//         $this->setHelper($name, $fqn);
-	//     }
-	// }
-
-	// /**
-	//  * @param $name
-	//  * @param null $fallbackFqnOrInstance
-	//  * @return null
-	//  * @throws Exception
-	//  */
-	// public function getHelper($name, $fallbackFqnOrInstance = null)
-	// {
-	//     $name = $this->_normalizeHelperName($name);
-
-	//     //
-	//     if (!isset($this->_helpers[$name])) {
-	//         // use fallback if provided
-	//         if ($fallbackFqnOrInstance) {
-	//             $this->setHelper($name, $fallbackFqnOrInstance);
-	//         } else {
-	//             return null;
-	//         }
-	//     }
-
-	//     // JIT, lazy, string to instance
-	//     if (is_string($this->_helpers[$name])) {
-	//         $helper = new $this->_helpers[$name]($this);
-	//         // note1: use setter because it validates
-	//         // note2: important $reset=true (3rd param)
-	//         $this->setHelper($name, $helper, true);
-	//     }
-
-	//     //
-	//     return $this->_helpers[$name];
-	// }
-
-	// /**
-	//  * @param $name
-	//  * @return bool
-	//  */
-	// public function hasHelper($name)
-	// {
-	//     $name = $this->_normalizeHelperName($name);
-	//     return isset($this->_helpers[$name]);
-	// }
 
 	/**
 	 * built-in shortcut
@@ -285,8 +168,5 @@ abstract class ViewAbstract {
 		}
 	}
 
-	/**
-	 * @return mixed
-	 */
-	abstract protected function _run();
+	abstract protected function _run(): void;
 }
