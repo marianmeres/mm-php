@@ -20,7 +20,7 @@ class Router {
 		}
 	}
 
-	public function reset(): Router {
+	public function reset(): static {
 		$this->_routes = [];
 		return $this;
 	}

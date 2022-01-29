@@ -23,18 +23,15 @@ class Uuid {
 
 	/**
 	 * Zbuchane na rychlo... dorobit konfiguraciu via optiony
-	 * @param int $length
-	 * @param array|null $options
-	 * @return string
 	 */
-	public static function getShortUid($length = 10, array $options = null) {
+	public static function getShortUid(int $length = 10, array $options = null): string {
 		$c = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' . 'abcdefghijklmnopqrstuvwxyz' . '0123456789';
 		//. '-_'
 
 		// todo: handle options
 
 		// vyhodime human ambiguos citatelne
-		$c = preg_replace('/(l|1|I|0|O)/', '', $c);
+		$c = preg_replace('/([l1I0O])/', '', $c);
 		$max = strlen($c) - 1;
 
 		$length = min(100, abs((int) $length)); // safety break

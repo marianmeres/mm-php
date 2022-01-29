@@ -4,7 +4,7 @@ namespace MM\Util;
 
 interface TranslateInterface {
 
-	public function translate($key, $replaceArgs = null);
+	public function translate(string $key, $replaceArgs = null): mixed;
 
 	public function hasTranslationFor($key, $lang = null);
 }

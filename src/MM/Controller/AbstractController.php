@@ -60,7 +60,7 @@ abstract class AbstractController {
 	/**
 	 *
 	 */
-	public function setParams($params): AbstractController {
+	public function setParams($params): static {
 		if (is_array($params)) {
 			$params = new Params($params);
 		}
@@ -82,7 +82,7 @@ abstract class AbstractController {
 	/**
 	 *
 	 */
-	public function setObEnabled(bool $flag = true): AbstractController {
+	public function setObEnabled(bool $flag = true): static {
 		$this->_obEnabled = (bool) $flag;
 		return $this;
 	}
@@ -110,7 +110,7 @@ abstract class AbstractController {
 	/**
 	 *
 	 */
-	public function setResponse(Response $response): AbstractController {
+	public function setResponse(Response $response): static {
 		$this->_response = $response;
 		return $this;
 	}
@@ -119,7 +119,7 @@ abstract class AbstractController {
 	 * Sets options which have normalized setter. Otherwise throws.
 	 * @throws Exception
 	 */
-	public function setOptions(array $options): AbstractController {
+	public function setOptions(array $options): static {
 		foreach ($options as $_key => $value) {
 			$key = str_replace('_', ' ', strtolower(trim($_key))); // under_scored to CamelCase
 			$key = str_replace(' ', '', ucwords($key));
@@ -147,7 +147,7 @@ abstract class AbstractController {
 	/**
 	 *
 	 */
-	public function setException(\Exception $e = null): AbstractController {
+	public function setException(\Exception $e = null): static {
 		$this->_exception = $e;
 		return $this;
 	}
@@ -311,7 +311,7 @@ abstract class AbstractController {
 	 * Sugar
 	 * @throws Exception
 	 */
-	public function redirect(string $url, bool $permanent = true): AbstractController {
+	public function redirect(string $url, bool $permanent = true): static {
 		if ('' === "$url") {
 			$url = '.';
 		}
@@ -352,7 +352,7 @@ abstract class AbstractController {
 		string $name,
 		$fqnOrInstance = null,
 		bool $reset = false
-	): AbstractController {
+	): static {
 		$name = $this->_normalizeHelperName($name);
 
 		//
@@ -382,7 +382,7 @@ abstract class AbstractController {
 		);
 	}
 
-	public function setHelpers(array $nameToFqn): AbstractController {
+	public function setHelpers(array $nameToFqn): static {
 		foreach ($nameToFqn as $name => $fqn) {
 			$this->setHelper($name, $fqn);
 		}

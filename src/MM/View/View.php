@@ -22,10 +22,7 @@ use MM\View\Helper\MetaNameTags;
 use MM\View\Helper\OpenGraphData;
 
 class View extends ViewAbstract {
-	/**
-	 * @var mixed
-	 */
-	public $__scriptIncludeReturn;
+	public mixed $__scriptIncludeReturn;
 
 	/**
 	 * Trick to make clean scoped template. Taken from ZF1.

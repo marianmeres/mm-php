@@ -14,10 +14,8 @@ require_once __DIR__ . '/_bootstrap.php';
  * @group mm-util
  */
 class DbUtilPdoTest extends TestCase {
-	/**
-	 * @var DbUtilPdo
-	 */
-	public $dbu;
+
+	public DbUtilPdo $dbu;
 
 	public function getTestTableSql($vendor = 'sqlite') {
 		$sql = "

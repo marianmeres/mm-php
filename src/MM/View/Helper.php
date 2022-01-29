@@ -2,14 +2,8 @@
 namespace MM\View;
 
 class Helper {
-	/**
-	 * @var View
-	 */
-	protected $_view;
+	protected ?View $_view;
 
-	/**
-	 * @param ViewAbstract $view
-	 */
 	public function __construct(ViewAbstract $view = null) {
 		if ($view) {
 			$this->setView($view);
@@ -21,11 +15,7 @@ class Helper {
 		return new static($view);
 	}
 
-	/**
-	 * @param ViewAbstract $view
-	 * @return $this
-	 */
-	public function setView(ViewAbstract $view = null) {
+	public function setView(ViewAbstract $view = null): static {
 		$this->_view = $view;
 		return $this;
 	}

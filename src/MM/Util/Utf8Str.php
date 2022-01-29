@@ -7,11 +7,7 @@
 namespace MM\Util;
 
 class Utf8Str {
-	/**
-	 * @param $str
-	 * @return string
-	 */
-	public static function replaceInvalidByteSequence($str) {
+	public static function replaceInvalidByteSequence(string $str): string {
 		// save current value
 		$old = mb_substitute_character();
 
@@ -26,12 +22,7 @@ class Utf8Str {
 		return $str;
 	}
 
-	/**
-	 *
-	 * @param $s
-	 * @return bool
-	 */
-	public static function isUtf8($s) {
+	public static function isUtf8($s): bool {
 		for ($i = 0; $i < strlen($s); $i++) {
 			if (ord($s[$i]) < 0x80) {
 				continue;
@@ -73,11 +64,8 @@ class Utf8Str {
 	/**
 	 * Ak je intl extensiona tak pouzije ju, inak fallbackuje na manualne
 	 * riesenie
-	 *
-	 * @param $str
-	 * @return mixed|string
 	 */
-	public static function unaccent($str) {
+	public static function unaccent(string $str): string {
 		if (class_exists('Normalizer', false)) {
 			return self::normalizeUnaccentUtf8String($str);
 		}
@@ -91,11 +79,8 @@ class Utf8Str {
 	 *
 	 * Otazka je, ako sa toto bude chovat pri veeelmi dlhych stringoch
 	 * (preg_replace...) Keby to padlo by som sa necudoval...
-	 *
-	 * @param $s
-	 * @return mixed
 	 */
-	public static function normalizeUnaccentUtf8String($s) {
+	public static function normalizeUnaccentUtf8String($s): string {
 		$original = $s;
 
 		// Normalizer-class missing!
@@ -171,11 +156,8 @@ class Utf8Str {
 	 * Toto robi to iste co vyssie func, akurat to robi manualne (definuje
 	 * mapu a potom strtr). Trva raz tak dlho ako vyssia, ale nezavisi na
 	 * php intl extensione
-	 *
-	 * @param  string $string  String to unaccent
-	 * @return string $string  Unaccented string
 	 */
-	public static function unaccentUtf8String($string) {
+	public static function unaccentUtf8String(string $string): string {
 		if (!preg_match('/[\x80-\xff]/', $string)) {
 			return $string;
 		}

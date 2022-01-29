@@ -3,14 +3,8 @@
 namespace MM\View\Helper;
 
 class HeadScript extends ContainerOfStrings {
-	/**
-	 * @var bool
-	 */
 	protected bool $_unique = false;
 
-	/**
-	 * @var bool
-	 */
 	protected bool $_doEscape = false;
 
 	/**

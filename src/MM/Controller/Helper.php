@@ -13,7 +13,7 @@ abstract class Helper {
 		}
 	}
 
-	public function setController(AbstractController $controller = null): Helper {
+	public function setController(AbstractController $controller = null): static {
 		$this->_controller = $controller;
 		return $this;
 	}

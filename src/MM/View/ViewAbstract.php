@@ -3,38 +3,25 @@
 namespace MM\View;
 
 abstract class ViewAbstract {
-	/**
-	 * @var array
-	 */
-	private $_vars = [];
+	private array $_vars = [];
 
 	/**
 	 * helper instances
-	 * @var array
 	 */
-	protected $_helpers = [];
+	protected array $_helpers = [];
 
-	/**
-	 * @var string
-	 */
-	private $_templateDir;
+	private string $_templateDir = '';
 
 	/**
 	 * Auto escape vars when overloading via magic __get?
-	 * @var bool
 	 */
-	private $_autoEscape = true;
+	private bool $_autoEscape = true;
 
 	/**
 	 * Trigger notices when accessing undefined view vars?
-	 * @var bool
 	 */
-	private $_strictVars = false;
+	private bool $_strictVars = false;
 
-	/**
-	 * @param array $options
-	 * @throws Exception
-	 */
 	public function __construct(array $options = null) {
 		if ($options) {
 			$this->setOptions($options);
@@ -49,20 +36,12 @@ abstract class ViewAbstract {
 	protected function _init() {
 	}
 
-	/**
-	 * @param $flag
-	 * @return $this
-	 */
-	public function setStrictVars($flag) {
+	public function setStrictVars($flag): static {
 		$this->_strictVars = (bool) $flag;
 		return $this;
 	}
 
-	/**
-	 * @param $flag
-	 * @return $this
-	 */
-	public function setAutoEscape($flag) {
+	public function setAutoEscape($flag): static {
 		$this->_autoEscape = (bool) $flag;
 		return $this;
 	}
@@ -74,11 +53,7 @@ abstract class ViewAbstract {
 		return $this->_autoEscape;
 	}
 
-	/**
-	 * @param $dir
-	 * @return $this
-	 */
-	public function setTemplateDir($dir) {
+	public function setTemplateDir($dir): static {
 		$this->_templateDir = $dir;
 		return $this;
 	}
@@ -92,11 +67,8 @@ abstract class ViewAbstract {
 
 	/**
 	 * Sets options which have normalized setter. Otherwise throws.
-	 * @param array $options
-	 * @return $this
-	 * @throws Exception
 	 */
-	public function setOptions(array $options) {
+	public function setOptions(array $options): static {
 		foreach ($options as $_key => $value) {
 			$key = str_replace('_', ' ', strtolower(trim($_key))); // under_scored to CamelCase
 			$key = str_replace(' ', '', ucwords($key));
@@ -109,21 +81,15 @@ abstract class ViewAbstract {
 		return $this;
 	}
 
-	/**
-	 * @param array $vars
-	 * @return $this
-	 */
-	public function setVars(array $vars, $merge = false) {
+	public function setVars(array $vars, $merge = false): static {
 		$this->_vars = $merge ? array_merge($this->_vars, $vars) : $vars;
 		return $this;
 	}
 
 	/**
 	 * Get raw value
-	 * @param $key
-	 * @return mixed
 	 */
-	public function raw($key) {
+	public function raw($key): mixed {
 		if (null === $key) {
 			return $this->_vars;
 		}
@@ -144,28 +110,17 @@ abstract class ViewAbstract {
 		return $this->_vars;
 	}
 
-	/**
-	 * @param $name
-	 * @return bool
-	 */
-	public function __isset($name) {
+	public function __isset(string $name): bool {
 		return array_key_exists($name, $this->_vars);
 	}
 
-	/**
-	 * @param $name
-	 */
-	public function __unset($name) {
+	public function __unset(string $name) {
 		if ($this->__isset($name)) {
 			unset($this->_vars[$name]);
 		}
 	}
 
-	/**
-	 * @param $name
-	 * @return null|string
-	 */
-	public function __get($name) {
+	public function __get(string $name): mixed {
 		if ($this->__isset($name)) {
 			if (!$this->_autoEscape || !is_scalar($this->_vars[$name])) {
 				return $this->_vars[$name];
@@ -182,14 +137,8 @@ abstract class ViewAbstract {
 		trigger_error("Undefined view var '$name'", E_USER_NOTICE);
 	}
 
-	/**
-	 * @param $name
-	 * @param $value
-	 * @return $this
-	 */
-	public function __set($name, $value) {
+	public function __set($name, $value): void {
 		$this->_vars[$name] = $value;
-		return $this;
 	}
 
 	// /**
@@ -204,10 +153,6 @@ abstract class ViewAbstract {
 	//     );
 	// }
 
-	/**
-	 * @param $name
-	 * @return string
-	 */
 	// protected function _normalizeHelperName($name)
 	// {
 	//     return strtolower($name);
@@ -306,31 +251,22 @@ abstract class ViewAbstract {
 
 	/**
 	 * built-in shortcut
-	 * @param $val
-	 * @return string
 	 */
-	public function htmlspecialchars($val) {
+	public function htmlspecialchars($val): string {
 		return htmlspecialchars($val, ENT_COMPAT, 'UTF-8');
 	}
 
 	/**
 	 * Renders a view template/script under template dir
-	 *
-	 * @param $template
-	 * @return string
 	 */
-	public function render($template, array $vars = [], $ext = '.phtml') {
+	public function render($template, array $vars = [], $ext = '.phtml'): string {
 		return $this->renderScript($this->_templateDir . $template, $vars, $ext);
 	}
 
 	/**
 	 * Renders a view template/script absolute filename
-	 *
-	 * @param $template
-	 * @return string
-	 * @throws \Exception
 	 */
-	public function renderScript($template, array $vars = [], $ext = '.phtml') {
+	public function renderScript($template, array $vars = [], $ext = '.phtml'): string {
 		// add extension if not exists
 		if ($ext && $ext !== strtolower(substr($template, -strlen($ext)))) {
 			$template .= $ext;

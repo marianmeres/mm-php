@@ -10,9 +10,6 @@ namespace MM\Util;
  * pouzitie:
  */
 class CliColor {
-	/**
-	 * @var array
-	 */
 	protected static array $_ANSI_CODES = [
 		'off' => 0,
 		'bold' => 1,

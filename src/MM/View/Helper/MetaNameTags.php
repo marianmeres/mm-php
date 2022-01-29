@@ -8,7 +8,7 @@ use MM\View\Helper;
 class MetaNameTags extends Helper implements \Countable {
 	protected array $_container = [];
 
-	public function set($name, $content): self {
+	public function set($name, $content): static {
 		$name = $this->_normalizeName($name);
 		$this->_container[$name] = $content;
 		return $this;

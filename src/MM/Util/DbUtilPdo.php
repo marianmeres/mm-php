@@ -25,7 +25,6 @@ class DbUtilPdo {
 
 	/**
 	 * Na debug...
-	 * @var string|null
 	 */
 	public ?string $logLabel = null;
 
@@ -95,7 +94,7 @@ class DbUtilPdo {
 		return is_array($this->_queryLog);
 	}
 
-	public function resetQueryLog(): DbUtilPdo {
+	public function resetQueryLog(): static {
 		// resetneme na cisty array iba ak je array, null ma specialny vyznam
 		// (deaktivovane logovanie)
 		if (is_array($this->_queryLog)) {
@@ -112,7 +111,7 @@ class DbUtilPdo {
 		return $this->_queryLogCounter;
 	}
 
-	public function resetQueryLogCounter(): DbUtilPdo {
+	public function resetQueryLogCounter(): static {
 		$this->_queryLogCounter = 0;
 		return $this;
 	}
@@ -120,7 +119,7 @@ class DbUtilPdo {
 	/**
 	 * Interny logger.
 	 */
-	protected function _log(string $sql, $extra = null): DbUtilPdo {
+	protected function _log(string $sql, $extra = null): static {
 		// toto robime vzdy
 		$this->_queryLogCounter++;
 
@@ -190,7 +189,7 @@ class DbUtilPdo {
 	 * uz existujucu konnekciu odinokadial. Konkretny class musi zistit,
 	 * ci dany resource je pre neho validny.
 	 */
-	public function setResource($pdo = null): DbUtilPdo {
+	public function setResource($pdo = null): static {
 		// ak null tak reset a return early
 		if (null === $pdo) {
 			$this->_resource = null;
@@ -302,7 +301,7 @@ class DbUtilPdo {
 	/**
 	 * Realne skusi connectnut db server;
 	 */
-	public function connect(): DbUtilPdo {
+	public function connect(): static {
 		if ($this->_resource) {
 			return $this;
 		}
@@ -336,11 +335,8 @@ class DbUtilPdo {
 
 	/**
 	 * Vykona dany surovy $sql alebo prepared statement
-	 * @param $rawSqlOrPreparedStatement
-	 * @param array $data
-	 * @return bool|int
 	 */
-	public function execute($rawSqlOrPreparedStatement, array $data = []) {
+	public function execute($rawSqlOrPreparedStatement, array $data = []): bool|int {
 		$db = $this->getResource();
 		if ($rawSqlOrPreparedStatement instanceof \PDOStatement) {
 			$stmt = $rawSqlOrPreparedStatement;
@@ -359,13 +355,8 @@ class DbUtilPdo {
 
 	/**
 	 * Vysklada a vykona query a vrati PDOStatement
-	 * @param $fields
-	 * @param $table
-	 * @param null $where
-	 * @param array|null $addons
-	 * @return false|mixed|\PDOStatement|string|void
 	 */
-	public function query($fields, $table, $where = null, array $addons = null) {
+	public function query($fields, $table, $where = null, array $addons = null): mixed {
 		return $this->querySql(
 			"SELECT $fields FROM " . $this->qi($table),
 			$where,
@@ -375,12 +366,8 @@ class DbUtilPdo {
 
 	/**
 	 * Vykona surovu query a vrati PDOStatement
-	 * @param $sql
-	 * @param null $where
-	 * @param array|null $addons
-	 * @return false|mixed|\PDOStatement|string|void
 	 */
-	public function querySql($sql, $where = null, array $addons = null) {
+	public function querySql($sql, $where = null, array $addons = null): mixed {
 		$db = $this->getResource();
 
 		// if (!empty($where)) {
@@ -420,43 +407,29 @@ class DbUtilPdo {
 
 	/**
 	 * Vrati vsetky riadky so vsetkymi stlpcami
-	 * @param $fields
-	 * @param $table
-	 * @param null $where
-	 * @param array|null $addons
-	 * @return array|false
 	 */
-	public function fetchAll($fields, $table, $where = null, array $addons = null) {
+	public function fetchAll($fields, $table, $where = null, array $addons = null): array|false {
 		$stmt = $this->query($fields, $table, $where, $addons);
 		return $stmt->fetchAll(\PDO::FETCH_ASSOC);
 	}
 
 	/**
 	 * Vrati vsetko pre (polo) surove sql
-	 * @param $sql
-	 * @param null $where
-	 * @param array|null $addons
-	 * @return array|false
 	 */
-	public function fetchAllSql($sql, $where = null, array $addons = null) {
+	public function fetchAllSql($sql, $where = null, array $addons = null): array|false {
 		$stmt = $this->querySql($sql, $where, $addons);
 		return $stmt->fetchAll(\PDO::FETCH_ASSOC);
 	}
 
 	/**
 	 * Vrati prvy riadok z resultsetu ako assoc pole
-	 * @param $fields
-	 * @param string $table
-	 * @param null $where
-	 * @param array|null $addons
-	 * @return mixed|null
 	 */
 	public function fetchRow(
 		$fields,
 		string $table,
 		$where = null,
 		array $addons = null
-	) {
+	): mixed {
 		$stmt = $this->query(
 			$fields,
 			$table,
@@ -474,12 +447,8 @@ class DbUtilPdo {
 
 	/**
 	 * fetch row pre surove sql
-	 * @param $sql
-	 * @param null $where
-	 * @param array|null $addons
-	 * @return mixed|null
 	 */
-	public function fetchRowSql($sql, $where = null, array $addons = null) {
+	public function fetchRowSql($sql, $where = null, array $addons = null): mixed {
 		$stmt = $this->querySql($sql, $where, $addons);
 		$row = $stmt->fetch(\PDO::FETCH_ASSOC);
 		$stmt->closeCursor();
@@ -489,14 +458,8 @@ class DbUtilPdo {
 	/**
 	 * Vrati pole hodnot prveho stlpca (0-ty index) zo vsetkych riadkov
 	 * v resultsete
-	 *
-	 * @param $fields
-	 * @param $table
-	 * @param null $where
-	 * @param array|null $addons
-	 * @return array|false|null
 	 */
-	public function fetchCol($fields, $table, $where = null, array $addons = null) {
+	public function fetchCol($fields, $table, $where = null, array $addons = null): mixed {
 		$stmt = $this->query($fields, $table, $where, $addons);
 		$out = $stmt->fetchAll(\PDO::FETCH_COLUMN, 0);
 		return $out ?: null;
@@ -504,13 +467,8 @@ class DbUtilPdo {
 
 	/**
 	 * fetch col pre surove sql
-	 *
-	 * @param $sql
-	 * @param null $where
-	 * @param array|null $addons
-	 * @return array|false|null
 	 */
-	public function fetchColSql($sql, $where = null, array $addons = null) {
+	public function fetchColSql($sql, $where = null, array $addons = null): mixed {
 		$stmt = $this->querySql($sql, $where, $addons);
 		$out = $stmt->fetchAll(\PDO::FETCH_COLUMN, 0);
 		return $out ?: null;
@@ -518,14 +476,8 @@ class DbUtilPdo {
 
 	/**
 	 * Vrati hodnotu prveho stlpca v prvom riadku z resulsetu
-	 *
-	 * @param $fields
-	 * @param $table
-	 * @param null $where
-	 * @param array|null $addons
-	 * @return mixed|null
 	 */
-	public function fetchOne($fields, $table, $where = null, array $addons = null) {
+	public function fetchOne($fields, $table, $where = null, array $addons = null): mixed {
 		$addons = (array) $addons;
 		if (!array_key_exists('limit', $addons)) {
 			// defaultne pridame limit 1
@@ -540,12 +492,8 @@ class DbUtilPdo {
 
 	/**
 	 * fetch one pre surove sql
-	 * @param $sql
-	 * @param null $where
-	 * @param array|null $addons
-	 * @return mixed|null
 	 */
-	public function fetchOneSql($sql, $where = null, array $addons = null) {
+	public function fetchOneSql($sql, $where = null, array $addons = null): mixed {
 		$addons = (array) $addons;
 		if (!array_key_exists('limit', $addons)) {
 			// defaultne pridame limit 1
@@ -560,11 +508,6 @@ class DbUtilPdo {
 
 	/**
 	 * Vrati pocet zaznamov z $table podla $where
-	 *
-	 * @param $table
-	 * @param null $where
-	 * @param false $debug
-	 * @return int
 	 */
 	public function fetchCount($table, $where = null, bool $debug = false): int {
 		return (int) $this->fetchOne('COUNT(*) AS count', $table, $where, [
@@ -572,14 +515,6 @@ class DbUtilPdo {
 		]);
 	}
 
-	/**
-	 * @param string $keyCol
-	 * @param string $valCol
-	 * @param string $table
-	 * @param null $where
-	 * @param array|null $addons
-	 * @return array
-	 */
 	public function fetchPairs(
 		string $keyCol,
 		string $valCol,
@@ -591,12 +526,6 @@ class DbUtilPdo {
 		return $stmt->fetchAll(\PDO::FETCH_KEY_PAIR);
 	}
 
-	/**
-	 * @param string $sql
-	 * @param null $where
-	 * @param array|null $addons
-	 * @return array
-	 */
 	public function fetchPairsSql(
 		string $sql,
 		$where = null,
@@ -841,7 +770,7 @@ class DbUtilPdo {
 	/**
 	 * Zacne transakciu
 	 */
-	public function begin(bool $strict = true): DbUtilPdo {
+	public function begin(bool $strict = true): static {
 		$db = $this->getResource();
 
 		if ($strict || !$this->inTransaction()) {
@@ -859,7 +788,7 @@ class DbUtilPdo {
 	 * Komitne. Ak $strict je false, tak realne posle serveru prikaz na komit
 	 * iba ak interny flag hovori ze sme v transakcii, inak ticho ignoruje.
 	 */
-	public function commit(bool $strict = true): DbUtilPdo {
+	public function commit(bool $strict = true): static {
 		$db = $this->getResource();
 
 		if ($strict || $this->inTransaction()) {
@@ -876,7 +805,7 @@ class DbUtilPdo {
 	 * Rollbackne. Ak $strict je false, tak realne posle serveru prikaz na rollback
 	 * iba ak interny flag hovori ze sme v transakcii, inak ticho ignoruje.
 	 */
-	public function rollback(bool $strict = true): DbUtilPdo {
+	public function rollback(bool $strict = true): static {
 		$db = $this->getResource();
 
 		if ($strict || $this->inTransaction()) {

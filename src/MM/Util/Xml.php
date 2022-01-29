@@ -10,14 +10,8 @@ class Xml {
 	 * correctly indents
 	 *
 	 * Acts as 1:1 oposite to xml2array below
-	 *
-	 * @param array $array
-	 * @param string $rootName
-	 * @param string $indent
-	 * @return string
-	 * @throws \Exception
 	 */
-	public static function array2xml(array $array, $rootName = 'root', $indent = '  ') {
+	public static function array2xml(array $array, string $rootName = 'root', string $indent = '  '): string {
 		// skip formatting uplne
 		if (is_bool($indent)) {
 			$formatOutput = $indent;
@@ -31,20 +25,12 @@ class Xml {
 		$out = '';
 		$rootAttrs = '';
 
-		/**
-		 * @param $array
-		 * @param $depth "depth level"
-		 * @param $parent "parent tag name"
-		 * @param string $attrs "attributes string"
-		 * @param string $pAttrs "Parent attributes string"
-		 * @return string
-		 */
-		$array2xml = function ($array, $depth, $parent, $attrs = '', $pAttrs = '') use (
+		$array2xml = function ($array, $depth, $parent, string $attrs = '', string $pAttrs = '') use (
 			&$array2xml,
 			$indent,
 			$n,
 			&$rootAttrs
-		) {
+		): string {
 			// lambda recursion
 
 			static $first = true; // because root attributes
@@ -141,10 +127,8 @@ class Xml {
 
 	/**
 	 * Nice and easy...
-	 * @param $xmlString
-	 * @return mixed
 	 */
-	public static function xml2array($xmlString) {
+	public static function xml2array($xmlString): mixed {
 		$xml = simplexml_load_string($xmlString);
 		$json = json_encode($xml);
 		return json_decode($json, true);

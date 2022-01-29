@@ -6,7 +6,7 @@ namespace MM\Controller\Helper;
 use MM\Controller\Helper;
 
 class Server extends Helper {
-	public function __invoke(): Server {
+	public function __invoke(): static {
 		return $this;
 	}
 

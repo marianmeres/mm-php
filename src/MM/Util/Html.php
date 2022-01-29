@@ -9,21 +9,14 @@ class Html {
 	 * Utilitka vyskladavajuca tag s atributmi. Defaultne escapuje
 	 * via htmlspecialchars. Bude escapuje vsetko (kluce, hodnoty, value) alebo
 	 * nic.
-	 *
-	 * @param $name
-	 * @param null $attribs
-	 * @param null $value
-	 * @param bool $close
-	 * @param bool $escape
-	 * @return string
 	 */
 	public static function renderTag(
 		$name,
 		$attribs = null,
 		$value = null,
-		$close = true,
-		$escape = true
-	) {
+		bool $close = true,
+		bool $escape = true
+	): string {
 		$tag = "<$name";
 		$attr = $attribs;
 

@@ -73,7 +73,7 @@ class Params implements \ArrayAccess {
 	}
 
 	// Nullne vsetky interne kontajnre. Vhodne pri testoch.
-	public function reset(): Params {
+	public function reset(): static {
 		$this->_GET = null;
 		$this->_POST = null;
 		$this->_SERVER = null;
@@ -127,7 +127,7 @@ class Params implements \ArrayAccess {
 	 * Main API. Un/setne hodnotu (alebo vsetko) do interneho "_params" kontainera.
 	 * Tato setnuta hodnota bude mat prioritu nad _GET a _POST.
 	 */
-	public function set($dataOrKey, $value = null): Params {
+	public function set($dataOrKey, $value = null): static {
 		if (is_array($dataOrKey)) {
 			$this->_params->exchangeArray($dataOrKey);
 		} elseif (null === $value && isset($this->_params[$dataOrKey])) {
@@ -212,7 +212,7 @@ class Params implements \ArrayAccess {
 	/**
 	 * Un/Setne hodnotu do "_*" kontainerov. Mimo testov nie je dovod volat.
 	 */
-	public function setInternal($which, $dataOrKey, $value = null): Params {
+	public function setInternal($which, $dataOrKey, $value = null): static {
 		if (!preg_match("/^_(GET|POST|SERVER|COOKIE)$/", $which)) {
 			throw new Exception("Invalid parameter '$which'");
 		}
@@ -235,11 +235,11 @@ class Params implements \ArrayAccess {
 		return $this;
 	}
 
-	public function offsetSet($offset, $value): void {
+	public function offsetSet(mixed $offset, mixed $value): void {
 		$this->set($offset, $value);
 	}
 
-	public function offsetExists($offset): bool {
+	public function offsetExists(mixed $offset): bool {
 		// return isset($this->_params[$offset]);
 
 		// @mm nizsie myslim viac odpoveda zmyslu
@@ -247,11 +247,11 @@ class Params implements \ArrayAccess {
 		return isset($p[$offset]);
 	}
 
-	public function offsetUnset($offset): void {
+	public function offsetUnset(mixed $offset): void {
 		unset($this->_params[$offset]);
 	}
 
-	public function offsetGet($offset): mixed {
+	public function offsetGet(mixed $offset): mixed {
 		return $this->get($offset);
 	}
 }

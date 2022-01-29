@@ -22,7 +22,7 @@ class Parameters extends \ArrayObject {
 	/**
 	 * Populate from native PHP array
 	 */
-	public function fromArray(array $values): Parameters {
+	public function fromArray(array $values): static {
 		$this->exchangeArray($values);
 		return $this;
 	}
@@ -30,7 +30,7 @@ class Parameters extends \ArrayObject {
 	/**
 	 * Populate from query string
 	 */
-	public function fromString(string $string): Parameters {
+	public function fromString(string $string): static {
 		$array = [];
 		parse_str($string, $array);
 		$this->fromArray($array);
@@ -70,7 +70,7 @@ class Parameters extends \ArrayObject {
 		return $default;
 	}
 
-	public function set(string $name, $value): Parameters {
+	public function set(string $name, $value): static {
 		$this[$name] = $value;
 		return $this;
 	}

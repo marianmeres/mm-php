@@ -3,11 +3,7 @@
 namespace MM\Util;
 
 class SqlHelper {
-	/**
-	 * @param array $custom
-	 * @return array
-	 */
-	public static function getSqlReplaceMap(array $custom = []) {
+	public static function getSqlReplaceMap(array $custom = []): array {
 		// mapa najcastejsich problematickych rozdielnych veci...
 		return array_merge(
 			[
@@ -148,13 +144,7 @@ class SqlHelper {
 		);
 	}
 
-	/**
-	 * @param $sql
-	 * @param string $vendor
-	 * @param array $map
-	 * @return mixed
-	 */
-	public static function getVendorSql($sql, $vendor = 'pgsql', array $map = null) {
+	public static function getVendorSql($sql, string $vendor = 'pgsql', array $map = null): string|array {
 		if (empty($map)) {
 			$map = self::getSqlReplaceMap();
 		}

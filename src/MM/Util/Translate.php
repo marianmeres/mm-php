@@ -10,40 +10,29 @@ use MM\Util\ClassUtil;
 class Translate implements TranslateInterface, \ArrayAccess {
 	/**
 	 * Interne data v tvare: "jazyk" => array("kluc" => "preklad")
-	 * @var array
 	 */
-	protected $_data = [];
+	protected array $_data = [];
 
 	/**
 	 * Aktualny jazyk
-	 * @var string
 	 */
-	protected $_lang = 'EN';
+	protected string $_lang = 'EN';
 
 	/**
 	 * Pixel loca tool convention
-	 * @var string
 	 */
-	public $placeholder = 'XXX';
+	public string $placeholder = 'XXX';
 
 	public function __construct(array $options = null, $strict = true) {
 		ClassUtil::setOptions($this, $options, $strict);
 	}
 
-	/**
-	 * @return mixed
-	 */
-	public function __invoke() {
+	public function __invoke(): mixed {
 		$args = func_get_args();
 		return call_user_func_array([$this, 'translate'], $args);
 	}
 
-	/**
-	 * @param $lang
-	 * @return $this
-	 * @throws \InvalidArgumentException
-	 */
-	public function setLang($lang) {
+	public function setLang($lang): static {
 		// TODO: validate here
 		if (!preg_match('/^[a-z]{2}$/i', $lang)) {
 			throw new \InvalidArgumentException("Invalid lang '$lang'");
@@ -52,27 +41,15 @@ class Translate implements TranslateInterface, \ArrayAccess {
 		return $this;
 	}
 
-	/**
-	 * @param $lang
-	 * @return string
-	 */
-	protected function _normalizeLang($lang) {
+	protected function _normalizeLang(string $lang): string {
 		return strtoupper($lang);
 	}
 
-	/**
-	 * @return string
-	 */
-	public function getLang() {
+	public function getLang(): string {
 		return $this->_lang;
 	}
 
-	/**
-	 * @param $key
-	 * @param null $replaceArgs
-	 * @return mixed
-	 */
-	public function translate($key, $replaceArgs = null) {
+	public function translate(string $key, $replaceArgs = null): mixed {
 		$replace = (array) $replaceArgs;
 
 		// podporujeme array aj arguments notaciu
@@ -91,7 +68,7 @@ class Translate implements TranslateInterface, \ArrayAccess {
 		$str = $data["$key"];
 
 		// pixel featura
-		$str = preg_replace_callback(
+		return preg_replace_callback(
 			"/($this->placeholder)/",
 			function ($m) use (&$replace) {
 				if (empty($replace)) {
@@ -103,23 +80,13 @@ class Translate implements TranslateInterface, \ArrayAccess {
 			},
 			$str,
 		);
-
-		return $str;
 	}
 
-	/**
-	 * @return array
-	 */
-	public function getData() {
+	public function getData(): array {
 		return $this->_data;
 	}
 
-	/**
-	 * @param array $data
-	 * @param null $lang
-	 * @return $this
-	 */
-	public function addTranslation(array $data, $lang = null) {
+	public function addTranslation(array $data, $lang = null): static {
 		if (null === $lang) {
 			$lang = $this->_lang;
 		}
@@ -149,11 +116,8 @@ class Translate implements TranslateInterface, \ArrayAccess {
 	 * alebo:
 	 *     key => value // tu bude pouzity akutalny jazyk
 	 *
-	 * @param array $data
-	 * @param bool $reset
-	 * @return $this
 	 */
-	public function setTranslation(array $data, $reset = true) {
+	public function setTranslation(array $data, bool $reset = true): static {
 		if ($reset) {
 			$this->_data = [];
 		}
@@ -173,11 +137,8 @@ class Translate implements TranslateInterface, \ArrayAccess {
 
 	/**
 	 * Extension hook
-	 *
-	 * @param $lang
-	 * @return mixed
 	 */
-	protected function _initializeData($lang) {
+	protected function _initializeData($lang): mixed {
 		// nejake defaultne loady tu napr...
 
 		// teraz iba takto
@@ -188,31 +149,26 @@ class Translate implements TranslateInterface, \ArrayAccess {
 		return $this->_data[$lang];
 	}
 
-	/**
-	 * @param $key
-	 * @param null $lang
-	 * @return bool
-	 */
-	public function hasTranslationFor($key, $lang = null) {
+	public function hasTranslationFor($key, $lang = null): bool {
 		if (!$lang) {
 			$lang = $this->_lang;
 		}
 		return isset($this->_data[$lang][$key]);
 	}
 
-	public function offsetGet($offset): mixed {
+	public function offsetGet(mixed $offset): mixed {
 		return $this->translate($offset);
 	}
 
-	public function offsetSet($offset, $value): void {
+	public function offsetSet(mixed $offset, mixed $value): void {
 		$this->addTranslation([$offset => $value]);
 	}
 
-	public function offsetExists($offset): bool {
+	public function offsetExists(mixed $offset): bool {
 		return isset($this->_data[$this->getLang()][$offset]);
 	}
 
-	public function offsetUnset($offset): void {
+	public function offsetUnset(mixed $offset): void {
 		unset($this->_data[$this->getLang()][$offset]);
 	}
 }

@@ -11,8 +11,6 @@ class Response implements \ArrayAccess {
 	/**
 	 * Suchy list podporovanych statusov a ich hlasok. Editovat podla potreby,
 	 * ale najskor na to nebude dovod. Prebrate z Zend\Http\Response
-	 *
-	 * @var array
 	 */
 	protected static array $_statuses = [
 		// INFORMATIONAL CODES
@@ -81,18 +79,13 @@ class Response implements \ArrayAccess {
 
 	/**
 	 * Telo responsu, rozdelene na segmenty. Defaultny segment sa vola "default"
-	 * @var array
 	 */
 	protected array $_body = [];
 
-	/**
-	 * @var array
-	 */
 	protected array $_headers = [];
 
 	/**
 	 * Current http status code
-	 * @var int
 	 */
 	protected int $_status = 200;
 
@@ -101,7 +94,7 @@ class Response implements \ArrayAccess {
 		$value,
 		bool $replace = true,
 		string $segment = 'default'
-	): Response {
+	): static {
 		// ak je value array, tak reset celeho body
 		if (is_array($value)) {
 			$this->_body = $value;
@@ -127,7 +120,7 @@ class Response implements \ArrayAccess {
 		string $key,
 		string $value,
 		bool $replace = true
-	): Response {
+	): static {
 		$key = $this->_normalizeHeaderKey($key);
 		$value = $this->_normalizeHeaderValue($value);
 
@@ -152,7 +145,7 @@ class Response implements \ArrayAccess {
 	 * DISCLAIMER: ziadnu RFC cookie specifikaciu som nikdy necital... jedine
 	 * toto: http://en.wikipedia.org/wiki/HTTP_cookie
 	 */
-	public function setCookie(string $name, $value, array $options = []): Response {
+	public function setCookie(string $name, $value, array $options = []): static {
 		$name = trim($name);
 
 		// sanity check
@@ -234,7 +227,7 @@ class Response implements \ArrayAccess {
 	}
 
 	// Interny helper - prejde vsetky cookies a necha len poslednu podla mena
-	public function _uniquizeCookies(): Response {
+	public function _uniquizeCookies(): static {
 		$unique = [];
 		$cookieHdr = $this->_normalizeHeaderKey('Set-Cookie');
 		if (!empty($this->_headers[$cookieHdr])) {
@@ -318,7 +311,7 @@ class Response implements \ArrayAccess {
 		return true;
 	}
 
-	public function reset(): Response {
+	public function reset(): static {
 		$this->setStatusCode(200);
 		$this->_body = [];
 		$this->_headers = [];
@@ -334,7 +327,7 @@ class Response implements \ArrayAccess {
 		return $this->_headers;
 	}
 
-	public function setStatusCode(int $value): Response {
+	public function setStatusCode(int $value): static {
 		if (!isset(self::$_statuses[$value])) {
 			throw new Exception("Uknown status '$value'");
 		}
@@ -363,7 +356,7 @@ class Response implements \ArrayAccess {
 	}
 
 	// Outputs headers via php's header() function
-	public function send(): Response {
+	public function send(): static {
 		// ma zmysel vypluvat aj OK?
 		if (200 !== $this->getStatusCode()) {
 			header($this->getStatusAsString());
@@ -439,34 +432,34 @@ class Response implements \ArrayAccess {
 		return trim($value);
 	}
 
-	public function offsetSet($offset, $value): void {
+	public function offsetSet(mixed $offset, mixed $value): void {
 		$this->setBody($value, true, $offset);
 	}
 
-	public function offsetExists($offset): bool {
+	public function offsetExists(mixed $offset): bool {
 		return isset($this->_body[$offset]);
 	}
 
-	public function offsetUnset($offset): void {
+	public function offsetUnset(mixed $offset): void {
 		unset($this->_body[$offset]);
 	}
 
-	public function offsetGet($offset): mixed {
+	public function offsetGet(mixed $offset): mixed {
 		return $this->getBody($offset);
 	}
 
 	// sugar
-	public function asText(): Response {
+	public function asText(): static {
 		return $this->setHeader('Content-type', 'text/plain; charset=UTF-8');
 	}
 
 	// sugar
-	public function asJson(): Response {
+	public function asJson(): static {
 		return $this->setHeader('Content-type', 'application/json');
 	}
 
 	// sugar
-	public function asHtml(): Response {
+	public function asHtml(): static {
 		return $this->setHeader('Content-type', 'text/html; charset=UTF-8');
 	}
 }

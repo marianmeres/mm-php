@@ -6,10 +6,8 @@ use MM\View\Exception;
 use MM\View\Helper;
 
 class OpenGraphData extends Helper implements \Countable {
-	/**
-	 * @var array
-	 */
-	protected $_whitelist = [
+
+	protected array $_whitelist = [
 		// for facebook domain insights
 		'fb:app_id' => 1,
 		// basic
@@ -37,27 +35,14 @@ class OpenGraphData extends Helper implements \Countable {
 		'og:video:height' => 1,
 	];
 
-	/**
-	 * @var array
-	 */
-	protected $_data = [];
+	protected array $_data = [];
 
-	/**
-	 * @return $this
-	 */
-	public function reset() {
+	public function reset(): static {
 		$this->_data = [];
 		return $this;
 	}
 
-	/**
-	 * @param $propertyOrData
-	 * @param null $propertyContent
-	 * @param bool|true $overwrite
-	 * @return $this
-	 * @throws Exception
-	 */
-	public function add($propertyOrData, $propertyContent = null, $overwrite = true) {
+	public function add($propertyOrData, $propertyContent = null, bool $overwrite = true): static {
 		if (is_array($propertyOrData)) {
 			// note: $propertyContentOrOverwriteFlag ignored here
 			foreach ($propertyOrData as $k => $v) {
@@ -70,18 +55,11 @@ class OpenGraphData extends Helper implements \Countable {
 		return $this;
 	}
 
-	/**
-	 * @param $property
-	 * @param $content
-	 * @param bool|true $overwrite
-	 * @return $this
-	 * @throws Exception
-	 */
-	protected function _addOne($property, $content, $overwrite = true) {
+	protected function _addOne($property, $content, bool $overwrite = true): static {
 		$property = strtolower($property);
 
 		// add "og:" prefix if not provided
-		if (substr($property, 0, 3) !== 'og:' && $property != 'fb:app_id') {
+		if (!str_starts_with($property, 'og:') && $property != 'fb:app_id') {
 			$property = 'og:' . $property;
 		}
 
@@ -114,17 +92,11 @@ class OpenGraphData extends Helper implements \Countable {
 		return $out;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function __toString() {
+	public function __toString(): string {
 		return $this->toString();
 	}
 
-	/**
-	 * @return int
-	 */
-	public function count() {
+	public function count(): int {
 		return count($this->_data);
 	}
 }
